@@ -59,3 +59,10 @@ npx vercel login
 -   Inside GitHub, add VERCEL_TOKEN, VERCEL_ORG_ID, and VERCEL_PROJECT_ID as [secrets]("https://docs.github.com/en/actions/security-guides/using-secrets-in-github-actions")
 
 Test the workflow by pushing modifications on the production brach.
+
+##### NextAuth
+
+-   When deploying on vercel using NextAuth set the following environment variables
+
+    -   NEXTAUTH_SECRET
+    -   NEXTAUTH_URL
