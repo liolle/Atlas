@@ -60,8 +60,6 @@ export const authOptions: NextAuthOptions = {
     ],
     callbacks: {
         async session({ session, token }) {
-            console.log(session, token);
-
             const sanitizedToken = Object.keys(token).reduce((p, c) => {
                 // strip unnecessary properties
                 if (
