@@ -1,19 +1,18 @@
 {
     "compilerOptions": {
-        "target": "es5",
+        "target": "ESNext",
         "lib": ["dom", "dom.iterable", "esnext"],
         "allowJs": true,
         "skipLibCheck": true,
         "strict": true,
         "noEmit": true,
         "esModuleInterop": true,
-        "module": "esnext",
-        "moduleResolution": "bundler",
+        "module": "ESNext",
+        "moduleResolution": "Bundler",
         "resolveJsonModule": true,
         "isolatedModules": true,
         "jsx": "preserve",
         "incremental": true,
-
         "noImplicitAny": true,
 
         "plugins": [
@@ -22,15 +21,23 @@
             }
         ],
         "paths": {
-            "@/*": ["./*"]
+            "@/*": ["./*"],
+            "@/src/*": ["./src/*"]
         }
+    },
+    "ts-node": {
+        // Tell ts-node CLI to install the --loader automatically
+        "esm": true
     },
     "include": [
         "next-env.d.ts",
         "**/*.ts",
         "**/*.tsx",
         ".next/types/**/*.ts",
-        "types.ts"
+        "types.ts",
+        "./src/**/*.ts",
+        "src/db/sql/signup.ts",
+        "src/db/index.ts"
     ],
     "exclude": ["node_modules"]
 }
