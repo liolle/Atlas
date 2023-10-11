@@ -17,18 +17,43 @@ import { Input } from "@/src/components/ui/input";
 
 import { SignUpSchema } from "@/src/zod/schema";
 import { useForm } from "react-hook-form";
+import { useRouter } from "next/navigation";
 
 export function FormSignUp() {
+    const router = useRouter();
+
     const form = useForm<z.infer<typeof SignUpSchema>>({
         resolver: zodResolver(SignUpSchema),
         defaultValues: {
             email: "",
-            password: ""
+            password: "",
+            name: ""
         }
     });
 
-    function onSubmit(values: z.infer<typeof SignUpSchema>) {
-        console.log(values);
+    async function onSubmit(values: z.infer<typeof SignUpSchema>) {
+        try {
+            const response = await fetch("/api/accounts/create", {
+                method: "POST",
+                body: JSON.stringify({
+                    email: values.email,
+                    password: values.password,
+                    username: values.name,
+                    provider: "credential"
+                })
+            });
+
+            if (!response.ok) {
+                const data = await response.json();
+                //TODO [SNACKBAR]
+                console.log(data);
+                return;
+            }
+
+            router.push("/api/auth/signin");
+        } catch (error) {
+            console.log(error);
+        }
     }
 
     return (
