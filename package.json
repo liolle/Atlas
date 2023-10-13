@@ -8,7 +8,6 @@
         "build": "next build",
         "start": "next start",
         "lint": "eslint --fix . && prettier --write .",
-        "db:test": "ts-node src/db/sql/signup.ts",
         "db:generate": "drizzle-kit generate:pg",
         "db:sync": "ts-node src/db/migrate.ts",
         "db:migrate": "npm run db:generate && npm run db:sync"
