@@ -2,6 +2,8 @@
 import { signIn } from "next-auth/react";
 import React from "react";
 import { Button } from "@/src/components/ui/button";
+import Image from "next/image";
+import DiscordIcon from "/public/icon/discord.svg";
 
 const DiscordButton = () => {
     const handleSignOut = async () => {
@@ -11,13 +13,21 @@ const DiscordButton = () => {
                 callbackUrl: "/home"
             });
         } catch (error) {
+            //TODO toast
             console.log(error);
         }
     };
 
     return (
-        <Button className="" onClick={handleSignOut}>
-            Sign with Discord
+        <Button className="flex justify-center gap-2" onClick={handleSignOut}>
+            <Image
+                className=" text-fgc"
+                src={DiscordIcon.src}
+                alt="G"
+                width={25}
+                height={25}
+            />{" "}
+            <span>Sign In with Discord</span>
         </Button>
     );
 };

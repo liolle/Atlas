@@ -4,6 +4,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
 import React from "react";
 import { Button } from "@/src/components/ui/button";
+import { Mail } from "lucide-react";
 import {
     Form,
     FormControl,
@@ -13,75 +14,68 @@ import {
     FormMessage
 } from "@/src/components/ui/form";
 import { Input } from "@/src/components/ui/input";
-import { SignInSchema } from "@/src/zod/schema";
+import { EmailRegistration } from "@/src/types";
 import { useForm } from "react-hook-form";
 
 export function FormSignIn() {
-    const form = useForm<z.infer<typeof SignInSchema>>({
-        resolver: zodResolver(SignInSchema),
+    const form = useForm<z.infer<typeof EmailRegistration>>({
+        resolver: zodResolver(EmailRegistration),
         defaultValues: {
-            email: "",
-            password: ""
+            email: ""
         }
     });
 
-    async function onSubmit(values: z.infer<typeof SignInSchema>) {
+    async function onSubmit(values: z.infer<typeof EmailRegistration>) {
         const email = values.email;
-        const password = values.password;
-
+        localStorage.setItem("atlas-email", email);
         try {
-            await signIn("credentials", {
+            await signIn("email", {
                 email,
-                password,
                 redirect: true,
                 callbackUrl: `${window.location.origin}/home`
             });
         } catch (error) {
+            //TODO toast
             console.log(error);
         }
     }
 
     return (
         <Form {...form}>
-            <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
+            <form
+                onSubmit={form.handleSubmit(onSubmit)}
+                className=" flex flex-col gap-4 rounded-md "
+            >
                 <FormField
                     control={form.control}
                     name="email"
                     render={({ field }) => (
-                        <FormItem className="">
-                            <FormLabel>Email</FormLabel>
+                        <FormItem className=" flex flex-col items-center space-y-4 ">
+                            <FormLabel className=" text-xl font-bold text-content">
+                                Hello !
+                            </FormLabel>
+                            <FormLabel
+                                className=" mt-[1rem !important] text-md 
+                            mb-4 max-w-[90%] text-center text-accent-2"
+                            >
+                                Use you email or an other service to continue
+                            </FormLabel>
+
                             <FormControl>
                                 <Input
                                     type="email"
-                                    className=""
+                                    className=" text-accent-2"
                                     placeholder="test@test.com"
                                     {...field}
                                 />
                             </FormControl>
-                            <FormMessage />
+                            <FormMessage className=" text-message-error" />
                         </FormItem>
                     )}
                 />
-                <FormField
-                    control={form.control}
-                    name="password"
-                    render={({ field }) => (
-                        <FormItem>
-                            <FormLabel>Password</FormLabel>
-                            <FormControl>
-                                <Input
-                                    type="password"
-                                    placeholder=""
-                                    {...field}
-                                />
-                            </FormControl>
 
-                            <FormMessage />
-                        </FormItem>
-                    )}
-                />
-                <Button className="w-full" type="submit">
-                    SignIn
+                <Button className=" w-full">
+                    <Mail className="mr-2 h-4 w-4" /> Login with Email
                 </Button>
             </form>
         </Form>
