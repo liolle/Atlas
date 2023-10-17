@@ -5,7 +5,7 @@ import { DrizzleAdapter } from "@auth/drizzle-adapter";
 import EmailProvider from "next-auth/providers/email";
 import { dzClient } from "@/src/db";
 import { sendVerificationRequest } from "@/src/services/nodemailer";
-import { generateVToken } from "@/src/lib/utils";
+import { generateName, generateVToken } from "@/src/lib/utils";
 
 export const authOptions: NextAuthOptions = {
     secret: process.env.NEXTAUTH_SECRET,
@@ -49,6 +49,12 @@ export const authOptions: NextAuthOptions = {
     callbacks: {
         async session({ session }) {
             return session;
+        },
+        async signIn({ user }) {
+            if (user) {
+                user.name = await generateName();
+            }
+            return true;
         }
     }
 };
