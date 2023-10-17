@@ -1,17 +1,22 @@
 /**
  * TYPES
  */
+import * as z from "zod";
+
 export type AccountProviders = "google" | "credential" | "discord";
 export type UserTypes = "admin" | "user" | "dev";
 export type GeneratorService = "crypto";
+export type ValidationType = "email" | "test";
 
 const accountIDLen = Number(process.env.ACCOUNT_ID_LEN);
 const userIDLen = Number(process.env.USER_ID_LEN);
+const verifToken = Number(process.env.VERIFICATION_TOKEN_LEN);
 const userRole = Number(process.env.USER_DEFAULT_ROLE);
 
 export const ACCOUNT_ID_LEN = isNaN(accountIDLen) ? 12 : accountIDLen;
 export const USER_ID_LEN = isNaN(userIDLen) ? 8 : userIDLen;
 export const USER_DEFAULT_ROLE = isNaN(userRole) ? 1 : userRole;
+export const VERIFICATION_TOKEN_LEN = isNaN(verifToken) ? 10 : verifToken;
 
 // ------------DB TYPES-----------------------------------//
 
@@ -55,5 +60,21 @@ export type APIMessage = {
 
 export type APIContent = {
     error: string;
-    content: RawLoginReturnType | LoginReturnType | null;
+    content: RawLoginReturnType | LoginReturnType | unknown | null;
+};
+
+// ------------ZOD-----------------------------------//
+
+export const EmailRegistration = z.object({
+    email: z.string().email()
+});
+
+export const EmailValidation = z.object({
+    code: z.string().min(1, "Input needed")
+});
+
+// ------------Other-----------------------------------//
+export type FormValidationType = {
+    type: ValidationType;
+    provider: AccountProviders;
 };
