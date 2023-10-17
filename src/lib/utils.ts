@@ -1,6 +1,6 @@
 import { clsx, type ClassValue } from "clsx";
 import { twMerge } from "tailwind-merge";
-import { ACCOUNT_ID_LEN, USER_ID_LEN } from "../types";
+import { ACCOUNT_ID_LEN, USER_ID_LEN, VERIFICATION_TOKEN_LEN } from "../types";
 import { cryptoGenerate } from "./generator";
 import bcrypt from "bcryptjs";
 
@@ -14,6 +14,10 @@ export const generateUserID = async () => {
 
 export const generateAccountID = async () => {
     return cryptoGenerate(ACCOUNT_ID_LEN);
+};
+
+export const generateVToken = async () => {
+    return cryptoGenerate(VERIFICATION_TOKEN_LEN, "hex");
 };
 
 export const hashPassword = async (password: string) => {
