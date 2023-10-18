@@ -7,6 +7,7 @@ export type AccountProviders = "google" | "credential" | "discord";
 export type UserTypes = "admin" | "user" | "dev";
 export type GeneratorService = "crypto";
 export type ValidationType = "email" | "test";
+export type NavigationVariant = "home";
 
 const accountIDLen = Number(process.env.ACCOUNT_ID_LEN);
 const userIDLen = Number(process.env.USER_ID_LEN);

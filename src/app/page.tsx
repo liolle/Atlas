@@ -3,7 +3,7 @@ import NavButton from "../components/client/Buttons/NavigationButton";
 
 export default function Main() {
     return (
-        <main className="flex min-h-screen items-center justify-center ">
+        <main className="flex min-h-screen items-center justify-center bg-bgc text-content ">
             Landing page
             <NavButton route="/home" text="Home">
                 Home
