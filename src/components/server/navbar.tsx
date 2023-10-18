@@ -2,15 +2,16 @@ import { NavigationVariant } from "@/src/types";
 import Link from "next/link";
 import React from "react";
 import { getServerSession } from "next-auth";
-import Image from "next/image";
+// import Image from "next/image";
+import AvatarHome from "../client/Buttons/AvatarHome";
 
 const NavBar = async () => {
     const session = await getServerSession();
     return (
-        <div className=" flex h-full w-fit flex-col items-center  justify-between gap-4 py-6">
-            <div className="@[250px]:w-[250px]  flex h-full flex-col gap-4  ">
+        <div className=" flex h-full w-fit flex-col items-center  justify-between gap-4 py-6 ">
+            <div className="flex  h-full flex-col gap-4 @[250px]:w-[250px]  ">
                 <Link
-                    className=" @[250px]:justify-start @[250px]:pl-3 flex w-full justify-start "
+                    className=" flex w-full justify-start @[250px]:justify-start @[250px]:pl-3 "
                     href="/"
                 >
                     <span>LOGO</span>
@@ -41,42 +42,17 @@ const NavigationItem = ({
         case "home":
             return (
                 <Link
-                    className=" flex w-fit items-center justify-center gap-4 rounded-full p-3 text-xl text-content hover:bg-accent-1"
+                    className=" flex w-fit justify-center gap-2 rounded-full p-2 text-xl text-content hover:bg-accent-1"
                     href="/home"
                 >
                     <HomeSVG isActive={isActive} />
-                    <span className=" @[250px]:block hidden self-end">
-                        Home
-                    </span>
+                    <span className=" hidden  @[250px]:block">Home</span>
                 </Link>
             );
 
         default:
             return <>Should not get here</>;
     }
-};
-
-interface AvatarHomeProps {
-    image: string;
-    name: string;
-}
-
-const AvatarHome = ({ image, name }: AvatarHomeProps) => {
-    return (
-        <div className=" flex w-full cursor-pointer items-start gap-2 rounded-full p-3 hover:bg-accent-1">
-            <Image
-                src={image}
-                alt=""
-                width={40}
-                height={40}
-                className=" rounded-full"
-            />
-
-            <div className=" @[250px]:flex hidden  h-full flex-1">
-                <span className=" self-center">@{name}</span>
-            </div>
-        </div>
-    );
 };
 
 interface SVGIcon {
@@ -86,7 +62,7 @@ interface SVGIcon {
 
 const HomeSVG = ({ isActive = false, size = 30 }: SVGIcon) => {
     return (
-        <div className=" flex-1">
+        <div className=" relative left-[-1px] top-[-3px] flex-1">
             <svg
                 width={size}
                 height={size}
