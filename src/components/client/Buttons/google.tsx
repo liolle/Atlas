@@ -4,6 +4,7 @@ import React from "react";
 import { Button } from "@/src/components/ui/button";
 import Image from "next/image";
 import GoogleIcon from "/public/icon/google.svg";
+import { ToastMessage } from "@/src/services/toast";
 
 const GoogleButton = () => {
     const handleSignOut = async () => {
@@ -14,7 +15,7 @@ const GoogleButton = () => {
             });
         } catch (error) {
             //TODO toast
-            console.log(error);
+            ToastMessage(error as string);
         }
     };
 

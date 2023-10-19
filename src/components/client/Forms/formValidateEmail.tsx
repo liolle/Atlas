@@ -16,6 +16,7 @@ import { EmailValidation, FormValidationType } from "@/src/types";
 import { UseFormReturn, useForm } from "react-hook-form";
 import { useRouter } from "next/navigation";
 import { signIn } from "next-auth/react";
+import { ToastMessage } from "@/src/services/toast";
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 export function FormEmailValidation({ type, provider }: FormValidationType) {
@@ -59,12 +60,11 @@ export function FormEmailValidation({ type, provider }: FormValidationType) {
         const formatted_email = (email as string).replace("@", "%40");
         try {
             const callbackUrl = `/api/auth/callback/email?callback=http%3A%2F%2Flocalhost%3A3000%2Fhome&token=${code}&email=${formatted_email}`;
-            console.log(callbackUrl);
 
             router.replace(callbackUrl);
         } catch (error) {
             //TODO toast
-            console.log(error);
+            ToastMessage(error as string);
         }
     }
     switch (type) {

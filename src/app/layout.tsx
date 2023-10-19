@@ -22,8 +22,8 @@ export default async function RootLayout({
     const session = await getServerSession(authOptions);
 
     return (
-        <html lang="en">
-            <body className={inter.className}>
+        <html className=" bg-bgc" lang="en">
+            <body className={` @container ${inter.className}`}>
                 <Toaster reverseOrder={false} />
                 <NextAuthProvider session={session}>
                     {children}

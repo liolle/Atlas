@@ -9,7 +9,6 @@ const TestToast = () => {
             type="button"
             className=" w-fit self-center rounded-full bg-content p-2 text-bgc"
         >
-            {/* <span className="h-full  flex-1 @[250px]:hidden">T</span> */}
             <span className=" flex  h-full flex-1">Test Toast</span>
         </button>
     );
