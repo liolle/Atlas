@@ -2,7 +2,7 @@
 import { signIn } from "next-auth/react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
-import React from "react";
+import React, { useEffect } from "react";
 import { Button } from "@/src/components/ui/button";
 import { Mail } from "lucide-react";
 import {
@@ -17,6 +17,7 @@ import { Input } from "@/src/components/ui/input";
 import { EmailRegistration } from "@/src/types";
 import { useForm } from "react-hook-form";
 import { ToastMessage } from "@/src/services/toast";
+import { useSearchParams } from "next/navigation";
 
 export function FormSignIn() {
     const form = useForm<z.infer<typeof EmailRegistration>>({
@@ -25,6 +26,14 @@ export function FormSignIn() {
             email: ""
         }
     });
+
+    const param = useSearchParams();
+    useEffect(() => {
+        const error = param.get("error");
+        if (error) {
+            ToastMessage(error);
+        }
+    }, []);
 
     async function onSubmit(values: z.infer<typeof EmailRegistration>) {
         const email = values.email;
@@ -38,7 +47,6 @@ export function FormSignIn() {
         } catch (error) {
             //TODO toast
             ToastMessage("form error");
-            console.log(error);
         }
     }
 
