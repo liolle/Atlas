@@ -16,6 +16,7 @@ import {
 import { Input } from "@/src/components/ui/input";
 import { EmailRegistration } from "@/src/types";
 import { useForm } from "react-hook-form";
+import { ToastMessage } from "@/src/services/toast";
 
 export function FormSignIn() {
     const form = useForm<z.infer<typeof EmailRegistration>>({
@@ -36,6 +37,7 @@ export function FormSignIn() {
             });
         } catch (error) {
             //TODO toast
+            ToastMessage("form error");
             console.log(error);
         }
     }
