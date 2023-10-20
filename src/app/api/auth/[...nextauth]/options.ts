@@ -1,10 +1,10 @@
 import type { NextAuthOptions } from "next-auth";
 import GoogleProvider from "next-auth/providers/google";
 import DiscordProvider from "next-auth/providers/discord";
-import { DrizzleAdapter } from "@auth/drizzle-adapter";
+import CustomDrizzleAdapter from "@/src/db/adapters";
 import EmailProvider from "next-auth/providers/email";
 import { dzClient } from "@/src/db";
-import { sendVerificationRequest } from "@/src/services/nodemailer";
+import { sendVerificationRequest } from "@/src/services/email/nodemailer";
 import { generateName, generateVToken } from "@/src/lib/utils";
 
 export const authOptions: NextAuthOptions = {
@@ -14,7 +14,7 @@ export const authOptions: NextAuthOptions = {
         maxAge: 30 * 24 * 60 * 60, // 30 days
         updateAge: 24 * 60 * 60 // 24 hours
     },
-    adapter: DrizzleAdapter(dzClient),
+    adapter: CustomDrizzleAdapter(dzClient),
     providers: [
         GoogleProvider({
             clientId: process.env.GOOGLE_CLIENT_ID as string,
