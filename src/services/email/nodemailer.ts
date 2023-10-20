@@ -1,6 +1,6 @@
 import { SendVerificationRequestParams } from "next-auth/providers/email";
 import { createTransport } from "nodemailer";
-import { EmailTemplate1 } from "../components/template/email1";
+import { EmailTemplate1 } from "./templates/email1";
 
 export async function sendVerificationRequest(
     params: SendVerificationRequestParams
