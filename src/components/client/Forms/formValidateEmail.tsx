@@ -16,7 +16,7 @@ import { EmailValidation, FormValidationType } from "@/src/types";
 import { UseFormReturn, useForm } from "react-hook-form";
 import { useRouter } from "next/navigation";
 import { signIn } from "next-auth/react";
-import { ToastMessage } from "@/src/services/toast";
+import { ToastMessage } from "@/src/services/toast/toast";
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 export function FormEmailValidation({ type, provider }: FormValidationType) {

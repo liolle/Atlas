@@ -4,7 +4,7 @@ import React from "react";
 import { Button } from "@/src/components/ui/button";
 import Image from "next/image";
 import DiscordIcon from "/public/icon/discord.svg";
-import { ToastMessage } from "@/src/services/toast";
+import { ToastMessage } from "@/src/services/toast/toast";
 
 const DiscordButton = () => {
     const handleSignOut = async () => {

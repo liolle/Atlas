@@ -1,7 +1,11 @@
 import { dzClient } from "@/src/db/index";
-import { APIContent, LoginType, RawLoginReturnType } from "@/src/types";
+import {
+    APIContent,
+    LoginType,
+    RawLoginReturnType,
+    RequestErrorType
+} from "@/src/types";
 import generate from "./sql";
-import { RequestErrorType } from "@/src/error";
 
 export default async function LOGIN(options: LoginType): Promise<APIContent> {
     const generatedQuery = generate(options.email);

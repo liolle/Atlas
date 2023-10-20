@@ -1,5 +1,5 @@
 "use client";
-import { ToastMessage } from "@/src/services/toast";
+import { ToastMessage } from "@/src/services/toast/toast";
 import React from "react";
 
 const TestToast = () => {

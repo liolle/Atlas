@@ -1,8 +1,12 @@
 import { dzClient } from "@/src/db/index";
-import { APIMessage, SignUpType, UserTypes } from "@/src/types";
+import {
+    APIMessage,
+    SignUpType,
+    UserTypes,
+    RequestErrorType
+} from "@/src/types";
 import generate from "./sql";
 import { generateAccountID, generateUserID } from "@/src/lib/utils";
-import { RequestErrorType } from "@/src/error";
 
 export default async function SIGNUP(options: SignUpType): Promise<APIMessage> {
     const user_id = await generateUserID();

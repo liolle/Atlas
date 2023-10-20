@@ -16,7 +16,7 @@ import {
 import { Input } from "@/src/components/ui/input";
 import { EmailRegistration } from "@/src/types";
 import { useForm } from "react-hook-form";
-import { ToastMessage } from "@/src/services/toast";
+import { ToastMessage } from "@/src/services/toast/toast";
 import { useSearchParams } from "next/navigation";
 
 export function FormSignIn() {
