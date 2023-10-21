@@ -22,35 +22,60 @@ export const VERIFICATION_TOKEN_LEN = isNaN(verifToken) ? 10 : verifToken;
 
 // ------------DB TYPES-----------------------------------//
 
-export type SignUpType = {
+export type UserType = {
+    id: string;
+    name: string;
     email: string;
-    provider: AccountProviders;
-    password: string;
-    username: string;
+    image: string;
+    created_at: Date;
 };
 
-export type LoginType = {
-    email: string;
-    password: string;
+export type ReserveNameType = {
+    input: {
+        name: string;
+        email: string;
+    };
+    output: {
+        id: number;
+    }[];
 };
 
-export type RawLoginReturnType = {
-    user_id: string;
-    email: string;
-    username: string;
-    user_created_at: string;
-    password: string;
-    role: string;
-    picture: string;
+export type UserGetStrField = {
+    field: "name" | "id" | "email";
+    value: string;
 };
 
-export type LoginReturnType = {
-    user_id: string;
+export type UserUpdateStrField = {
+    field: "name" | "image";
+    value: string;
     email: string;
-    username: string;
-    user_created_at: string;
-    role: string;
-    picture: string;
+};
+
+export type UserCreated = {
+    field: "created_at";
+    value: Date;
+};
+
+export type UserEmailVerified = {
+    field: "emailVerified";
+    value: Date;
+};
+
+export type GetUserType = {
+    input: UserGetStrField;
+    output: UserType[];
+};
+
+export type UpdateUserType = {
+    input: UserUpdateStrField;
+    output: {
+        id: number;
+    }[];
+};
+
+export type DBReturnType = {
+    error?: unknown;
+    data: unknown[];
 };
 
 // ------------API TYPES-----------------------------------//
@@ -62,7 +87,7 @@ export type APIMessage = {
 
 export type APIContent = {
     error: string;
-    content: RawLoginReturnType | LoginReturnType | unknown | null;
+    content: unknown | null;
 };
 
 // ------------ZOD-----------------------------------//
@@ -76,6 +101,12 @@ export const EmailValidation = z.object({
 });
 
 //ERROR//
+
+export type BaseError = {
+    error: string;
+    details: string;
+};
+
 export enum RequestErrorType {
     // API Errors
     API_REQUEST_FAILED = "API request failed",
@@ -96,6 +127,17 @@ export enum RequestErrorType {
 export type FormValidationType = {
     type: ValidationType;
     provider: AccountProviders;
+};
+
+//Type checking function//
+export const isBaseError = (obj: unknown): obj is BaseError => {
+    if (!obj) return false;
+    return (
+        typeof obj === "object" &&
+        "error" in obj &&
+        typeof obj.error === "string" &&
+        "details" in obj
+    );
 };
 
 // ----------- Lists ----------------------------------//

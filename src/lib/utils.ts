@@ -35,8 +35,6 @@ export const hashPassword = async (password: string) => {
     return bcrypt.hashSync(password);
 };
 
-// Example: Combine a random adjective and object
-
 export const comparePassword = async (
     password: string,
     hashedPassword: string
@@ -45,3 +43,10 @@ export const comparePassword = async (
 };
 
 export const API_URL = `${process.env.API_URL || "http://localhost:3000"}`;
+
+export const curateError = (rawError: string) => {
+    if (rawError.includes("duplicate key value violates unique constraint"))
+        return "Already exist";
+
+    return "";
+};
