@@ -14,7 +14,6 @@ const DiscordButton = () => {
                 callbackUrl: "/home"
             });
         } catch (error) {
-            //TODO toast
             ToastMessage(error as string);
         }
     };

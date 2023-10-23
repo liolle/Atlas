@@ -7,16 +7,18 @@ export type AccountProviders = "google" | "credential" | "discord";
 export type UserTypes = "admin" | "user" | "dev";
 export type GeneratorService = "crypto";
 export type ValidationType = "email" | "test";
-export type NavigationVariant = "home" | "profile";
+export type NavigationVariant = "home" | "account" | "profile";
 export type LogoType = "logout";
 
 const accountIDLen = Number(process.env.ACCOUNT_ID_LEN);
 const userIDLen = Number(process.env.USER_ID_LEN);
 const verifToken = Number(process.env.VERIFICATION_TOKEN_LEN);
 const userRole = Number(process.env.USER_DEFAULT_ROLE);
+const pictureIDLen = Number(process.env.Picture_ID_LEN);
 
 export const ACCOUNT_ID_LEN = isNaN(accountIDLen) ? 12 : accountIDLen;
 export const USER_ID_LEN = isNaN(userIDLen) ? 8 : userIDLen;
+export const PICTURE_ID_LEN = isNaN(pictureIDLen) ? 15 : pictureIDLen;
 export const USER_DEFAULT_ROLE = isNaN(userRole) ? 1 : userRole;
 export const VERIFICATION_TOKEN_LEN = isNaN(verifToken) ? 10 : verifToken;
 
@@ -88,6 +90,18 @@ export type APIMessage = {
 export type APIContent = {
     error: string;
     content: unknown | null;
+};
+
+//AWS//
+export type SignedType = {
+    region: "eu-west-3" | "eu-central-1";
+    bucket: string;
+    key: string;
+};
+
+export type PutS3Type = {
+    url: string;
+    data: File;
 };
 
 // ------------ZOD-----------------------------------//

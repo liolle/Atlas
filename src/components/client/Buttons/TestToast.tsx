@@ -7,9 +7,9 @@ const TestToast = () => {
         <button
             onClick={() => ToastMessage("clicked")}
             type="button"
-            className=" w-fit self-center rounded-full bg-content p-2 text-bgc"
+            className=" w-fit self-center rounded-full bg-content px-3 py-2 text-bgc"
         >
-            <span className=" flex  h-full flex-1">Test Toast</span>
+            <span className=" flex  h-full flex-1">Click me</span>
         </button>
     );
 };

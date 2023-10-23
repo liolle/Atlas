@@ -49,8 +49,8 @@ export function FormEmailValidation({ type, provider }: FormValidationType) {
     const sendEmail = async () => {
         await signIn("email", {
             email,
-            redirect: false
-            // callbackUrl: `${window.location.origin}/home`
+            redirect: true,
+            callbackUrl: `${window.location.origin}/home`
         });
     };
 
@@ -60,7 +60,6 @@ export function FormEmailValidation({ type, provider }: FormValidationType) {
         const formatted_email = (email as string).replace("@", "%40");
         try {
             const callbackUrl = `/api/auth/callback/email?callback=http%3A%2F%2Flocalhost%3A3000%2Fhome&token=${code}&email=${formatted_email}`;
-
             router.replace(callbackUrl);
         } catch (error) {
             //TODO toast

@@ -3,6 +3,7 @@ import { twMerge } from "tailwind-merge";
 import {
     ACCOUNT_ID_LEN,
     NameObjects,
+    PICTURE_ID_LEN,
     USER_ID_LEN,
     VERIFICATION_TOKEN_LEN
 } from "../types";
@@ -19,6 +20,10 @@ export const generateUserID = async () => {
 
 export const generateAccountID = async () => {
     return cryptoGenerate(ACCOUNT_ID_LEN);
+};
+
+export const generatePictureID = async () => {
+    return cryptoGenerate(PICTURE_ID_LEN, "hex");
 };
 
 export const generateVToken = async () => {
