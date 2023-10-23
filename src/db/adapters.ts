@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
-import { and, eq } from "drizzle-orm";
+import { and, eq, name } from "drizzle-orm";
 import { PgDatabase } from "drizzle-orm/pg-core";
 import {
     Adapter,
@@ -20,10 +20,11 @@ export default function CustomDrizzleAdapter(
                 .insert(users)
                 .values({ ...user, id: crypto.randomUUID() })
                 .returning()
-                .then((res: unknown[]) => res[0] ?? null)) as AdapterUser;
+                .then((res) => res[0] ?? null)) as AdapterUser;
         },
 
         async getUser(id: string): Promise<AdapterUser | null> {
+            console.log("getUser");
             return (await client
                 .select()
                 .from(users)
@@ -33,18 +34,31 @@ export default function CustomDrizzleAdapter(
                 )) as AdapterUser | null;
         },
         async getUserByEmail(email: string): Promise<AdapterUser | null> {
-            return (await client
-                .select()
-                .from(users)
-                .where(eq(users.email, email))
-                .then(
-                    (res: unknown[]) => res[0] ?? null
-                )) as AdapterUser | null;
+            console.log("getUserByEmail");
+            try {
+                return (await client
+                    .select()
+                    .from(users)
+                    .where(eq(users.email, email))
+                    .then(
+                        (res: unknown[]) => res[0] ?? null
+                    )) as AdapterUser | null;
+            } catch (error) {
+                if (error instanceof Error) {
+                    console.error(`Error name: ${error.name}`);
+                    console.error(`Error message: ${error.message}`);
+                    console.error(`Error stack: ${error.stack}`);
+                } else {
+                    console.error("An unknown error occurred:", error);
+                }
+                throw error;
+            }
         },
         async getUserByAccount({
             providerAccountId,
             provider
         }): Promise<AdapterUser | null> {
+            console.log("getUserByAccount");
             const dbAccount =
                 (await client
                     .select()
@@ -67,6 +81,7 @@ export default function CustomDrizzleAdapter(
         async updateUser(
             user: Partial<AdapterUser> & Pick<AdapterUser, "id">
         ): Promise<AdapterUser> {
+            console.log("updateUser");
             if (!user.id) {
                 throw new Error("No user id.");
             }
@@ -79,6 +94,7 @@ export default function CustomDrizzleAdapter(
                 .then((res) => res[0])) as AdapterUser;
         },
         async deleteUser(userId: string): Promise<AdapterUser | null> {
+            console.log("deleteUser");
             return (await client
                 .delete(users)
                 .where(eq(users.id, userId))
@@ -88,6 +104,7 @@ export default function CustomDrizzleAdapter(
         async linkAccount(
             rawAccount: AdapterAccount
         ): Promise<AdapterAccount | null | undefined> {
+            console.log("linkAccount");
             const updatedAccount = await client
                 .insert(accounts)
                 .values(rawAccount)
@@ -112,6 +129,7 @@ export default function CustomDrizzleAdapter(
         async unlinkAccount(
             account: Pick<AdapterAccount, "provider" | "providerAccountId">
         ): Promise<AdapterAccount | undefined> {
+            console.log("unlinkAccount");
             const { type, provider, providerAccountId, userId } = (await client
                 .delete(accounts)
                 .where(
@@ -133,6 +151,7 @@ export default function CustomDrizzleAdapter(
             userId: string;
             expires: Date;
         }): Promise<AdapterSession> {
+            console.log("createSession");
             return (await client
                 .insert(sessions)
                 .values(data)
@@ -142,6 +161,7 @@ export default function CustomDrizzleAdapter(
         async getSessionAndUser(
             sessionToken: string
         ): Promise<{ session: AdapterSession; user: AdapterUser } | null> {
+            console.log("getSessionAndUser");
             return (await client
                 .select({
                     session: sessions,
@@ -158,6 +178,7 @@ export default function CustomDrizzleAdapter(
         async updateSession(
             data: Partial<AdapterSession> & Pick<AdapterSession, "sessionToken">
         ): Promise<AdapterSession | null | undefined> {
+            console.log("updateSession");
             return (await client
                 .update(sessions)
                 .set(data)
@@ -171,6 +192,7 @@ export default function CustomDrizzleAdapter(
         async deleteSession(
             sessionToken: string
         ): Promise<AdapterSession | null | undefined> {
+            console.log("deleteSession");
             const session = await client
                 .delete(sessions)
                 .where(eq(sessions.sessionToken, sessionToken))
@@ -182,6 +204,7 @@ export default function CustomDrizzleAdapter(
         async createVerificationToken(
             token: VerificationToken
         ): Promise<VerificationToken | null | undefined> {
+            console.log("createVerificationToken");
             return await client
                 .insert(verificationTokens)
                 .values(token)
@@ -192,6 +215,7 @@ export default function CustomDrizzleAdapter(
             identifier: string;
             token: string;
         }): Promise<VerificationToken | null> {
+            console.log("useVerificationToken");
             try {
                 return await client
                     .delete(verificationTokens)
