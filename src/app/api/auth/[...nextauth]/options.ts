@@ -6,6 +6,8 @@ import EmailProvider from "next-auth/providers/email";
 import { dzClient } from "@/src/db";
 import { sendVerificationRequest } from "@/src/services/email/nodemailer";
 import { generateName, generateVToken } from "@/src/lib/utils";
+import { GetUsers } from "@/src/db/portal";
+import { isBaseError } from "@/src/types";
 
 export const authOptions: NextAuthOptions = {
     secret: process.env.NEXTAUTH_SECRET,
@@ -55,6 +57,24 @@ export const authOptions: NextAuthOptions = {
                 user.name = await generateName();
             }
             return true;
+        },
+        async jwt({ token, trigger }) {
+            if (trigger === "update") {
+                const email = token.email;
+                if (!email) return token;
+
+                const dbUser = await GetUsers({
+                    field: "email",
+                    value: email
+                });
+
+                if (!dbUser || isBaseError(dbUser)) return token;
+
+                if (dbUser[0].name) token.name = dbUser[0].name;
+                if (dbUser[0].name) token.picture = dbUser[0].image;
+            }
+
+            return token;
         }
     }
 };
