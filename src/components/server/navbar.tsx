@@ -9,7 +9,6 @@ import { headers } from "next/headers";
 
 const NavBar = async () => {
     const session = await getServerSession();
-
     return (
         <div className=" flex h-full w-fit flex-col items-center  justify-between gap-4 py-6 ">
             <div className="flex  h-full flex-col gap-4 @[250px]:w-[250px]  ">
@@ -20,14 +19,19 @@ const NavBar = async () => {
                     <span>LOGO</span>
                 </Link>
                 <NavigationItem variant="home" />
-                <NavigationItem variant="profile" />
+                <NavigationItem variant="account" />
+                <NavigationItem
+                    variant="profile"
+                    username={session?.user?.name as string}
+                />
             </div>
+
             <AvatarHome
                 image={
-                    session?.user?.image ||
+                    (session && session.user?.image) ||
                     "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTM4TfipskFLoycix3JSNW7DbUIkzdJoNsk6m4XpVtEunqZGil1nwWeZlhsBzbUqF_AdA0&usqp=CAU"
                 }
-                name={session?.user?.name || ""}
+                name={(session && session.user?.name) || ""}
             />
         </div>
     );
@@ -35,11 +39,18 @@ const NavBar = async () => {
 
 interface NavItemItemProps {
     variant?: NavigationVariant;
+    username?: string;
 }
 
-const NavigationItem = ({ variant = "home" }: NavItemItemProps) => {
+const NavigationItem = ({ variant = "home", username }: NavItemItemProps) => {
     const headersList = headers();
     const activePage = headersList.get("x-page");
+    const activePath = headersList.get("x-path") as string;
+    const pathUser = activePath?.split(/[/?]/)[2];
+    const regex = /^\/users\/[^/]+$/;
+
+    const isProfileSelected = regex.test(activePath) && pathUser == username;
+
     switch (variant) {
         case "home":
             return (
@@ -57,16 +68,32 @@ const NavigationItem = ({ variant = "home" }: NavItemItemProps) => {
                     </span>
                 </Link>
             );
-        case "profile":
+        case "account":
             return (
                 <Link
                     className={`flex w-fit justify-center gap-2 rounded-full p-2 text-xl text-content ${"hover:text-accent-1"}`}
-                    href="/profile"
+                    href="/account"
                 >
                     <ProfileSVG isActive={activePage == variant} />
                     <span
                         className={`hidden  @[250px]:block ${
                             activePage == variant && "font-bold text-accent-1"
+                        }`}
+                    >
+                        Account
+                    </span>
+                </Link>
+            );
+        case "profile":
+            return (
+                <Link
+                    className={`flex w-fit justify-center gap-2 rounded-full p-2 text-xl text-content ${"hover:text-accent-1"}`}
+                    href={`/users/${username}`}
+                >
+                    <ProfileSVG isActive={isProfileSelected} />
+                    <span
+                        className={`hidden  @[250px]:block ${
+                            isProfileSelected && "font-bold text-accent-1"
                         }`}
                     >
                         Profile
