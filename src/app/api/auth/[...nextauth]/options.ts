@@ -70,8 +70,6 @@ export const authOptions: NextAuthOptions = {
 
                 if (!dbUser || isBaseError(dbUser)) return token;
 
-                console.log(dbUser);
-
                 if (dbUser[0].data.name) token.name = dbUser[0].data.name;
                 if (dbUser[0].data.name) token.picture = dbUser[0].data.image;
             }

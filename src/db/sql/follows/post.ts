@@ -7,10 +7,6 @@ const follow = (options: UpdateFollowStrField) => {
     INSERT INTO followers (self, follow) 
     VALUES (${options.self}, ${options.follow});
     `;
-    console.log(`
-    INSERT INTO followers (self, follow) 
-    VALUES (${options.self}, ${options.follow});
-    `);
 
     return {
         query: statement,
@@ -24,8 +20,7 @@ export async function FollowUsers(
     const generatedQuery = follow(options);
 
     try {
-        const result = await dzClient.execute(generatedQuery.query);
-        console.log(result);
+        await dzClient.execute(generatedQuery.query);
 
         return null;
     } catch (error) {

@@ -10,8 +10,6 @@ export async function GET(request: NextRequest, context: RouteContext) {
     try {
         const name = context.params.name;
 
-        console.log(name);
-
         if (!name) {
             return NextResponse.json(
                 {

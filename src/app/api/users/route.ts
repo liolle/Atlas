@@ -16,8 +16,6 @@ export async function GET() {
 
         return NextResponse.json(result, { status: 200 });
     } catch (error) {
-        console.log(error);
-
         return NextResponse.json(
             {
                 error: RequestErrorType.API_REQUEST_FAILED,
@@ -81,7 +79,6 @@ export async function POST(request: NextRequest) {
 
         return NextResponse.json(result, { status: 200 });
     } catch (error) {
-        console.log(error);
         return NextResponse.json({ error: String(error) }, { status: 500 });
     }
 }

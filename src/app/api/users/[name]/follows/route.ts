@@ -94,8 +94,6 @@ export async function POST(request: NextRequest, context: RouteContext) {
             );
         }
 
-        console.log(session.user.name);
-
         const result = await UpdateFollows({
             type: action,
             self: session.user.name,
