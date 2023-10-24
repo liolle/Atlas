@@ -13,7 +13,7 @@ export default async function Profile({
         value: params.name
     });
 
-    if (!user || isBaseError(user) || !user[0]) {
+    if (!user || isBaseError(user) || !user[0].data) {
         return (
             <BaseLayout>
                 <section className=" flex h-full items-center justify-center">
