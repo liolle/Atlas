@@ -45,11 +45,11 @@ export async function getFollow(
                 actions: [
                     {
                         type: "followUser",
-                        link: `/api/users/${row.name}?action=follow`
+                        link: `/api/users/${row.name}/follows?action=follow`
                     } as LinkAction,
                     {
                         type: "unfollowUser",
-                        link: `/api/users/${row.name}?action=unfollowUser`
+                        link: `/api/users/${row.name}/follows?action=unfollowUser`
                     } as LinkAction
                 ]
             };
