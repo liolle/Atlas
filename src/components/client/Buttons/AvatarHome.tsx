@@ -8,8 +8,7 @@ import {
 import { LogOut } from "lucide-react";
 import { LogoType } from "@/src/types";
 import { signOut } from "next-auth/react";
-import { Avatar, AvatarImage, AvatarFallback } from "@radix-ui/react-avatar";
-import Loading from "../loading/loading";
+import Image from "next/image";
 
 interface AvatarHomeProps {
     image: string;
@@ -22,15 +21,12 @@ const AvatarHome = ({ image, name }: AvatarHomeProps) => {
             <PopoverTrigger className=" w-full  pr-2">
                 <div className="flex h-fit w-full cursor-pointer items-end  gap-2 rounded-full p-2 hover:bg-accent-1">
                     <div className=" relative h-10 w-10 overflow-hidden rounded-full ">
-                        <Avatar>
-                            <AvatarImage
-                                className=" h-full w-full"
-                                src={image}
-                            />
-                            <AvatarFallback>
-                                <Loading />
-                            </AvatarFallback>
-                        </Avatar>
+                        <Image
+                            src={image}
+                            alt="I"
+                            layout="fill"
+                            priority={true}
+                        />
                     </div>
 
                     <div className=" hidden h-full  flex-1 @[250px]:flex">

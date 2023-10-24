@@ -1,13 +1,12 @@
 "use client";
-import { Avatar, AvatarImage, AvatarFallback } from "@radix-ui/react-avatar";
 import React, { MouseEvent } from "react";
 import { FollowType } from "@/src/types";
-import Loading from "../loading/loading";
 import { Button } from "../../ui/button";
 import { Separator } from "../../ui/separator";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { Session } from "next-auth";
+import Image from "next/image";
 
 const CardProfile = ({
     profile,
@@ -31,12 +30,12 @@ const CardProfile = ({
     return (
         <section className=" flex h-32 w-80 select-none gap-4">
             <div className="relative h-32 w-32 overflow-hidden rounded-full">
-                <Avatar className="">
-                    <AvatarImage className=" h-full" src={profile.image} />
-                    <AvatarFallback>
-                        <Loading />
-                    </AvatarFallback>
-                </Avatar>
+                <Image
+                    src={profile.image}
+                    alt="I"
+                    layout="fill"
+                    priority={true}
+                />
             </div>
             <div className=" flex flex-col justify-between">
                 <div className="flex">@{profile.name}</div>
