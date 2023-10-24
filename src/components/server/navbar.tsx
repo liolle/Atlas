@@ -2,7 +2,6 @@ import { NavigationVariant } from "@/src/types";
 import Link from "next/link";
 import React from "react";
 import { getServerSession } from "next-auth";
-// import Image from "next/image";
 import AvatarHome from "../client/Buttons/AvatarHome";
 
 import { headers } from "next/headers";
@@ -47,7 +46,7 @@ const NavigationItem = ({ variant = "home", username }: NavItemItemProps) => {
     const activePage = headersList.get("x-page");
     const activePath = headersList.get("x-path") as string;
     const pathUser = activePath?.split(/[/?]/)[2];
-    const regex = /^\/users\/[^/]+$/;
+    const regex = /^\/users\/*/;
 
     const isProfileSelected = regex.test(activePath) && pathUser == username;
 
