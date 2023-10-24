@@ -11,8 +11,9 @@ const NavProfile = ({ params, isOWner }: NavProfileProps) => {
         <div className=" flex h-14 w-full gap-4  p-2">
             <Link
                 href={`/users/${params.name}/posts`}
-                className={`flex w-32 items-center justify-center rounded-full ${
-                    params.page == "posts" && " font-bold text-accent-1"
+                className={`flex w-fit items-center justify-center rounded-full border-2 border-accent-2 px-4 ${
+                    params.page == "posts" &&
+                    " border-accent-1 font-bold text-accent-1"
                 }`}
             >
                 posts
@@ -20,8 +21,9 @@ const NavProfile = ({ params, isOWner }: NavProfileProps) => {
             {isOWner && (
                 <Link
                     href={`/users/${params.name}/groups`}
-                    className={`flex w-32 items-center justify-center rounded-full ${
-                        params.page == "groups" && " font-bold text-accent-1"
+                    className={`flex w-fit items-center justify-center rounded-full border-2 border-accent-2 px-4 ${
+                        params.page == "groups" &&
+                        " border-accent-1 font-bold text-accent-1"
                     }`}
                 >
                     groups

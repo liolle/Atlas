@@ -35,7 +35,7 @@ export default async function Layout({
     return (
         <BaseLayout>
             <section className=" flex h-full flex-col ">
-                <div className=" flex h-60 w-full items-center justify-center ">
+                <div className=" flex h-60 w-full items-center justify-center border-b-2 border-accent-2 ">
                     <CardProfile profile={profile} session={session} />
                 </div>
 

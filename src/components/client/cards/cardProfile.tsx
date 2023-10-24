@@ -50,14 +50,20 @@ const CardProfile = ({
                     )}
                 </div>
                 <div className="flex items-center gap-2">
-                    <Link className="hover:text-accent-1" href="">
+                    <Link
+                        className="hover:text-accent-1"
+                        href={`/users/${profile.name}/followers`}
+                    >
                         followers
                     </Link>
                     <Separator
                         className=" bg-accent-2"
                         orientation="vertical"
                     />
-                    <Link className="hover:text-accent-1" href="">
+                    <Link
+                        className="hover:text-accent-1"
+                        href={`/users/${profile.name}/follows`}
+                    >
                         follows
                     </Link>
                 </div>
