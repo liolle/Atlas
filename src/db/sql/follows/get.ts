@@ -14,7 +14,9 @@ const getByField = (options: GetUserFollowType["input"]) => {
     SELECT ${sql.raw(
         options.field == "follow" ? "self" : "follow"
     )}, image  FROM ${followers} 
-    LEFT JOIN ${users} ON ${users.name} = followers.${sql.raw(options.field)}
+    LEFT JOIN ${users} ON ${users.name} = followers.${sql.raw(
+        options.field == "follow" ? "self" : "follow"
+    )}
     WHERE ${sql.raw(options.field)} = ${options.value}
     `;
 
@@ -38,8 +40,6 @@ export async function getFollow(
             data: FollowType;
             actions: LinkAction[];
         }[] = follows.map((row) => {
-            console.log(row);
-
             return {
                 data: row,
                 actions: [
