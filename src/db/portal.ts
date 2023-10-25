@@ -27,13 +27,15 @@ export const GetUsers = async (
     options: UserGetStrField
 ): Promise<GetUserType["output"][] | BaseError | null> => {
     const result =
-        options.field == "all" ? await getAllUsers() : await getUsers(options);
+        options.field == "all"
+            ? await getAllUsers(options)
+            : await getUsers(options);
 
     if (!result) return null;
 
     if (isBaseError(result)) {
         // TODO Log error using log service
-        console.log("<TODO Log Error>");
+        console.log("<TODO Log Error>:GetUsers");
         return result;
     }
 
@@ -49,8 +51,7 @@ export const UpdateUser = async (
 
     if (isBaseError(result)) {
         // TODO Log error using log service
-        console.log("<TODO Log Error>");
-
+        console.log("<TODO Log Error>:UpdateUser");
         result.details = curateError(result.details);
         return result;
     }
@@ -67,7 +68,7 @@ export const GetFollows = async (
 
     if (isBaseError(result)) {
         // TODO Log error using log service
-        console.log("<TODO Log Error>");
+        console.log("<TODO Log Error>:GetFollows");
 
         return result;
     }
@@ -88,7 +89,7 @@ export const UpdateFollows = async (
     if (isBaseError(result)) {
         // TODO Log error using log service
 
-        console.log("<TODO Log Error>");
+        console.log("<TODO Log Error>:UpdateFollows");
 
         result.details = curateError(result.details);
         return result;

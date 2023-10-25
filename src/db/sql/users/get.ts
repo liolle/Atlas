@@ -7,14 +7,19 @@ import {
     RequestErrorType,
     UserType
 } from "@/src/types";
+import { followers, users } from "../../schema";
 
 const getByField = (options: GetUserType["input"]) => {
     const statement = sql`
         SELECT 
-            name,email
-            ,image,
-            created_at
-        FROM "user"
+            u.name,
+            u.email,
+            u.image,
+            u.created_at,
+            CASE WHEN f2.self IS NOT NULL THEN true ELSE false END as following 
+        FROM ${users} u
+        LEFT JOIN ${followers} f2 ON f2.self = ${options.self}
+            AND u.name = f2.follow
         WHERE ${sql.raw(options.field)} = ${options.value}
     `;
 
@@ -24,14 +29,17 @@ const getByField = (options: GetUserType["input"]) => {
     };
 };
 
-const getAll = () => {
+const getAll = (options: GetUserType["input"]) => {
     const statement = sql`
-        SELECT 
-            id,
-            name,email
-            ,image,
-            created_at
-        FROM "user"
+    SELECT 
+        u.name,
+        u.email,
+        u.image,
+        u.created_at,
+        CASE WHEN f2.self IS NOT NULL THEN true ELSE false END as following
+    FROM "user" u
+    LEFT JOIN ${followers} f2 ON f2.self = '${options.self}' 
+        AND u.name = f2.follow
         
     `;
 
@@ -63,7 +71,7 @@ export async function getUsers(
                     } as LinkAction,
                     {
                         type: "unfollowUser",
-                        link: `/api/users/${row.name}/follows?action=unfollowUser`
+                        link: `/api/users/${row.name}/follows?action=unfollow`
                     } as LinkAction
                 ]
             };
@@ -78,10 +86,10 @@ export async function getUsers(
     }
 }
 
-export async function getAllUsers(): Promise<
-    GetUserType["output"][] | BaseError | null
-> {
-    const generatedQuery = getAll();
+export async function getAllUsers(
+    options: GetUserType["input"]
+): Promise<GetUserType["output"][] | BaseError | null> {
+    const generatedQuery = getAll(options);
 
     try {
         const result = await dzClient.execute(generatedQuery.query);
@@ -93,14 +101,15 @@ export async function getAllUsers(): Promise<
             return {
                 data: row,
                 actions: [
-                    {
-                        type: "followUser",
-                        link: `/api/users/${row.name}/follows?action=follow`
-                    } as LinkAction,
-                    {
-                        type: "unfollowUser",
-                        link: `/api/users/${row.name}/follows?action=unfollowUser`
-                    } as LinkAction
+                    row.following
+                        ? ({
+                              type: "followUser",
+                              link: `/api/users/${row.name}/follows?action=follow`
+                          } as LinkAction)
+                        : ({
+                              type: "unfollowUser",
+                              link: `/api/users/${row.name}/follows?action=unfollow`
+                          } as LinkAction)
                 ]
             };
         });
@@ -121,7 +130,8 @@ function transformUsers(data: Record<string, unknown>[]): UserType[] {
             name: record.name as string,
             email: record.email as string,
             image: record.image as string,
-            created_at: new Date(record.created_at as string)
+            created_at: new Date(record.created_at as string),
+            following: record.following as boolean
         };
         return transformedRecord;
     });

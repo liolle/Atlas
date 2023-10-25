@@ -11,13 +11,18 @@ import { followers, users } from "../../schema";
 
 const getByField = (options: GetUserFollowType["input"]) => {
     const statement = sql`
-    SELECT ${sql.raw(
-        options.field == "follow" ? "self" : "follow"
-    )}, image  FROM ${followers} 
-    LEFT JOIN ${users} ON ${users.name} = followers.${sql.raw(
+        SELECT 
+        f1.${sql.raw(options.field == "follow" ? "self" : "follow")}, 
+        u.image, 
+        CASE WHEN f2.self IS NOT NULL THEN true ELSE false END as following
+    FROM ${followers} f1
+    LEFT JOIN ${users} u ON u.name = f1.${sql.raw(
         options.field == "follow" ? "self" : "follow"
     )}
-    WHERE ${sql.raw(options.field)} = ${options.value}
+    LEFT JOIN ${followers} f2 ON f2.self = ${
+        options.self
+    } AND u.name = f2.follow
+    WHERE f1.${sql.raw(options.field)} = ${options.value}
     `;
 
     return {
@@ -43,14 +48,15 @@ export async function getFollow(
             return {
                 data: row,
                 actions: [
-                    {
-                        type: "followUser",
-                        link: `/api/users/${row.name}/follows?action=follow`
-                    } as LinkAction,
-                    {
-                        type: "unfollowUser",
-                        link: `/api/users/${row.name}/follows?action=unfollowUser`
-                    } as LinkAction
+                    !row.following
+                        ? ({
+                              type: "followUser",
+                              link: `/api/users/${row.name}/follows?action=follow`
+                          } as LinkAction)
+                        : ({
+                              type: "unfollowUser",
+                              link: `/api/users/${row.name}/follows?action=unfollow`
+                          } as LinkAction)
                 ]
             };
         });
@@ -68,7 +74,8 @@ function transformFollowUsers(data: Record<string, unknown>[]): FollowType[] {
     return data.map((record) => {
         const transformedRecord: FollowType = {
             name: (record.follow || record.self) as string,
-            image: record.image as string
+            image: record.image as string,
+            following: record.following as boolean
         };
         return transformedRecord;
     });
