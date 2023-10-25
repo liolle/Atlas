@@ -64,6 +64,7 @@ export const authOptions: NextAuthOptions = {
                 if (!email) return token;
 
                 const dbUser = await GetUsers({
+                    self: " ",
                     field: "email",
                     value: email
                 });

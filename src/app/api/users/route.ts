@@ -4,8 +4,10 @@ import { getServerSession } from "next-auth";
 import { NextRequest, NextResponse } from "next/server";
 
 export async function GET() {
+    const session = await getServerSession();
     try {
         const result = await GetUsers({
+            self: session?.user?.name || " ",
             field: "all",
             value: ""
         });

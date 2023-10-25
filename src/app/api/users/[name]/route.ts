@@ -1,5 +1,6 @@
 import { GetUsers } from "@/src/db/portal";
 import { RequestErrorType, isBaseError } from "@/src/types";
+import { getServerSession } from "next-auth";
 import { NextRequest, NextResponse } from "next/server";
 
 interface RouteContext {
@@ -7,6 +8,7 @@ interface RouteContext {
 }
 
 export async function GET(request: NextRequest, context: RouteContext) {
+    const session = await getServerSession();
     try {
         const name = context.params.name;
 
@@ -21,6 +23,7 @@ export async function GET(request: NextRequest, context: RouteContext) {
         }
 
         const result = await GetUsers({
+            self: session?.user?.name || " ",
             field: "name",
             value: name
         });
