@@ -1,7 +1,7 @@
 import { GetFollows } from "@/src/db/portal";
 import { GetUserFollowType, isBaseError } from "@/src/types";
 import React from "react";
-
+import { getServerSession } from "next-auth";
 import CardUserFollow from "../client/cards/CardUserFollow";
 interface FollowsProps {
     type: "followers" | "follows";
@@ -10,12 +10,12 @@ interface FollowsProps {
 
 const Follows = async ({ type, name }: FollowsProps) => {
     let follows = null;
-
+    const session = await getServerSession();
     try {
         switch (type) {
             case "follows":
                 follows = await GetFollows({
-                    self: "",
+                    self: session?.user?.name || " ",
                     field: "self",
                     value: name
                 });
@@ -23,7 +23,7 @@ const Follows = async ({ type, name }: FollowsProps) => {
 
             case "followers":
                 follows = await GetFollows({
-                    self: "",
+                    self: session?.user?.name || " ",
                     field: "follow",
                     value: name
                 });
@@ -44,7 +44,13 @@ const Follows = async ({ type, name }: FollowsProps) => {
     return (
         <div className=" flex h-full flex-1 flex-col gap-4 px-4 pb-4 pt-8">
             {(follows as GetUserFollowType["output"]).map((user) => {
-                return <CardUserFollow key={user.data.name} user={user} />;
+                return (
+                    <CardUserFollow
+                        key={user.data.name}
+                        user={user}
+                        isOWner={session?.user?.name == user.data.name}
+                    />
+                );
             })}
         </div>
     );

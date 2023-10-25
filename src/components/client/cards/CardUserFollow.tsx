@@ -4,17 +4,41 @@ import React, { MouseEvent } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { Button } from "../../ui/button";
+import { ToastMessage } from "@/src/services/toast/toast";
+import { useRouter } from "next/navigation";
 interface CardUserFollowType {
     user: {
         data: FollowType;
         actions: LinkAction[];
     };
+    isOWner: boolean;
 }
 
-const CardUserFollow = ({ user }: CardUserFollowType) => {
-    const handleFollow = (e: MouseEvent<HTMLButtonElement>) => {
+const CardUserFollow = ({ user, isOWner }: CardUserFollowType) => {
+    const router = useRouter();
+    const handleFollow = async (e: MouseEvent<HTMLButtonElement>) => {
         e.preventDefault();
-        console.log(user.actions.find((value) => value.type == "followUser"));
+
+        if (!user.data.name) return;
+
+        if (user.data.following == undefined) return;
+        const action = user.actions.find(
+            (value) =>
+                value.type ==
+                (user.data.following ? "unfollowUser" : "followUser")
+        );
+        if (!action || !action.link) return;
+
+        try {
+            await fetch(action.link, {
+                method: "POST"
+            });
+            // router.push( `/users/${}`)
+            router.refresh();
+        } catch (error) {
+            ToastMessage(String(error));
+        }
+        return;
     };
 
     return (
@@ -37,9 +61,14 @@ const CardUserFollow = ({ user }: CardUserFollowType) => {
                     </Link>
                 </div>
             </div>
-            <Button onClick={handleFollow} className=" w-20 rounded-full">
-                {"Follow"}
-            </Button>
+            {!isOWner && (
+                <Button
+                    onClick={handleFollow}
+                    className=" w-20 rounded-full px-2"
+                >
+                    {user.data.following ? "Unfollow" : "Follow"}
+                </Button>
+            )}
         </div>
     );
 };
