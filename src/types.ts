@@ -35,6 +35,7 @@ export type UserType = {
     email: string;
     image: string;
     created_at: Date;
+    following?: boolean;
 };
 
 export type ReserveNameType = {
@@ -48,6 +49,7 @@ export type ReserveNameType = {
 };
 
 export type UserGetStrField = {
+    self: string;
     field: "name" | "id" | "email" | "all";
     value: string;
 };
@@ -83,6 +85,7 @@ export type UserEmailVerified = {
 export type FollowType = {
     name: string;
     image: string;
+    following?: boolean;
 };
 
 export type GetUserFollowType = {
