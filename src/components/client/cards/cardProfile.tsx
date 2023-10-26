@@ -3,7 +3,6 @@ import React, { MouseEvent } from "react";
 import { FollowType, LinkAction } from "@/src/types";
 import { Button } from "../../ui/button";
 import { Separator } from "../../ui/separator";
-import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { Session } from "next-auth";
 import Image from "next/image";
@@ -50,7 +49,7 @@ const CardProfile = ({
     };
 
     return (
-        <section className=" flex h-32 w-80 select-none gap-4">
+        <section className=" flex h-32 w-[416px] select-none gap-4">
             <div className="relative h-32 w-32 overflow-hidden rounded-full">
                 <Image
                     src={user.data.image}
@@ -75,23 +74,13 @@ const CardProfile = ({
                         </Button>
                     )}
                 </div>
-                <div className="flex items-center gap-2">
-                    <Link
-                        className="hover:text-accent-1"
-                        href={`/users/${user.data.name}/followers`}
-                    >
-                        followers
-                    </Link>
+                <div className="flex items-center gap-4">
+                    <span className="">X : followers</span>
                     <Separator
-                        className=" bg-accent-2"
+                        className=" rotate-[30deg] bg-accent-2"
                         orientation="vertical"
                     />
-                    <Link
-                        className="hover:text-accent-1"
-                        href={`/users/${user.data.name}/follows`}
-                    >
-                        follows
-                    </Link>
+                    <span className="">X :follows</span>
                 </div>
             </div>
         </section>
