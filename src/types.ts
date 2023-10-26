@@ -7,6 +7,7 @@ import * as z from "zod";
 export type AccountProviders = "google" | "credential" | "discord";
 export type NavigationVariant = "home" | "account" | "profile";
 export type LinkActionType = "followUser" | "unfollowUser";
+export type ActiveProfileTab = "posts" | "groups" | "follows" | "followers";
 
 export type UserTypes = "admin" | "user" | "dev";
 export type ValidationType = "email";
