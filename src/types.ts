@@ -13,6 +13,7 @@ export type UserTypes = "admin" | "user" | "dev";
 export type ValidationType = "email";
 export type GeneratorService = "crypto";
 export type LogoType = "logout";
+export const APIVersion = "v0.1";
 //-----//
 
 //Keys Length//
@@ -137,6 +138,42 @@ export type APIContent = {
     content: unknown | null;
 };
 
+export type APIDataTypesName =
+    | "user"
+    | "post"
+    | "comment"
+    | "reply"
+    | "follows";
+
+export type APIDataTypes = UserType | FollowType;
+
+export type APIResponse = {
+    version: string;
+    self: string;
+    error?: {
+        error: string;
+        detail: string;
+    };
+    data?: {
+        type: APIDataTypesName;
+        count: number;
+        content: {
+            actions: LinkAction[];
+            item: APIDataTypes;
+        }[];
+    };
+    rel?: {
+        pagination: {
+            first: string;
+            last: string;
+            next: string;
+            pages: number;
+            limit: number;
+            index: number;
+        };
+    };
+};
+
 //AWS//
 export type SignedType = {
     region: "eu-west-3" | "eu-central-1";
@@ -196,6 +233,36 @@ export const isBaseError = (obj: unknown): obj is BaseError => {
         "error" in obj &&
         typeof obj.error === "string" &&
         "details" in obj
+    );
+};
+
+export const isUserType = (obj: unknown): obj is UserType => {
+    if (!obj) return false;
+    return (
+        typeof obj === "object" &&
+        "name" in obj &&
+        typeof obj.name === "string" &&
+        "email" in obj &&
+        typeof obj.email === "string" &&
+        "image" in obj &&
+        typeof obj.image === "string" &&
+        "created_at" in obj &&
+        typeof obj.created_at === "object" &&
+        "following" in obj &&
+        typeof obj.following === "boolean"
+    );
+};
+
+export const isFollowType = (obj: unknown): obj is FollowType => {
+    if (!obj) return false;
+    return (
+        typeof obj === "object" &&
+        "name" in obj &&
+        typeof obj.name === "string" &&
+        "image" in obj &&
+        typeof obj.name === "string" &&
+        "following" in obj &&
+        typeof obj.following === "boolean"
     );
 };
 
