@@ -4,7 +4,7 @@ import { parseUrl } from "@smithy/url-parser";
 import { Hash } from "@smithy/hash-node";
 import { HttpRequest } from "@smithy/protocol-http";
 import { formatUrl } from "@aws-sdk/util-format-url";
-import { BaseError, PutS3Type, RequestErrorType } from "./types";
+import { BaseError, PutS3Type, RequestErrorType } from "../../types";
 
 const presignedUrl = async (key: string): Promise<string | BaseError> => {
     if (!process.env.AWS_REGION || !process.env.AWS_BUCKET_NAME) {
