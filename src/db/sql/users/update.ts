@@ -19,16 +19,12 @@ const generate = (options: UpdateUserType["input"]) => {
 
 export default async function updateUser(
     options: UpdateUserType["input"]
-): Promise<UpdateUserType["output"] | BaseError | null> {
+): Promise<BaseError | null> {
     const generatedQuery = generate(options);
 
     try {
-        const result = await dzClient.execute(generatedQuery.query);
-        const { id } = result[0] as { id: number };
-
-        if (!id) return null;
-
-        return [result[0] as { id: number }];
+        await dzClient.execute(generatedQuery.query);
+        return null;
     } catch (error) {
         return {
             error: RequestErrorType.DB_QUERY_FAILED,

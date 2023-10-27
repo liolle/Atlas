@@ -3,7 +3,6 @@ import { dzClient } from "@/src/db/index";
 import {
     BaseError,
     GetUserType,
-    LinkAction,
     RequestErrorType,
     UserType
 } from "@/src/types";
@@ -38,7 +37,7 @@ const getAll = (options: GetUserType["input"]) => {
         u.created_at,
         CASE WHEN f2.self IS NOT NULL THEN true ELSE false END as following
     FROM "user" u
-    LEFT JOIN ${followers} f2 ON f2.self = '${options.self}' 
+    LEFT JOIN ${followers} f2 ON f2.self = ${options.self}
         AND u.name = f2.follow
         
     `;
@@ -51,33 +50,14 @@ const getAll = (options: GetUserType["input"]) => {
 
 export async function getUsers(
     options: GetUserType["input"]
-): Promise<GetUserType["output"][] | BaseError | null> {
+): Promise<UserType[] | BaseError | null> {
     if (!options.value) return null;
     const generatedQuery = getByField(options);
 
     try {
         const result = await dzClient.execute(generatedQuery.query);
         const user = transformUsers(result);
-        const ret: {
-            data: UserType;
-            actions: LinkAction[];
-        }[] = user.map((row) => {
-            return {
-                data: row,
-                actions: [
-                    {
-                        type: "followUser",
-                        link: `/api/users/${row.name}/follows?action=follow`
-                    } as LinkAction,
-                    {
-                        type: "unfollowUser",
-                        link: `/api/users/${row.name}/follows?action=unfollow`
-                    } as LinkAction
-                ]
-            };
-        });
-
-        return ret;
+        return user;
     } catch (error) {
         return {
             error: RequestErrorType.DB_QUERY_FAILED,
@@ -88,33 +68,14 @@ export async function getUsers(
 
 export async function getAllUsers(
     options: GetUserType["input"]
-): Promise<GetUserType["output"][] | BaseError | null> {
+): Promise<UserType[] | BaseError | null> {
     const generatedQuery = getAll(options);
 
     try {
         const result = await dzClient.execute(generatedQuery.query);
         const users = transformUsers(result);
-        const ret: {
-            data: UserType;
-            actions: LinkAction[];
-        }[] = users.map((row) => {
-            return {
-                data: row,
-                actions: [
-                    row.following
-                        ? ({
-                              type: "followUser",
-                              link: `/api/users/${row.name}/follows?action=follow`
-                          } as LinkAction)
-                        : ({
-                              type: "unfollowUser",
-                              link: `/api/users/${row.name}/follows?action=unfollow`
-                          } as LinkAction)
-                ]
-            };
-        });
 
-        return ret;
+        return users;
     } catch (error) {
         return {
             error: RequestErrorType.DB_QUERY_FAILED,

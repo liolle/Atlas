@@ -7,25 +7,22 @@ import { Button } from "../../ui/button";
 import { ToastMessage } from "@/src/services/toast/toast";
 import { useRouter } from "next/navigation";
 interface CardUserFollowType {
-    user: {
-        data: FollowType;
-        actions: LinkAction[];
-    };
+    user: FollowType;
+    actions: LinkAction[];
     isOWner: boolean;
 }
 
-const CardUserFollow = ({ user, isOWner }: CardUserFollowType) => {
+const CardUserFollow = ({ user, isOWner, actions }: CardUserFollowType) => {
     const router = useRouter();
     const handleFollow = async (e: MouseEvent<HTMLButtonElement>) => {
         e.preventDefault();
 
-        if (!user.data.name) return;
+        if (!user.name) return;
 
-        if (user.data.following == undefined) return;
-        const action = user.actions.find(
+        if (user.following == undefined) return;
+        const action = actions.find(
             (value) =>
-                value.type ==
-                (user.data.following ? "unfollowUser" : "followUser")
+                value.type == (user.following ? "unfollowUser" : "followUser")
         );
         if (!action || !action.link) return;
 
@@ -46,7 +43,7 @@ const CardUserFollow = ({ user, isOWner }: CardUserFollowType) => {
             <div className=" flex items-center gap-4">
                 <div className="relative h-14 w-14 overflow-hidden rounded-full  ">
                     <Image
-                        src={user.data.image}
+                        src={user.image}
                         alt="I"
                         layout="fill"
                         priority={true}
@@ -55,9 +52,9 @@ const CardUserFollow = ({ user, isOWner }: CardUserFollowType) => {
                 <div className=" flex h-full flex-col justify-between">
                     <Link
                         className="text-lg font-bold hover:text-accent-1"
-                        href={`/users/${user.data.name}`}
+                        href={`/users/${user.name}`}
                     >
-                        @{user.data.name}
+                        @{user.name}
                     </Link>
                 </div>
             </div>
@@ -66,7 +63,7 @@ const CardUserFollow = ({ user, isOWner }: CardUserFollowType) => {
                     onClick={handleFollow}
                     className=" w-20 rounded-full px-2"
                 >
-                    {user.data.following ? "Unfollow" : "Follow"}
+                    {user.following ? "Unfollow" : "Follow"}
                 </Button>
             )}
         </div>

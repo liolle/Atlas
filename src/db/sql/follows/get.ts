@@ -4,7 +4,6 @@ import {
     BaseError,
     FollowType,
     GetUserFollowType,
-    LinkAction,
     RequestErrorType
 } from "@/src/types";
 import { followers, users } from "../../schema";
@@ -33,35 +32,14 @@ const getByField = (options: GetUserFollowType["input"]) => {
 
 export async function getFollow(
     options: GetUserFollowType["input"]
-): Promise<GetUserFollowType["output"] | BaseError | null> {
+): Promise<FollowType[] | BaseError | null> {
     if (!options.value) return null;
     const generatedQuery = getByField(options);
 
     try {
         const result = await dzClient.execute(generatedQuery.query);
         const follows = transformFollowUsers(result);
-
-        const ret: {
-            data: FollowType;
-            actions: LinkAction[];
-        }[] = follows.map((row) => {
-            return {
-                data: row,
-                actions: [
-                    !row.following
-                        ? ({
-                              type: "followUser",
-                              link: `/api/users/${row.name}/follows?action=follow`
-                          } as LinkAction)
-                        : ({
-                              type: "unfollowUser",
-                              link: `/api/users/${row.name}/follows?action=unfollow`
-                          } as LinkAction)
-                ]
-            };
-        });
-
-        return ret;
+        return follows;
     } catch (error) {
         return {
             error: RequestErrorType.DB_QUERY_FAILED,

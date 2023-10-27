@@ -9,19 +9,14 @@ import Image from "next/image";
 import { ToastMessage } from "@/src/services/toast/toast";
 
 interface CardUserFollowType {
-    data: FollowType;
+    user: FollowType;
     actions: LinkAction[];
+    session: Session | null;
 }
 
-const CardProfile = ({
-    user,
-    session
-}: {
-    user: CardUserFollowType;
-    session: Session | null;
-}) => {
+const CardProfile = ({ user, actions, session }: CardUserFollowType) => {
     const router = useRouter();
-    const isOWner = (session && user.data.name == session.user?.name) ?? false;
+    const isOWner = (session && user.name == session.user?.name) ?? false;
     const handleEdit = (e: MouseEvent<HTMLButtonElement>) => {
         e.preventDefault();
         router.push("/account");
@@ -29,11 +24,10 @@ const CardProfile = ({
 
     const handleFollow = async (e: MouseEvent<HTMLButtonElement>) => {
         e.preventDefault();
-        if (user.data.following == undefined) return;
-        const action = user.actions.find(
+        if (user.following == undefined) return;
+        const action = actions.find(
             (value) =>
-                value.type ==
-                (user.data.following ? "unfollowUser" : "followUser")
+                value.type == (user.following ? "unfollowUser" : "followUser")
         );
         if (!action || !action.link) return;
 
@@ -51,15 +45,10 @@ const CardProfile = ({
     return (
         <section className=" flex h-32 w-[416px] select-none gap-4">
             <div className="relative h-32 w-32 overflow-hidden rounded-full">
-                <Image
-                    src={user.data.image}
-                    alt="I"
-                    layout="fill"
-                    priority={true}
-                />
+                <Image src={user.image} alt="I" layout="fill" priority={true} />
             </div>
             <div className=" flex flex-col justify-between">
-                <div className="flex">@{user.data.name}</div>
+                <div className="flex">@{user.name}</div>
                 <div className="flex">
                     {session && (
                         <Button
@@ -68,7 +57,7 @@ const CardProfile = ({
                         >
                             {isOWner
                                 ? "Edit"
-                                : user.data.following
+                                : user.following
                                 ? "Unfollow"
                                 : "Follow"}
                         </Button>

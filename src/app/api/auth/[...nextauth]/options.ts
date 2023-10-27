@@ -7,7 +7,6 @@ import { dzClient } from "@/src/db";
 import { sendVerificationRequest } from "@/src/services/email/nodemailer";
 import { generateName, generateVToken } from "@/src/lib/utils";
 import { GetUsers } from "@/src/db/portal";
-import { isBaseError } from "@/src/types";
 
 export const authOptions: NextAuthOptions = {
     secret: process.env.NEXTAUTH_SECRET,
@@ -69,10 +68,13 @@ export const authOptions: NextAuthOptions = {
                     value: email
                 });
 
-                if (!dbUser || isBaseError(dbUser)) return token;
+                if (dbUser.data && dbUser.data.content.length > 0) {
+                    const name = dbUser.data.content[0].item.name;
+                    const image = dbUser.data.content[0].item.image;
 
-                if (dbUser[0].data.name) token.name = dbUser[0].data.name;
-                if (dbUser[0].data.name) token.picture = dbUser[0].data.image;
+                    if (name) token.name = name;
+                    if (image) token.picture = image;
+                }
             }
 
             return token;

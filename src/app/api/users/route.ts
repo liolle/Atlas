@@ -1,18 +1,28 @@
 import { GetUsers, UpdateUser } from "@/src/db/portal";
-import { RequestErrorType, isBaseError } from "@/src/types";
+import { APIResponse, APIVersion, RequestErrorType } from "@/src/types";
 import { getServerSession } from "next-auth";
 import { NextRequest, NextResponse } from "next/server";
 
-export async function GET() {
+export async function GET(request: NextRequest) {
     const session = await getServerSession();
-    try {
-        const result = await GetUsers({
-            self: session?.user?.name || " ",
-            field: "all",
-            value: ""
-        });
+    console.log(request.nextUrl);
 
-        if (isBaseError(result)) {
+    const baseResponse: APIResponse = {
+        self: request.nextUrl.href,
+        version: APIVersion
+    };
+
+    try {
+        const result = await GetUsers(
+            {
+                self: session?.user?.name || " ",
+                field: "all",
+                value: ""
+            },
+            baseResponse
+        );
+
+        if (result.error) {
             return NextResponse.json(result, { status: 400 });
         }
 
@@ -29,6 +39,11 @@ export async function GET() {
 }
 
 export async function POST(request: NextRequest) {
+    const baseResponse: APIResponse = {
+        self: request.nextUrl.href,
+        version: APIVersion
+    };
+
     try {
         const { field, value, email } = await request.json();
 
@@ -40,13 +55,12 @@ export async function POST(request: NextRequest) {
             !session.user.email ||
             session.user.email != email
         ) {
-            return NextResponse.json(
-                {
-                    error: RequestErrorType.API_AUTH_ERROR,
-                    details: "Not authorized to modify this value"
-                },
-                { status: 401 }
-            );
+            baseResponse.error = {
+                error: RequestErrorType.API_AUTH_ERROR,
+                detail: "Not authorized to modify this value"
+            };
+
+            return NextResponse.json(baseResponse, { status: 401 });
         }
 
         if (!field || !value || !email) {
@@ -75,7 +89,7 @@ export async function POST(request: NextRequest) {
             email: email
         });
 
-        if (isBaseError(result)) {
+        if (result.error) {
             return NextResponse.json(result, { status: 409 });
         }
 

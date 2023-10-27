@@ -1,99 +1,98 @@
-import { curateError } from "../lib/utils";
+/* eslint-disable @typescript-eslint/no-unused-vars */
+import { APIDispatcher } from "../lib/apiDispatcher";
 import {
-    BaseError,
+    APIResponse,
     GetUserFollowType,
-    GetUserType,
-    ReserveNameType,
     UpdateFollowStrField,
-    UpdateUserType,
     UserGetStrField,
-    UserUpdateStrField,
-    isBaseError
+    UserUpdateStrField
 } from "../types";
 import { UnFollowUsers } from "./sql/follows/delete";
 import { getFollow } from "./sql/follows/get";
 import { FollowUsers } from "./sql/follows/post";
 import { getAllUsers, getUsers } from "./sql/users/get";
-import ReserveName from "./sql/users/reserveName";
 import updateUser from "./sql/users/update";
 
-export const QueryReserveName = async (
-    options: ReserveNameType["input"]
-): Promise<ReserveNameType["output"] | BaseError | null> => {
-    return ReserveName(options);
-};
-
 export const GetUsers = async (
-    options: UserGetStrField
-): Promise<GetUserType["output"][] | BaseError | null> => {
+    options: UserGetStrField,
+    APIResponse?: APIResponse
+): Promise<APIResponse> => {
     const result =
         options.field == "all"
             ? await getAllUsers(options)
             : await getUsers(options);
 
-    if (!result) return null;
+    const response = APIResponse
+        ? APIResponse
+        : {
+              version: "0.1",
+              self: ""
+          };
 
-    if (isBaseError(result)) {
-        // TODO Log error using log service
-        console.log("<TODO Log Error>:GetUsers");
-        return result;
-    }
+    if (!result) return response;
 
-    return result;
+    APIDispatcher(response, result);
+
+    return response;
 };
 
 export const UpdateUser = async (
-    options: UserUpdateStrField
-): Promise<UpdateUserType["output"] | BaseError | null> => {
+    options: UserUpdateStrField,
+    APIResponse?: APIResponse
+): Promise<APIResponse> => {
     const result = await updateUser(options);
 
-    if (!result) return null;
+    const response = APIResponse
+        ? APIResponse
+        : {
+              version: "0.1",
+              self: ""
+          };
 
-    if (isBaseError(result)) {
-        // TODO Log error using log service
-        console.log("<TODO Log Error>:UpdateUser");
-        result.details = curateError(result.details);
-        return result;
-    }
+    if (!result) return response;
 
-    return result;
+    APIDispatcher(response, result);
+
+    return response;
 };
 
 export const GetFollows = async (
-    options: GetUserFollowType["input"]
-): Promise<GetUserFollowType["output"] | BaseError | null> => {
+    options: GetUserFollowType["input"],
+    APIResponse?: APIResponse
+): Promise<APIResponse> => {
     const result = await getFollow(options);
 
-    if (!result) return null;
+    const response = APIResponse
+        ? APIResponse
+        : {
+              version: "0.1",
+              self: ""
+          };
 
-    if (isBaseError(result)) {
-        // TODO Log error using log service
-        console.log("<TODO Log Error>:GetFollows");
-
-        return result;
-    }
-
-    return result;
+    if (!result) return response;
+    APIDispatcher(response, result);
+    return response;
 };
 
 export const UpdateFollows = async (
-    options: UpdateFollowStrField
-): Promise<BaseError | null> => {
+    options: UpdateFollowStrField,
+    APIResponse?: APIResponse
+): Promise<APIResponse> => {
     const result =
         options.type == "follow"
             ? await FollowUsers(options)
             : await UnFollowUsers(options);
 
-    if (!result) return null;
+    const response = APIResponse
+        ? APIResponse
+        : {
+              version: "0.1",
+              self: ""
+          };
 
-    if (isBaseError(result)) {
-        // TODO Log error using log service
+    if (!result) return response;
 
-        console.log("<TODO Log Error>:UpdateFollows");
+    APIDispatcher(response, result);
 
-        result.details = curateError(result.details);
-        return result;
-    }
-
-    return result;
+    return response;
 };

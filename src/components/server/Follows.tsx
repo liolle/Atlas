@@ -1,5 +1,5 @@
 import { GetFollows } from "@/src/db/portal";
-import { GetUserFollowType, isBaseError } from "@/src/types";
+import { APIResponse, FollowType } from "@/src/types";
 import React from "react";
 import { getServerSession } from "next-auth";
 import CardUserFollow from "../client/cards/CardUserFollow";
@@ -9,7 +9,7 @@ interface FollowsProps {
 }
 
 const Follows = async ({ type, name }: FollowsProps) => {
-    let follows = null;
+    let follows: APIResponse | null = null;
     const session = await getServerSession();
     try {
         switch (type) {
@@ -30,9 +30,9 @@ const Follows = async ({ type, name }: FollowsProps) => {
                 break;
         }
 
-        if (isBaseError(follows)) {
+        if (follows.error) {
             <div className=" flex flex-1 items-center justify-center">
-                <span>{follows.error}</span>
+                <span>{follows.error.error}</span>
             </div>;
         }
     } catch (error) {
@@ -43,12 +43,13 @@ const Follows = async ({ type, name }: FollowsProps) => {
 
     return (
         <div className=" flex h-full flex-1 flex-col gap-4 px-4 pb-4 pt-8">
-            {(follows as GetUserFollowType["output"]).map((user) => {
+            {(follows?.data?.content || []).map((user) => {
                 return (
                     <CardUserFollow
-                        key={user.data.name}
-                        user={user}
-                        isOWner={session?.user?.name == user.data.name}
+                        key={user.item.name}
+                        user={user.item as FollowType}
+                        actions={user.actions}
+                        isOWner={session?.user?.name == user.item.name}
                     />
                 );
             })}
