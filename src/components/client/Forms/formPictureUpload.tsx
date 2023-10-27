@@ -18,7 +18,7 @@ import { useSession } from "next-auth/react";
 import { Session } from "next-auth";
 import Loading from "../loading/loading";
 import { generatePictureID } from "@/src/lib/utils";
-import UploadService from "@/src/fileUpload";
+import UploadService from "@/src/services/aws/fileUpload";
 
 export function FormPictureUpload({ session }: { session: Session | null }) {
     const inputRef = useRef<HTMLInputElement>(null);

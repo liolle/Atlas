@@ -1,4 +1,4 @@
-import UploadService from "@/src/fileUpload";
+import UploadService from "@/src/services/aws/fileUpload";
 import { RequestErrorType, isBaseError } from "@/src/types";
 import { NextRequest, NextResponse } from "next/server";
 

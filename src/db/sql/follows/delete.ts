@@ -20,7 +20,6 @@ export async function UnFollowUsers(
     const generatedQuery = unfollow(options);
     try {
         await dzClient.execute(generatedQuery.query);
-
         return null;
     } catch (error) {
         return {

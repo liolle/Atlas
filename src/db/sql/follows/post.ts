@@ -21,7 +21,6 @@ export async function FollowUsers(
 
     try {
         await dzClient.execute(generatedQuery.query);
-
         return null;
     } catch (error) {
         return {

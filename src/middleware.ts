@@ -4,7 +4,6 @@ import { NextResponse } from "next/server";
 export default withAuth(
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     function middleware(req) {
-        // req.nextUrl.searchParams.currentPage = "test";
         const requestHeaders = new Headers(req.headers);
         const page = req.nextUrl.pathname?.split(/[/?]/)[1];
         requestHeaders.set("x-page", page);
