@@ -35,9 +35,7 @@
         "**/*.tsx",
         ".next/types/**/*.ts",
         "types.ts",
-        "./src/**/*.ts",
-        "src/db/sql/signup.ts",
-        "src/db/index.ts"
+        "src/**/*.ts"
     ],
     "exclude": ["node_modules"]
 }

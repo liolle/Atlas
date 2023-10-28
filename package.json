@@ -10,7 +10,8 @@
         "lint": "eslint --fix . && prettier --write .",
         "db:generate": "drizzle-kit generate:pg",
         "db:sync": "ts-node src/db/migrate.ts",
-        "db:migrate": "npm run db:generate && npm run db:sync"
+        "db:setup": " ts-node src/db/setup.ts",
+        "db:migrate": "npm run db:generate && npm run db:sync && npm run db:setup"
     },
     "dependencies": {
         "@auth/drizzle-adapter": "^0.3.3",
