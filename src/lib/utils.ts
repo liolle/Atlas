@@ -4,6 +4,7 @@ import {
     ACCOUNT_ID_LEN,
     NameObjects,
     PICTURE_ID_LEN,
+    POST_ID_LEN,
     USER_ID_LEN,
     VERIFICATION_TOKEN_LEN
 } from "../types";
@@ -28,6 +29,10 @@ export const generatePictureID = async () => {
 
 export const generateVToken = async () => {
     return cryptoGenerate(VERIFICATION_TOKEN_LEN, "hex");
+};
+
+export const generatePostID = async () => {
+    return cryptoGenerate(POST_ID_LEN, "hex");
 };
 
 export const generateName = async () => {
