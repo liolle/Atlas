@@ -5,7 +5,6 @@ import { NextRequest, NextResponse } from "next/server";
 
 export async function GET(request: NextRequest) {
     const session = await getServerSession();
-    console.log(request.nextUrl);
 
     const baseResponse: APIResponse = {
         self: request.nextUrl.href,
