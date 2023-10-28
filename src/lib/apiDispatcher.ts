@@ -7,9 +7,11 @@ import {
     BaseError,
     FollowType,
     LinkAction,
+    PostType,
     UserType,
     isBaseError,
     isFollowType,
+    isPostType,
     isUserType
 } from "../types";
 
@@ -101,6 +103,40 @@ const dispatchMethods = {
 
         return response;
     },
+    addPosts: (response: APIResponse, posts: PostType[]): APIResponse => {
+        if (response.error) return response;
+
+        const content: {
+            actions: LinkAction[];
+            item: PostType;
+        }[] = posts.map((row) => {
+            return {
+                item: row,
+                actions: [
+                    {
+                        type: "like",
+                        link: `/api/posts/${row.id}?action=like`
+                    } as LinkAction
+                ]
+            };
+        });
+
+        const data: {
+            type: APIDataTypesName;
+            count: number;
+            content: {
+                actions: LinkAction[];
+                item: APIDataTypes;
+            }[];
+        } = {
+            type: "posts",
+            count: posts.length,
+            content: content
+        };
+        response.data = data;
+
+        return response;
+    },
     addError: (response: APIResponse, error: BaseError): APIResponse => {
         return {
             version: response.version,
@@ -121,14 +157,15 @@ export const APIDispatcher = <T>(
     }
 
     if (Array.isArray(data) && isUserType(data[0])) {
-        console.log("USER");
-
         return dispatchMethods.addUsers(response, data as UserType[]);
     }
 
     if (Array.isArray(data) && isFollowType(data[0])) {
-        console.log("Follows");
         return dispatchMethods.addFollows(response, data as FollowType[]);
+    }
+
+    if (Array.isArray(data) && isPostType(data[0])) {
+        return dispatchMethods.addPosts(response, data as PostType[]);
     }
 
     return response;
