@@ -6,7 +6,7 @@ import * as z from "zod";
 //Unions//
 export type AccountProviders = "google" | "credential" | "discord";
 export type NavigationVariant = "home" | "account" | "profile";
-export type LinkActionType = "followUser" | "unfollowUser";
+export type LinkActionType = "followUser" | "unfollowUser" | "like";
 export type ActiveProfileTab = "posts" | "groups" | "follows" | "followers";
 
 export type UserTypes = "admin" | "user" | "dev";
@@ -22,15 +22,19 @@ const userIDLen = Number(process.env.USER_ID_LEN);
 const verifToken = Number(process.env.VERIFICATION_TOKEN_LEN);
 const userRole = Number(process.env.USER_DEFAULT_ROLE);
 const pictureIDLen = Number(process.env.Picture_ID_LEN);
+const postIDLen = Number(process.env.POST_ID_LEN);
 
 export const ACCOUNT_ID_LEN = isNaN(accountIDLen) ? 12 : accountIDLen;
 export const USER_ID_LEN = isNaN(userIDLen) ? 8 : userIDLen;
+export const POST_ID_LEN = isNaN(postIDLen) ? 20 : postIDLen;
 export const PICTURE_ID_LEN = isNaN(pictureIDLen) ? 15 : pictureIDLen;
 export const USER_DEFAULT_ROLE = isNaN(userRole) ? 1 : userRole;
 export const VERIFICATION_TOKEN_LEN = isNaN(verifToken) ? 10 : verifToken;
 //--------//
 
 //DB TYPES//
+
+//-->Entity
 export type UserType = {
     id: string;
     name: string;
@@ -39,22 +43,63 @@ export type UserType = {
     created_at: Date;
     following?: boolean;
 };
-
-export type ReserveNameType = {
-    input: {
-        name: string;
-        email: string;
-    };
-    output: {
-        id: number;
-    }[];
+export type FollowType = {
+    name: string;
+    image: string;
+    following?: boolean;
 };
+
+export type PostType = {
+    id: string;
+    content: string;
+    comments: number;
+    likes: number;
+    created_at: Date;
+    owner: string;
+    image: string;
+    liked: boolean;
+};
+
+//-->Create
+
+export type AddPostInput = {
+    id: string;
+    owner: string;
+    content: string;
+    files: string[];
+};
+
+export type AddPostOutput = BaseError | null;
+
+export type LikeXInput = {
+    type: "posts" | "comments" | "reply";
+    id: string;
+    name: string;
+};
+
+//-->Read
 
 export type UserGetStrField = {
     self: string;
     field: "name" | "id" | "email" | "all";
     value: string;
 };
+
+export type GetPostInput = {
+    self: string;
+    field: "owner" | "id" | "all";
+    value: string;
+};
+
+//-->Update
+
+//-->Delete
+
+export type DeletePostInput = {
+    id: string;
+};
+
+//DB TYPES//
 
 export type UserFollowGetStrField = {
     self: string;
@@ -72,22 +117,6 @@ export type UpdateFollowStrField = {
     type: "follow" | "unfollow";
     self: string;
     follow: string;
-};
-
-export type UserCreated = {
-    field: "created_at";
-    value: Date;
-};
-
-export type UserEmailVerified = {
-    field: "emailVerified";
-    value: Date;
-};
-
-export type FollowType = {
-    name: string;
-    image: string;
-    following?: boolean;
 };
 
 export type GetUserFollowType = {
@@ -140,12 +169,12 @@ export type APIContent = {
 
 export type APIDataTypesName =
     | "user"
-    | "post"
+    | "posts"
     | "comment"
     | "reply"
     | "follows";
 
-export type APIDataTypes = UserType | FollowType;
+export type APIDataTypes = UserType | FollowType | PostType;
 
 export type APIResponse = {
     version: string;
@@ -265,6 +294,39 @@ export const isFollowType = (obj: unknown): obj is FollowType => {
         typeof obj.following === "boolean"
     );
 };
+
+export const isPostType = (obj: unknown): obj is PostType => {
+    if (!obj) return false;
+    return (
+        typeof obj === "object" &&
+        "content" in obj &&
+        typeof obj.content === "string" &&
+        "comments" in obj &&
+        typeof obj.comments === "number" &&
+        "likes" in obj &&
+        typeof obj.likes === "number" &&
+        "owner" in obj &&
+        typeof obj.owner === "string" &&
+        "image" in obj &&
+        typeof obj.image === "string" &&
+        "liked" in obj &&
+        typeof obj.liked === "boolean" &&
+        "created_at" in obj &&
+        typeof obj.created_at === "object" &&
+        "id" in obj &&
+        typeof obj.id === "string"
+    );
+};
+
+// export type PostType = {
+//     content: string;
+//     comments: number;
+//     likes: number;
+//     created_at: Date;
+//     owner: string;
+//     image: string;
+//     liked: boolean;
+// };
 
 // ----------- Lists ----------------------------------//
 
