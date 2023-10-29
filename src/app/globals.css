@@ -31,6 +31,7 @@
         --color-secondary-foreground: 224, 224, 224;
         --color-accent-main: 2, 132, 199;
         --color-accent-alt: 125, 125, 125;
+        --color-accent-like: 239, 72, 72;
         --color-info: 60, 144, 209;
         --color-error: 232, 89, 89;
         --color-warning: 237, 153, 29;
@@ -45,8 +46,6 @@
             --color-secondary: 224, 224, 224;
             --color-primary-foreground: 16, 16, 16;
             --color-secondary-foreground: 32, 32, 32;
-            --color-accent-main: 2, 132, 199;
-            --color-accent-alt: 125, 125, 125;
         }
     }
 }
