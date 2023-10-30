@@ -2,13 +2,14 @@
 import { APIDispatcher } from "../lib/apiDispatcher";
 import { generatePostID } from "../lib/utils";
 import {
+    APIOptions,
     APIResponse,
+    APIVersion,
     AddPostInput,
-    AddPostOutput,
     GetPostInput,
-    GetUserFollowType,
     LikeXInput,
     UpdateFollowStrField,
+    UserFollowGetStrField,
     UserGetStrField,
     UserUpdateStrField
 } from "../types";
@@ -21,159 +22,199 @@ import { addPost } from "./sql/posts/post";
 import { getAllUsers, getUsers } from "./sql/users/get";
 import updateUser from "./sql/users/update";
 
-export const GetUsers = async (
-    options: UserGetStrField,
-    APIResponse?: APIResponse
-): Promise<APIResponse> => {
+interface GetUsersProps {
+    input: UserGetStrField;
+    APIResponse?: APIResponse;
+    options?: APIOptions;
+}
+
+export const GetUsers = async ({
+    input,
+    APIResponse,
+    options
+}: GetUsersProps): Promise<APIResponse> => {
     const result =
-        options.field == "all"
-            ? await getAllUsers(options)
-            : await getUsers(options);
+        input.field == "all" ? await getAllUsers(input) : await getUsers(input);
 
     const response = APIResponse
         ? APIResponse
         : {
-              version: "0.1",
+              version: APIVersion,
               self: ""
           };
 
     if (!result) return response;
 
-    APIDispatcher(response, result);
+    new APIDispatcher(response).dispatch(result);
 
     return response;
 };
 
-export const UpdateUser = async (
-    options: UserUpdateStrField,
-    APIResponse?: APIResponse
-): Promise<APIResponse> => {
-    const result = await updateUser(options);
+interface UpdateUserProps {
+    input: UserUpdateStrField;
+    APIResponse?: APIResponse;
+    options?: APIOptions;
+}
+
+export const UpdateUser = async ({
+    input,
+    APIResponse,
+    options
+}: UpdateUserProps): Promise<APIResponse> => {
+    const result = await updateUser(input);
 
     const response = APIResponse
         ? APIResponse
         : {
-              version: "0.1",
+              version: APIVersion,
               self: ""
           };
 
     if (!result) return response;
 
-    APIDispatcher(response, result);
+    new APIDispatcher(response).dispatch(result);
 
     return response;
 };
 
-export const GetFollows = async (
-    options: GetUserFollowType["input"],
-    APIResponse?: APIResponse
-): Promise<APIResponse> => {
-    const result = await getFollow(options);
+interface GetFollowsProps {
+    input: UserFollowGetStrField;
+    APIResponse?: APIResponse;
+    options?: APIOptions;
+}
+
+export const GetFollows = async ({
+    input,
+    APIResponse,
+    options
+}: GetFollowsProps): Promise<APIResponse> => {
+    const result = await getFollow(input);
 
     const response = APIResponse
         ? APIResponse
         : {
-              version: "0.1",
+              version: APIVersion,
               self: ""
           };
 
     if (!result) return response;
 
-    const res = APIDispatcher(response, result);
-    if (res.error) return res;
+    new APIDispatcher(response).dispatch(result);
 
     return response;
 };
 
-export const UpdateFollows = async (
-    options: UpdateFollowStrField,
-    APIResponse?: APIResponse
-): Promise<APIResponse> => {
+interface UpdateFollowsProps {
+    input: UpdateFollowStrField;
+    APIResponse?: APIResponse;
+    options?: APIOptions;
+}
+
+export const UpdateFollows = async ({
+    input,
+    APIResponse,
+    options
+}: UpdateFollowsProps): Promise<APIResponse> => {
     const result =
-        options.type == "follow"
-            ? await FollowUsers(options)
-            : await UnFollowUsers(options);
+        input.type == "follow"
+            ? await FollowUsers(input)
+            : await UnFollowUsers(input);
 
     const response = APIResponse
         ? APIResponse
         : {
-              version: "0.1",
+              version: APIVersion,
               self: ""
           };
 
     if (!result) return response;
 
-    const res = APIDispatcher(response, result);
-    if (res.error) return res;
+    new APIDispatcher(response).dispatch(result);
 
     return response;
 };
 
-export const AddPost = async (
-    options: AddPostInput,
-    APIResponse?: APIResponse
-): Promise<APIResponse> => {
+interface AddPostProps {
+    input: AddPostInput;
+    APIResponse?: APIResponse;
+    options?: APIOptions;
+}
+
+export const AddPost = async ({
+    input,
+    APIResponse,
+    options
+}: AddPostProps): Promise<APIResponse> => {
     const id = await generatePostID();
-    options.id = id;
+    input.id = id;
 
-    const result = addPost(options);
+    const result = await addPost(input);
 
     const response = APIResponse
         ? APIResponse
         : {
-              version: "0.1",
+              version: APIVersion,
               self: ""
           };
 
     if (!result) return response;
 
-    const res = APIDispatcher(response, result);
-    if (res.error) return res;
+    new APIDispatcher(response).dispatch(result);
 
     return response;
 };
 
-export const GetPosts = async (
-    options: GetPostInput,
-    APIResponse?: APIResponse
-): Promise<APIResponse> => {
+interface GetPostsProps {
+    input: GetPostInput;
+    APIResponse?: APIResponse;
+    options?: APIOptions;
+}
+
+export const GetPosts = async ({
+    input,
+    APIResponse,
+    options
+}: GetPostsProps): Promise<APIResponse> => {
     const result =
-        options.field == "all"
-            ? await getAllPosts(options)
-            : await getPost(options);
+        input.field == "all" ? await getAllPosts(input) : await getPost(input);
 
     const response = APIResponse
         ? APIResponse
         : {
-              version: "0.1",
+              version: APIVersion,
               self: ""
           };
 
     if (!result) return response;
 
-    const res = APIDispatcher(response, result);
-    if (res.error) return res;
+    new APIDispatcher(response).dispatch(options).dispatch(result);
 
     return response;
 };
 
-export const LikeX = async (
-    options: LikeXInput,
-    APIResponse?: APIResponse
-): Promise<APIResponse> => {
-    const result = likeX(options);
+interface LikeXProps {
+    input: LikeXInput;
+    APIResponse?: APIResponse;
+    options?: APIOptions;
+}
+
+export const LikeX = async ({
+    input,
+    APIResponse,
+    options
+}: LikeXProps): Promise<APIResponse> => {
+    const result = await likeX(input);
 
     const response = APIResponse
         ? APIResponse
         : {
-              version: "0.1",
+              version: APIVersion,
               self: ""
           };
 
     if (!result) return response;
 
-    const res = APIDispatcher(response, result);
-    if (res.error) return res;
+    new APIDispatcher(response).dispatch(result);
 
     return response;
 };
