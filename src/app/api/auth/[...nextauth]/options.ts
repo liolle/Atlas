@@ -7,6 +7,7 @@ import { dzClient } from "@/src/db";
 import { sendVerificationRequest } from "@/src/services/email/nodemailer";
 import { generateName, generateVToken } from "@/src/lib/utils";
 import { GetUsers } from "@/src/db/portal";
+import { UserType } from "@/src/types";
 
 export const authOptions: NextAuthOptions = {
     secret: process.env.NEXTAUTH_SECRET,
@@ -63,14 +64,17 @@ export const authOptions: NextAuthOptions = {
                 if (!email) return token;
 
                 const dbUser = await GetUsers({
-                    self: " ",
-                    field: "email",
-                    value: email
+                    input: {
+                        self: " ",
+                        field: "email",
+                        value: email
+                    }
                 });
 
                 if (dbUser.data && dbUser.data.content.length > 0) {
-                    const name = dbUser.data.content[0].item.name;
-                    const image = dbUser.data.content[0].item.image;
+                    const data = dbUser.data.content[0].item as UserType;
+                    const name = data.name;
+                    const image = data.image;
 
                     if (name) token.name = name;
                     if (image) token.picture = image;

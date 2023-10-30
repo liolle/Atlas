@@ -12,14 +12,14 @@ export async function GET(request: NextRequest) {
     };
 
     try {
-        const result = await GetUsers(
-            {
+        const result = await GetUsers({
+            input: {
                 self: session?.user?.name || " ",
                 field: "all",
                 value: ""
             },
-            baseResponse
-        );
+            APIResponse: baseResponse
+        });
 
         if (result.error) {
             return NextResponse.json(result, { status: 400 });
@@ -83,9 +83,11 @@ export async function POST(request: NextRequest) {
         }
 
         const result = await UpdateUser({
-            field: field,
-            value: value,
-            email: email
+            input: {
+                field: field,
+                value: value,
+                email: email
+            }
         });
 
         if (result.error) {

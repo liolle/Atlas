@@ -25,14 +25,14 @@ export async function GET(request: NextRequest, context: RouteContext) {
             return NextResponse.json(baseResponse, { status: 409 });
         }
 
-        const result = await GetUsers(
-            {
+        const result = await GetUsers({
+            input: {
                 self: session?.user?.name || " ",
                 field: "name",
                 value: name
             },
-            baseResponse
-        );
+            APIResponse: baseResponse
+        });
 
         if (result.error) {
             return NextResponse.json(result, { status: 400 });

@@ -12,14 +12,23 @@ export async function GET(request: NextRequest) {
     };
 
     try {
-        const result = await GetPosts(
-            {
+        const reference = request.nextUrl.searchParams.get("reference");
+
+        const result = await GetPosts({
+            input: {
                 self: session?.user?.name || " ",
                 field: "all",
+                reference: reference,
                 value: ""
             },
-            baseResponse
-        );
+            APIResponse: baseResponse,
+            options: {
+                pagination: {
+                    index: 1,
+                    limit: 5
+                }
+            }
+        });
 
         if (result.error) {
             return NextResponse.json(result, { status: 400 });
@@ -44,7 +53,7 @@ export async function POST(request: NextRequest) {
     };
 
     try {
-        const { content, files } = await request.json();
+        const { content, files, reference } = await request.json();
 
         const session = await getServerSession();
 
@@ -67,10 +76,13 @@ export async function POST(request: NextRequest) {
         }
 
         const result = await AddPost({
-            id: "",
-            owner: session.user.name,
-            content: content,
-            files: files
+            input: {
+                id: "",
+                reference: reference,
+                owner: session.user.name,
+                content: content,
+                files: files
+            }
         });
 
         if (result.error) {

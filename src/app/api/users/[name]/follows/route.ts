@@ -37,14 +37,14 @@ export async function GET(request: NextRequest, context: RouteContext) {
             return NextResponse.json(baseResponse, { status: 401 });
         }
 
-        const result = await GetFollows(
-            {
+        const result = await GetFollows({
+            input: {
                 field: field,
                 value: name,
                 self: session?.user?.name || " "
             },
-            baseResponse
-        );
+            APIResponse: baseResponse
+        });
 
         if (result.error) {
             return NextResponse.json(result, { status: 400 });
@@ -102,14 +102,14 @@ export async function POST(request: NextRequest, context: RouteContext) {
             return NextResponse.json(baseResponse, { status: 401 });
         }
 
-        const result = await UpdateFollows(
-            {
+        const result = await UpdateFollows({
+            input: {
                 type: action,
                 self: session.user.name,
                 follow: name
             },
-            baseResponse
-        );
+            APIResponse: baseResponse
+        });
 
         if (result.error) {
             return NextResponse.json(result, { status: 400 });

@@ -8,7 +8,7 @@ import {
 import { getServerSession } from "next-auth";
 import { NextRequest, NextResponse } from "next/server";
 interface RouteContext {
-    params: { id: string };
+    params: { id: string; reference: string };
 }
 
 export async function GET(request: NextRequest, context: RouteContext) {
@@ -22,14 +22,14 @@ export async function GET(request: NextRequest, context: RouteContext) {
     try {
         const id = context.params.id;
 
-        const result = await GetPosts(
-            {
+        const result = await GetPosts({
+            input: {
                 self: session?.user?.name || " ",
                 field: "id",
                 value: id
             },
-            baseResponse
-        );
+            APIResponse: baseResponse
+        });
 
         if (result.error) {
             return NextResponse.json(result, { status: 400 });
@@ -81,14 +81,14 @@ export async function POST(request: NextRequest, context: RouteContext) {
         }
 
         if (action == "like") {
-            const result = await LikeX(
-                {
+            const result = await LikeX({
+                input: {
                     id: id,
                     name: session.user.name,
                     type: "posts"
                 },
-                baseResponse
-            );
+                APIResponse: baseResponse
+            });
 
             if (result.error) {
                 return NextResponse.json(result, { status: 409 });
