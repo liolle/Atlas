@@ -12,6 +12,7 @@ const getByField = (options: GetPostInput) => {
     const statement = sql`
         SELECT 
             p.id,
+            p.reference,
             p.owner,
             u.image,
             p.content,
@@ -24,6 +25,7 @@ const getByField = (options: GetPostInput) => {
         LEFT JOIN ${users} uself ON uself.name = ${options.self}
         LEFT JOIN ${post_likes} pl ON pl.post_id = p.id AND pl.user_id = uself.id
         WHERE p.${sql.raw(options.field)} = ${options.value}
+        ORDER BY p.created_at DESC 
     `;
 
     return {
@@ -36,6 +38,7 @@ const getAll = (options: GetPostInput) => {
     const statement = sql`
         SELECT 
             p.id,
+            p.reference,
             p.owner,
             u.image,
             p.content,
@@ -47,6 +50,34 @@ const getAll = (options: GetPostInput) => {
         LEFT JOIN ${users} u ON u.name = p.owner 
         LEFT JOIN ${users} uself ON uself.name = ${options.self}
         LEFT JOIN ${post_likes} pl ON pl.post_id = p.id AND pl.user_id = uself.id
+        ORDER BY p.created_at DESC 
+        
+    `;
+
+    return {
+        query: statement,
+        statement: statement
+    };
+};
+
+const getAllWithRef = (options: GetPostInput) => {
+    const statement = sql`
+        SELECT 
+            p.id,
+            p.reference,
+            p.owner,
+            u.image,
+            p.content,
+            p.comments,
+            p.likes,
+            p.created_at,
+            CASE WHEN pl.post_id IS NOT NULL THEN true ELSE false END AS liked
+        FROM ${posts} p 
+        LEFT JOIN ${users} u ON u.name = p.owner 
+        LEFT JOIN ${users} uself ON uself.name = ${options.self}
+        LEFT JOIN ${post_likes} pl ON pl.post_id = p.id AND pl.user_id = uself.id
+        WHERE p.reference = ${options.reference}
+        ORDER BY p.created_at DESC 
         
     `;
 
@@ -77,7 +108,9 @@ export async function getPost(
 export async function getAllPosts(
     options: GetPostInput
 ): Promise<PostType[] | BaseError | null> {
-    const generatedQuery = getAll(options);
+    const generatedQuery = options.reference
+        ? getAllWithRef(options)
+        : getAll(options);
 
     try {
         const result = await dzClient.execute(generatedQuery.query);
@@ -96,6 +129,7 @@ function transformUsers(data: Record<string, unknown>[]): PostType[] {
     return data.map((record) => {
         const transformedRecord: PostType = {
             id: record.id as string,
+            reference: (record.reference as string) || "",
             owner: record.owner as string,
             image: record.image as string,
             content: record.content as string,
