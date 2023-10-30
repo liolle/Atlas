@@ -16,7 +16,7 @@ const ProfileBoard = ({
     params,
     session,
     posts,
-    groups,
+    // groups,
     follows,
     followers
 }: ProfileBoardProps) => {
@@ -33,7 +33,7 @@ const ProfileBoard = ({
             />
             <div className=" flex flex-1 items-center justify-center">
                 {activeTab == "posts" && posts}
-                {activeTab == "groups" && groups}
+                {/* {activeTab == "groups" && groups} */}
                 {activeTab == "follows" && follows}
                 {activeTab == "followers" && followers}
             </div>
@@ -56,12 +56,12 @@ const NavProfile = ({ isOWner, setActiveTab, activeTab }: NavProfileProps) => {
                 activeTab={activeTab}
                 tab="posts"
             />
-            <NavButton
+            {/* <NavButton
                 isOWner={isOWner}
                 setActiveTab={setActiveTab}
                 activeTab={activeTab}
                 tab="groups"
-            />
+            /> */}
             <NavButton
                 isOWner={isOWner}
                 setActiveTab={setActiveTab}
