@@ -2,6 +2,8 @@
 import {
     APIDataTypes,
     APIDataTypesName,
+    APIOptions,
+    APIPaginationType,
     APIResponse,
     APIVersion,
     BaseError,
@@ -9,24 +11,22 @@ import {
     LinkAction,
     PostType,
     UserType,
+    isApiOption,
     isBaseError,
     isFollowType,
     isPostType,
     isUserType
 } from "../types";
 
-interface optionsProps {
-    index?: number;
-    limit?: number;
-}
+export class APIDispatcher {
+    private response: APIResponse;
 
-const dispatchMethods = {
-    addUsers: (
-        response: APIResponse,
-        users: UserType[],
-        options?: optionsProps
-    ): APIResponse => {
-        if (response.error) return response;
+    constructor(response: APIResponse) {
+        this.response = response;
+    }
+
+    private addUsers(users: UserType[]) {
+        if (this.response.error) return;
 
         const content: {
             actions: LinkAction[];
@@ -60,12 +60,11 @@ const dispatchMethods = {
             content: content
         };
 
-        response.data = data;
+        this.response.data = data;
+    }
 
-        return response;
-    },
-    addFollows: (response: APIResponse, follows: FollowType[]): APIResponse => {
-        if (response.error) return response;
+    private addFollows(follows: FollowType[]) {
+        if (this.response.error) return;
 
         const content: {
             actions: LinkAction[];
@@ -99,12 +98,11 @@ const dispatchMethods = {
             content: content
         };
 
-        response.data = data;
+        this.response.data = data;
+    }
 
-        return response;
-    },
-    addPosts: (response: APIResponse, posts: PostType[]): APIResponse => {
-        if (response.error) return response;
+    private addPosts(posts: PostType[]) {
+        if (this.response.error) return;
 
         const content: {
             actions: LinkAction[];
@@ -133,40 +131,66 @@ const dispatchMethods = {
             count: posts.length,
             content: content
         };
-        response.data = data;
 
-        return response;
-    },
-    addError: (response: APIResponse, error: BaseError): APIResponse => {
-        return {
-            version: response.version,
-            self: response.self,
-            error: { error: error.error, detail: error.details }
-        };
-    }
-};
-
-export const APIDispatcher = <T>(
-    response: APIResponse,
-    data: BaseError | T | T[]
-): APIResponse => {
-    if (!APIVersion) response.version = `${APIVersion}`;
-
-    if (isBaseError(data)) {
-        return dispatchMethods.addError(response, data);
+        this.response.data = data;
     }
 
-    if (Array.isArray(data) && isUserType(data[0])) {
-        return dispatchMethods.addUsers(response, data as UserType[]);
+    private addError(error: BaseError) {
+        this.response.error = { error: error.error, detail: error.details };
     }
 
-    if (Array.isArray(data) && isFollowType(data[0])) {
-        return dispatchMethods.addFollows(response, data as FollowType[]);
+    private addPagination(options?: APIOptions) {
+        if (!options) {
+            options = {
+                pagination: {
+                    index: 0,
+                    limit: 10
+                }
+            };
+        }
+
+        if (!this.response.rel) {
+            this.response.rel = {
+                pagination: options.pagination as APIPaginationType
+            };
+        } else {
+            this.response.rel.pagination =
+                options.pagination as APIPaginationType;
+        }
+
+        console.log("Response", this.response);
+        console.log("Options", options);
     }
 
-    if (Array.isArray(data) && isPostType(data[0])) {
-        return dispatchMethods.addPosts(response, data as PostType[]);
-    }
+    public dispatch<T>(data: BaseError | T | T[]): APIDispatcher {
+        if (!APIVersion) this.response.version = `${APIVersion}`;
 
-    return response;
-};
+        if (isBaseError(data)) {
+            this.addError(data);
+            return this;
+        }
+
+        if (Array.isArray(data) && isUserType(data[0])) {
+            this.addUsers(data as UserType[]);
+            return this;
+        }
+
+        if (Array.isArray(data) && isFollowType(data[0])) {
+            this.addFollows(data as FollowType[]);
+            return this;
+        }
+
+        if (Array.isArray(data) && isPostType(data[0])) {
+            this.addPosts(data as PostType[]);
+            return this;
+        }
+
+        if (isApiOption(data)) {
+            console.log("Dispatch In", data);
+            this.addPagination(data);
+            return this;
+        }
+
+        return this;
+    }
+}
