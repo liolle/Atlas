@@ -1,6 +1,7 @@
 import CardProfile from "@/src/components/client/cards/cardProfile";
 import BaseLayout from "@/src/components/server/BaseLayout";
 import { GetUsers } from "@/src/db/portal";
+import { FollowType } from "@/src/types";
 import { getServerSession } from "next-auth";
 import React from "react";
 export default async function Layout({
@@ -12,9 +13,11 @@ export default async function Layout({
 }) {
     const session = await getServerSession();
     const user = await GetUsers({
-        self: session?.user?.name || " ",
-        field: "name",
-        value: params.name
+        input: {
+            self: session?.user?.name || " ",
+            field: "name",
+            value: params.name
+        }
     });
 
     if (!user || !user.data || user.error) {
@@ -32,7 +35,7 @@ export default async function Layout({
             <section className=" flex h-full flex-col ">
                 <div className=" flex h-60 w-full items-center justify-center border-b-2 border-accent-2 ">
                     <CardProfile
-                        user={user.data.content[0].item}
+                        user={user.data.content[0].item as FollowType}
                         actions={user.data.content[0].actions}
                         session={session}
                     />

@@ -15,17 +15,21 @@ const Follows = async ({ type, name }: FollowsProps) => {
         switch (type) {
             case "follows":
                 follows = await GetFollows({
-                    self: session?.user?.name || " ",
-                    field: "self",
-                    value: name
+                    input: {
+                        self: session?.user?.name || " ",
+                        field: "self",
+                        value: name
+                    }
                 });
                 break;
 
             case "followers":
                 follows = await GetFollows({
-                    self: session?.user?.name || " ",
-                    field: "follow",
-                    value: name
+                    input: {
+                        self: session?.user?.name || " ",
+                        field: "follow",
+                        value: name
+                    }
                 });
                 break;
         }
@@ -44,12 +48,13 @@ const Follows = async ({ type, name }: FollowsProps) => {
     return (
         <div className=" flex h-full flex-1 flex-col gap-4 px-4 pb-4 pt-8">
             {(follows?.data?.content || []).map((user) => {
+                const follow = user.item as FollowType;
                 return (
                     <CardUserFollow
-                        key={user.item.name}
-                        user={user.item as FollowType}
+                        key={follow.name}
+                        user={follow}
                         actions={user.actions}
-                        isOWner={session?.user?.name == user.item.name}
+                        isOWner={session?.user?.name == follow.name}
                     />
                 );
             })}
