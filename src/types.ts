@@ -51,6 +51,7 @@ export type FollowType = {
 
 export type PostType = {
     id: string;
+    reference?: string;
     content: string;
     comments: number;
     likes: number;
@@ -64,6 +65,7 @@ export type PostType = {
 
 export type AddPostInput = {
     id: string;
+    reference?: string;
     owner: string;
     content: string;
     files: string[];
@@ -88,6 +90,7 @@ export type UserGetStrField = {
 export type GetPostInput = {
     self: string;
     field: "owner" | "id" | "all";
+    reference?: string | null;
     value: string;
 };
 
@@ -176,6 +179,19 @@ export type APIDataTypesName =
 
 export type APIDataTypes = UserType | FollowType | PostType;
 
+export type APIPaginationType = {
+    first?: string;
+    last?: string;
+    next?: string;
+    pages?: number;
+    limit: number;
+    index: number;
+};
+
+export type APIOptions = {
+    pagination?: APIPaginationType;
+};
+
 export type APIResponse = {
     version: string;
     self: string;
@@ -192,14 +208,7 @@ export type APIResponse = {
         }[];
     };
     rel?: {
-        pagination: {
-            first: string;
-            last: string;
-            next: string;
-            pages: number;
-            limit: number;
-            index: number;
-        };
+        pagination: APIPaginationType;
     };
 };
 
@@ -299,34 +308,54 @@ export const isPostType = (obj: unknown): obj is PostType => {
     if (!obj) return false;
     return (
         typeof obj === "object" &&
-        "content" in obj &&
-        typeof obj.content === "string" &&
         "comments" in obj &&
-        typeof obj.comments === "number" &&
-        "likes" in obj &&
-        typeof obj.likes === "number" &&
-        "owner" in obj &&
-        typeof obj.owner === "string" &&
-        "image" in obj &&
-        typeof obj.image === "string" &&
-        "liked" in obj &&
-        typeof obj.liked === "boolean" &&
+        "content" in obj &&
         "created_at" in obj &&
-        typeof obj.created_at === "object" &&
         "id" in obj &&
-        typeof obj.id === "string"
+        "image" in obj &&
+        "liked" in obj &&
+        "likes" in obj &&
+        "owner" in obj &&
+        "reference" in obj &&
+        typeof obj.comments === "number" &&
+        typeof obj.content === "string" &&
+        typeof obj.created_at === "object" &&
+        typeof obj.id === "string" &&
+        typeof obj.image === "string" &&
+        typeof obj.likes === "number" &&
+        typeof obj.liked === "boolean" &&
+        typeof obj.owner === "string" &&
+        typeof obj.reference === "string"
     );
 };
 
-// export type PostType = {
-//     content: string;
-//     comments: number;
-//     likes: number;
-//     created_at: Date;
-//     owner: string;
-//     image: string;
-//     liked: boolean;
-// };
+export const isAPIPaginationType = (obj: unknown): obj is APIPaginationType => {
+    if (!obj) return false;
+    return (
+        typeof obj === "object" &&
+        "index" in obj &&
+        "limit" in obj &&
+        typeof obj.index === "number" &&
+        typeof obj.index === "number"
+    );
+};
+
+export const isApiOption = (obj: unknown): obj is APIOptions => {
+    if (!obj) return false;
+    if (typeof obj !== "object") return false;
+    const keys = Object.keys(obj);
+    if (keys.length > 1 || (keys.length == 1 && !("pagination" in obj)))
+        return false;
+
+    // optional pagination
+    if ("pagination" in obj) {
+        const pagination = (obj as APIOptions).pagination;
+        if (!pagination) return true;
+        if (!isAPIPaginationType(pagination)) return false;
+    }
+
+    return true;
+};
 
 // ----------- Lists ----------------------------------//
 
