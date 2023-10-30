@@ -95,8 +95,8 @@ const NavButton = ({
     return (
         <button
             onClick={() => setActiveTab(tab)}
-            className={`flex w-fit items-center justify-center rounded-full border-2 border-accent-2 px-4 ${
-                activeTab === tab && " border-accent-1 font-bold text-accent-1"
+            className={`flex w-fit items-center justify-center rounded-full border-[1px] border-accent-2 px-3 py-2 ${
+                activeTab === tab && " border-content bg-content  text-bgc"
             }`}
         >
             {tab}

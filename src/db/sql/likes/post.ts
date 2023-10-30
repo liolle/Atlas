@@ -44,11 +44,8 @@ export async function likeX(options: LikeXInput): Promise<BaseError | null> {
 
     try {
         await dzClient.execute(generatedQuery.query);
-        console.log(options);
         return null;
     } catch (error) {
-        console.log(error);
-
         return {
             error: RequestErrorType.DB_QUERY_FAILED,
             details: String(error)

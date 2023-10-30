@@ -9,12 +9,9 @@ import { headers } from "next/headers";
 const NavBar = async () => {
     const session = await getServerSession();
     return (
-        <div className=" flex h-full w-fit flex-col items-center  justify-between gap-4 py-6 ">
-            <div className="flex  h-full flex-col gap-4 @[250px]:w-[250px]  ">
-                <Link
-                    className=" flex w-full justify-start @[250px]:justify-start @[250px]:pl-3 "
-                    href="/"
-                >
+        <div className=" flex h-full w-full flex-col  justify-between gap-4 py-6 ">
+            <div className="flex  h-full flex-col items-center gap-4 px-2 @[250px]:items-start  ">
+                <Link className=" flex w-full  @[250px]:pl-3 " href="/">
                     <span>LOGO</span>
                 </Link>
                 <NavigationItem variant="home" />

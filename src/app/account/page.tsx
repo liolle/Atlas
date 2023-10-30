@@ -17,12 +17,6 @@ export default async function Account() {
                     >
                         General
                     </Link>
-                    <Link
-                        href={"/account/other"}
-                        className={`rounded-full px-3 py-2 text-content`}
-                    >
-                        Other
-                    </Link>
                 </div>
                 <div className=" flex flex-1 flex-col gap-8 p-6">
                     <FormUpdateUser field="name" session={session} />
