@@ -4,8 +4,15 @@ import { Button } from "../../ui/button";
 
 import * as Dialog from "@radix-ui/react-dialog";
 import PostAddCard from "../../server/PostAddCard";
-const PostDialog = () => {
+
+interface PostAddCardProps {
+    reference?: string;
+    children: React.ReactNode;
+}
+
+const PostDialog = ({ reference, children }: PostAddCardProps) => {
     const [isMounted, setIsMounted] = useState(false);
+    const [open, setOpen] = useState(false);
 
     // hydration trick
     useEffect(() => {
@@ -18,23 +25,27 @@ const PostDialog = () => {
                 disabled
                 className="rounded-full bg-content px-3 py-2 text-bgc"
             >
-                New post
+                {children}
             </Button>
         );
     }
 
     return (
-        <Dialog.Root>
+        <Dialog.Root open={open} onOpenChange={setOpen}>
             <Dialog.Trigger className="">
-                <Button className="rounded-full bg-content px-3 py-2 text-bgc">
-                    New post
-                </Button>
+                <div className="rounded-full bg-content px-3 py-2 text-bgc">
+                    {children}
+                </div>
             </Dialog.Trigger>
 
             <Dialog.Portal>
                 <Dialog.Overlay className="fixed inset-0 bg-fgc/50" />
-                <Dialog.Content className="fixed left-1/2 top-1/2 flex w-[400] -translate-x-1/2  -translate-y-1/2 shadow md:w-[600px]   xl:w-[800px]">
-                    <PostAddCard maxCharacters={200} />
+                <Dialog.Content className="fixed left-1/2 top-1/2 flex w-full -translate-x-1/2 -translate-y-1/2  px-4 shadow md:w-[800px]">
+                    <PostAddCard
+                        onStatusChange={setOpen}
+                        maxCharacters={200}
+                        reference={reference}
+                    />
                 </Dialog.Content>
             </Dialog.Portal>
         </Dialog.Root>

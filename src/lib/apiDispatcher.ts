@@ -157,9 +157,6 @@ export class APIDispatcher {
             this.response.rel.pagination =
                 options.pagination as APIPaginationType;
         }
-
-        console.log("Response", this.response);
-        console.log("Options", options);
     }
 
     public dispatch<T>(data: BaseError | T | T[]): APIDispatcher {
@@ -186,7 +183,6 @@ export class APIDispatcher {
         }
 
         if (isApiOption(data)) {
-            console.log("Dispatch In", data);
             this.addPagination(data);
             return this;
         }

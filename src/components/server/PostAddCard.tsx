@@ -1,27 +1,35 @@
 "use client";
-import React, { FormEvent, ChangeEvent, useRef, useState } from "react";
+import React, {
+    FormEvent,
+    ChangeEvent,
+    useRef,
+    useState,
+    Dispatch
+} from "react";
 import { Button } from "../ui/button";
 import { ToastMessage } from "@/src/services/toast/toast";
 import { X } from "lucide-react";
 import * as Dialog from "@radix-ui/react-dialog";
+import { useRouter } from "next/navigation";
 interface PostAddCardProps {
     maxCharacters: number;
+    reference?: string;
+    onStatusChange: Dispatch<React.SetStateAction<boolean>>;
 }
 
-const PostAddCard = ({ maxCharacters }: PostAddCardProps) => {
+const PostAddCard = ({
+    maxCharacters,
+    reference,
+    onStatusChange
+}: PostAddCardProps) => {
     const textAreaRef = useRef<HTMLTextAreaElement>(null);
-
+    const router = useRouter();
     const [characters, setCharacters] = useState(0);
     const [isSending, setIsSending] = useState(false);
 
     const handleTextChange = (e: ChangeEvent<HTMLTextAreaElement>) => {
         e.preventDefault;
         setCharacters(e.target.value.length);
-    };
-
-    const resetInput = () => {
-        if (!textAreaRef.current) return;
-        textAreaRef.current.value = "";
     };
 
     const handlePost = async (e: FormEvent<HTMLFormElement>) => {
@@ -31,14 +39,13 @@ const PostAddCard = ({ maxCharacters }: PostAddCardProps) => {
             setIsSending(false);
             return;
         }
-        console.log(textAreaRef.current.value);
 
         try {
-            const response = await fetch("api/posts", {
+            const response = await fetch("/api/posts", {
                 method: "POST",
                 body: JSON.stringify({
                     content: textAreaRef.current.value,
-                    reference: ""
+                    reference: reference || ""
                 })
             });
 
@@ -51,11 +58,16 @@ const PostAddCard = ({ maxCharacters }: PostAddCardProps) => {
 
             ToastMessage("Post sent");
         } catch (error) {
+            console.log(error);
+
             ToastMessage(String(error));
+        } finally {
+            router.refresh();
+            onStatusChange(false);
         }
-        setIsSending(false);
-        setCharacters(0);
-        resetInput();
+        // setIsSending(false);
+        // setCharacters(0);
+        // resetInput();
     };
 
     return (
@@ -81,7 +93,7 @@ const PostAddCard = ({ maxCharacters }: PostAddCardProps) => {
             <div className="flex items-center justify-between border-t border-accent-2 ">
                 <div className="flex w-full items-center justify-between px-4 py-2">
                     <div
-                        className={` hover:text-accent-like flex cursor-pointer flex-col items-center p-[1rem_0.5rem_1rem_0rem] text-accent-2 `}
+                        className={` flex cursor-pointer flex-col items-center p-[1rem_0.5rem_1rem_0rem] text-accent-2 hover:text-accent-like `}
                     ></div>
                     <Button
                         disabled={isSending || characters == 0}
