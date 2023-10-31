@@ -51,12 +51,3 @@ export const comparePassword = async (
 ) => {
     return bcrypt.compareSync(password, hashedPassword);
 };
-
-export const API_URL = `${process.env.API_URL || "http://localhost:3000"}`;
-
-export const curateError = (rawError: string) => {
-    if (rawError.includes("duplicate key value violates unique constraint"))
-        return "Already exist";
-
-    return "";
-};

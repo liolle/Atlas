@@ -24,8 +24,9 @@ const AvatarHome = ({ image, name }: AvatarHomeProps) => {
                         <Image
                             src={image}
                             alt="I"
-                            layout="fill"
-                            priority={true}
+                            fill
+                            sizes="(max-width: 600px) 100vw, 600px"
+                            loading="eager"
                         />
                     </div>
 

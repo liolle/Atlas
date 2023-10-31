@@ -31,9 +31,9 @@ const ProfileBoard = ({
                 setActiveTab={setActiveTab}
                 activeTab={activeTab}
             />
-            <div className=" flex flex-1 items-center justify-center">
+
+            <div className="  h-full w-full  items-center justify-center  ">
                 {activeTab == "posts" && posts}
-                {/* {activeTab == "groups" && groups} */}
                 {activeTab == "follows" && follows}
                 {activeTab == "followers" && followers}
             </div>
@@ -49,19 +49,13 @@ interface NavProfileProps {
 
 const NavProfile = ({ isOWner, setActiveTab, activeTab }: NavProfileProps) => {
     return (
-        <div className=" flex h-14 w-full gap-4  p-2">
+        <div className=" sticky left-0 top-0 z-10 flex h-14 w-full gap-4 bg-bgc p-2  backdrop-blur-sm">
             <NavButton
                 isOWner={isOWner}
                 setActiveTab={setActiveTab}
                 activeTab={activeTab}
                 tab="posts"
             />
-            {/* <NavButton
-                isOWner={isOWner}
-                setActiveTab={setActiveTab}
-                activeTab={activeTab}
-                tab="groups"
-            /> */}
             <NavButton
                 isOWner={isOWner}
                 setActiveTab={setActiveTab}

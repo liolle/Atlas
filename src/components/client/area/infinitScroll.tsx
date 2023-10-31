@@ -11,13 +11,18 @@ interface InfiniteScrollPostsProps {
 
 const InfiniteScrollPosts = ({ posts }: InfiniteScrollPostsProps) => {
     return (
-        <div className=" flex w-full flex-col items-center">
-            <div className="  h-full w-full max-w-[500px]   space-y-4 p-2 @[1200px]:max-w-[800px]">
-                {posts.map((post) => {
-                    return (
-                        <CardPostDisplay key={post.item.id} post={post.item} />
-                    );
-                })}
+        <div className="flex h-full w-full   @container">
+            <div className=" flex h-full w-full flex-col items-start @[1000px]:items-center ">
+                <div className="  h-full w-full max-w-[1000px] space-y-4  p-2  ">
+                    {posts.map((post) => {
+                        return (
+                            <CardPostDisplay
+                                key={post.item.id}
+                                post={post.item}
+                            />
+                        );
+                    })}
+                </div>
             </div>
         </div>
     );

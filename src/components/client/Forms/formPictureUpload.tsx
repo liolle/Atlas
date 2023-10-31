@@ -18,7 +18,7 @@ import { useSession } from "next-auth/react";
 import { Session } from "next-auth";
 import Loading from "../loading/loading";
 import { generatePictureID } from "@/src/lib/utils";
-import UploadService from "@/src/services/aws/fileUpload";
+import UploadServiceClient from "@/src/services/aws/client/clientSafe";
 
 export function FormPictureUpload({ session }: { session: Session | null }) {
     const inputRef = useRef<HTMLInputElement>(null);
@@ -49,7 +49,7 @@ export function FormPictureUpload({ session }: { session: Session | null }) {
 
             const { url, cdn, key } = data;
 
-            await UploadService.putS3({
+            await UploadServiceClient.putS3({
                 url: url as string,
                 data: selectedFile
             });
@@ -73,6 +73,7 @@ export function FormPictureUpload({ session }: { session: Session | null }) {
             await update();
 
             ToastMessage("Update Successful", { variant: "success" });
+
             router.refresh();
         } catch (error) {
             ToastMessage(String(error));

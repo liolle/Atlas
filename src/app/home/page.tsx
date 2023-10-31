@@ -38,16 +38,16 @@ export default async function Home() {
         <BaseLayout>
             <section className="  flex h-full w-full gap-4  @container">
                 <div className="flex h-full w-full overflow-y-auto">
-                    <main className="  flex h-fit min-h-screen  flex-[3_1_0] flex-col border-r-2 border-accent-2  ">
+                    <div className="  flex h-fit min-h-screen  flex-[3_1_0] flex-col border-r-2 border-accent-2  ">
                         <div className=" sticky left-0 top-0 z-10 flex h-[70px] w-[100%] items-center  justify-between px-4 backdrop-blur-sm ">
                             <div></div>
-                            <PostDialog />
+                            <PostDialog>New post</PostDialog>
                         </div>
 
                         <Suspense fallback={<div>Loading</div>}>
                             <InfiniteScrollPosts posts={posts || []} />
                         </Suspense>
-                    </main>
+                    </div>
                     <div className=" hidden h-full max-w-[500px] flex-[1_1_0] flex-col  @[950px]:flex">
                         <div className=" sticky left-0 top-0 z-10 flex h-[70px] w-[100%] items-center justify-center border-b-2 border-accent-2 bg-bgc  ">
                             <span>WIP</span>

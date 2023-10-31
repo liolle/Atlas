@@ -158,6 +158,11 @@ export type GetUserType = {
     };
 };
 
+export type PostTypeElement = {
+    actions: LinkAction[];
+    item: PostType;
+};
+
 //API TYPES//
 
 export type APIMessage = {

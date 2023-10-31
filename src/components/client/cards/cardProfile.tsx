@@ -45,7 +45,13 @@ const CardProfile = ({ user, actions, session }: CardUserFollowType) => {
     return (
         <section className=" flex h-32 w-[416px] select-none gap-4">
             <div className="relative h-32 w-32 overflow-hidden rounded-full">
-                <Image src={user.image} alt="I" layout="fill" priority={true} />
+                <Image
+                    src={user.image}
+                    alt="I"
+                    fill
+                    sizes="128px"
+                    loading="eager"
+                />
             </div>
             <div className=" flex flex-col justify-between">
                 <div className="flex">@{user.name}</div>

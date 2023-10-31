@@ -45,8 +45,9 @@ const CardUserFollow = ({ user, isOWner, actions }: CardUserFollowType) => {
                     <Image
                         src={user.image}
                         alt="I"
-                        layout="fill"
-                        priority={true}
+                        fill
+                        sizes="56px"
+                        loading="eager"
                     />
                 </div>
                 <div className=" flex h-full flex-col justify-between">
