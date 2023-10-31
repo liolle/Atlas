@@ -8,6 +8,9 @@ import * as schema from "./schema";
 
 const connectionString = "postgres://postgres:postgres@localhost:5432/atlas";
 
-const client = postgres(connectionString);
+const client = postgres(connectionString, {
+    idle_timeout: 20,
+    max_lifetime: 60 * 5
+});
 
 export const dzClient = drizzle(client, { schema: schema });
