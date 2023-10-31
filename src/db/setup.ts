@@ -22,6 +22,28 @@ const PostLikeInsertTrigger = sql`
     EXECUTE FUNCTION after_like_insert_function();
 `;
 
+const PostReplyInsertTrigger = sql`
+    CREATE OR REPLACE FUNCTION after_reply_insert_function()
+    RETURNS TRIGGER AS $$
+    BEGIN
+        IF NEW.reference IS NOT NULL THEN
+            UPDATE posts
+            SET comments = comments + 1 
+            WHERE id = NEW.reference;
+        END IF;
+        RETURN NEW;
+    END;
+    $$ LANGUAGE plpgsql;
+
+    DROP TRIGGER IF EXISTS after_reply_insert 
+    ON posts;
+
+    CREATE TRIGGER after_reply_insert
+    AFTER INSERT ON posts
+    FOR EACH ROW
+    EXECUTE FUNCTION after_reply_insert_function();
+`;
+
 const PostLikeDeleteTrigger = sql`
     CREATE OR REPLACE FUNCTION after_like_delete_function()
     RETURNS TRIGGER AS $$
@@ -44,7 +66,11 @@ const PostLikeDeleteTrigger = sql`
     EXECUTE FUNCTION after_like_delete_function();
 `;
 
-export const SETUP_QUERIES = [PostLikeInsertTrigger, PostLikeDeleteTrigger];
+export const SETUP_QUERIES = [
+    PostLikeInsertTrigger,
+    PostLikeDeleteTrigger,
+    PostReplyInsertTrigger
+];
 
 async function main() {
     console.log("SetUp started");
