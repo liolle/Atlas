@@ -4,6 +4,9 @@ import React, { MouseEvent, useState } from "react";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { ToastMessage } from "@/src/services/toast/toast";
+import { timeAgo } from "@/src/lib/time";
+import { MessageCircle } from "lucide-react";
+
 interface CardPostDisplayProps {
     post: PostType;
 }
@@ -11,14 +14,23 @@ interface CardPostDisplayProps {
 const CardPostDisplay = ({ post }: CardPostDisplayProps) => {
     const router = useRouter();
     const [isSending, setIsSending] = useState(false);
+
+    const handlePostClick = (e: MouseEvent<HTMLDivElement>) => {
+        e.preventDefault();
+        console.log("div click");
+        router.push(`/posts/${post.id}`);
+    };
+
     const handleAvatarClick = (e: MouseEvent<HTMLDivElement>) => {
         e.preventDefault();
+        e.stopPropagation();
         if (!post.owner) return;
         router.push(`/users/${post.owner}`);
     };
 
     const handleLikeClick = async (e: MouseEvent<HTMLDivElement>) => {
         e.preventDefault();
+        e.stopPropagation();
         if (!post.owner) return;
         if (isSending) return;
         setIsSending(true);
@@ -43,8 +55,18 @@ const CardPostDisplay = ({ post }: CardPostDisplayProps) => {
         }
     };
 
+    const handleCommentClick = async (e: MouseEvent<HTMLDivElement>) => {
+        e.preventDefault();
+        e.stopPropagation();
+
+        router.push(`/posts/${post.id}`);
+    };
+
     return (
-        <div className=" h-fit w-full  overflow-hidden rounded-xl border-2 border-accent-2 bg-bgc">
+        <div
+            onClick={handlePostClick}
+            className=" h-fit w-full  cursor-pointer overflow-hidden rounded-xl border-2 border-accent-2 bg-bgc hover:bg-accent-2/5"
+        >
             <div className="flex items-center justify-between px-6 py-4">
                 <div className="flex space-x-4">
                     <div
@@ -55,12 +77,13 @@ const CardPostDisplay = ({ post }: CardPostDisplayProps) => {
                             <Image
                                 src={post.image}
                                 alt="I"
-                                layout="fill"
-                                priority={true}
+                                fill
+                                sizes="48px"
+                                loading="lazy"
                             />
                         </div>
 
-                        <div className=" 00 flex h-full items-center ">
+                        <div className=" flex h-full items-center ">
                             <span className=" ">@{post.owner}</span>
                         </div>
                     </div>
@@ -69,18 +92,27 @@ const CardPostDisplay = ({ post }: CardPostDisplayProps) => {
             <div className="px-6 py-4">
                 <div className="text-sm text-content ">{post.content}</div>
             </div>
-            <div className="flex items-center justify-between border-t border-accent-2 ">
-                <div className="flex items-center pl-4">
+            <div className="flex items-center justify-between border-t border-accent-2 px-4">
+                <div className="flex items-center gap-6 ">
                     <div
                         onClick={handleLikeClick}
                         className={` ${
                             post.liked && " text-accent-like"
-                        } hover:text-accent-like flex cursor-pointer flex-col items-center p-[1rem_0.5rem_1rem_0rem] text-accent-2`}
+                        } flex cursor-pointer items-center gap-1  p-[0.5rem] text-accent-2  hover:text-accent-like`}
                     >
                         <LikeSVG isLiked={post.liked} />
                         <span>{post.likes}</span>
                     </div>
+
+                    <div
+                        onClick={handleCommentClick}
+                        className={`  hover:text-accent-Com flex cursor-pointer items-center gap-1  p-[0.5rem] text-accent-2`}
+                    >
+                        <MessageCircle />
+                        <span>{post.comments}</span>
+                    </div>
                 </div>
+                <div>{timeAgo(post.created_at)}</div>
             </div>
         </div>
     );
