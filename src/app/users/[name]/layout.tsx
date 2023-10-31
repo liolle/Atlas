@@ -21,6 +21,8 @@ export default async function Layout({
     });
 
     if (!user || !user.data || user.error) {
+        console.log(user);
+
         return (
             <BaseLayout>
                 <section className=" flex h-full items-center justify-center">
@@ -32,16 +34,24 @@ export default async function Layout({
 
     return (
         <BaseLayout>
-            <section className=" flex h-full flex-col ">
-                <div className=" flex h-60 w-full items-center justify-center border-b-2 border-accent-2 ">
-                    <CardProfile
-                        user={user.data.content[0].item as FollowType}
-                        actions={user.data.content[0].actions}
-                        session={session}
-                    />
+            <section className="  flex h-full  w-full gap-4  @container">
+                <div className="flex h-full w-full">
+                    <div className="  flex h-fit min-h-screen flex-[3_1_0] flex-col  border-r-2 border-accent-2 ">
+                        <div className=" sticky left-0 top-0 z-10 flex w-[100%] flex-[0_0_15rem] items-center justify-center border-b-2  border-accent-2 bg-bgc  ">
+                            <div></div>
+                            <CardProfile
+                                user={user.data.content[0].item as FollowType}
+                                actions={user.data.content[0].actions}
+                                session={session}
+                            />
+                        </div>
+                        <main className=" flex h-full max-h-[calc(100vh-240px)] w-full overflow-y-auto  ">
+                            <div className="block h-full w-full ">
+                                {children}
+                            </div>
+                        </main>
+                    </div>
                 </div>
-
-                <main className=" flex w-full flex-1 flex-col">{children}</main>
             </section>
         </BaseLayout>
     );
