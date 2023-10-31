@@ -5,15 +5,18 @@ import { posts } from "../../schema";
 
 const generatePost = (options: AddPostInput) => {
     const statement = sql`
-        INSERT INTO ${posts} (id,content,owner,reference)
-        VALUES (${options.id},${options.content},${options.owner},${
-            options.reference || ""
-        })
+        INSERT INTO ${posts} (id,content,owner)
+        VALUES (${options.id},${options.content},${options.owner})
+    `;
+
+    const StatementWithRef = sql`
+    INSERT INTO ${posts} (id,content,owner ,reference)
+    VALUES (${options.id},${options.content},${options.owner},${options.reference})
     `;
 
     return {
-        query: statement,
-        statement: statement
+        query: options.reference ? StatementWithRef : statement,
+        statement: options.reference ? StatementWithRef : statement
     };
 };
 

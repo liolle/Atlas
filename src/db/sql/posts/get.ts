@@ -50,6 +50,7 @@ const getAll = (options: GetPostInput) => {
         LEFT JOIN ${users} u ON u.name = p.owner 
         LEFT JOIN ${users} uself ON uself.name = ${options.self}
         LEFT JOIN ${post_likes} pl ON pl.post_id = p.id AND pl.user_id = uself.id
+        WHERE p.reference = '' OR p.reference IS NULL
         ORDER BY p.created_at DESC 
         
     `;
@@ -76,7 +77,7 @@ const getAllWithRef = (options: GetPostInput) => {
         LEFT JOIN ${users} u ON u.name = p.owner 
         LEFT JOIN ${users} uself ON uself.name = ${options.self}
         LEFT JOIN ${post_likes} pl ON pl.post_id = p.id AND pl.user_id = uself.id
-        WHERE p.reference = ${options.reference}
+        WHERE p.reference = ${options.reference} OR p.id = ${options.reference}
         ORDER BY p.created_at DESC 
         
     `;
@@ -108,6 +109,8 @@ export async function getPost(
 export async function getAllPosts(
     options: GetPostInput
 ): Promise<PostType[] | BaseError | null> {
+    console.log(options);
+
     const generatedQuery = options.reference
         ? getAllWithRef(options)
         : getAll(options);
