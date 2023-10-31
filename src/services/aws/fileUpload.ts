@@ -1,10 +1,10 @@
-import { S3RequestPresigner } from "@aws-sdk/s3-request-presigner";
 import { fromEnv } from "@aws-sdk/credential-providers";
-import { parseUrl } from "@smithy/url-parser";
+import { S3RequestPresigner } from "@aws-sdk/s3-request-presigner";
+import { formatUrl } from "@aws-sdk/util-format-url";
 import { Hash } from "@smithy/hash-node";
 import { HttpRequest } from "@smithy/protocol-http";
-import { formatUrl } from "@aws-sdk/util-format-url";
-import { BaseError, PutS3Type, RequestErrorType } from "../../types";
+import { parseUrl } from "@smithy/url-parser";
+import { BaseError, RequestErrorType } from "../../types";
 
 const presignedUrl = async (key: string): Promise<string | BaseError> => {
     if (!process.env.AWS_REGION || !process.env.AWS_BUCKET_NAME) {
@@ -37,29 +37,6 @@ const presignedUrl = async (key: string): Promise<string | BaseError> => {
     }
 };
 
-const putS3 = async ({ url, data }: PutS3Type): Promise<string | BaseError> => {
-    try {
-        const response = await fetch(url, {
-            method: "PUT",
-            headers: {
-                "Content-Type": data.type
-            },
-            body: data
-        });
+const UploadServiceServer = { presignedUrl };
 
-        if (!response.ok) {
-            throw new Error("PUT request failed");
-        }
-
-        return "ok";
-    } catch (error) {
-        return {
-            error: RequestErrorType.API_REQUEST_FAILED,
-            details: String(error)
-        };
-    }
-};
-
-const UploadService = { presignedUrl, putS3 };
-
-export default UploadService;
+export default UploadServiceServer;
