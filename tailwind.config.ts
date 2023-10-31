@@ -33,7 +33,8 @@ module.exports = {
                 accent: {
                     1: "rgba(var(--color-accent-main), <alpha-value>)",
                     2: "rgba(var(--color-accent-alt), <alpha-value>)",
-                    like: "rgba(var(--color-accent-like), <alpha-value>)"
+                    like: "rgba(var(--color-accent-like), <alpha-value>)",
+                    Com: "rgba(var(--color-accent-com), <alpha-value>)"
                 },
                 message: {
                     info: "rgba(var(--color-info), <alpha-value>)",
