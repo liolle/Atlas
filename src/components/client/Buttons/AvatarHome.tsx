@@ -21,13 +21,7 @@ const AvatarHome = ({ image, name }: AvatarHomeProps) => {
             <PopoverTrigger className=" w-full  px-2">
                 <div className="flex h-fit w-full cursor-pointer items-end  gap-2 rounded-full p-2 hover:bg-accent-1">
                     <div className=" relative h-10 w-10 overflow-hidden rounded-full ">
-                        <Image
-                            src={image}
-                            alt="I"
-                            fill
-                            sizes="(max-width: 600px) 100vw, 600px"
-                            loading="eager"
-                        />
+                        <Image src={image} alt="I" fill loading="eager" />
                     </div>
 
                     <div className=" hidden h-full  flex-1 @[250px]:flex">
