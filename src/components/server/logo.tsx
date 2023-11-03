@@ -220,7 +220,7 @@ interface LogoSVGProps {
 export const LogoSVG = ({ size = 30 }: LogoSVGProps) => {
     return (
         <svg
-            className={`fill-current stroke-current  `}
+            className={`bg-transparent fill-current stroke-current  `}
             width={size}
             height={size}
             viewBox={`0 0 ${size} ${size}`}

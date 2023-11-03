@@ -2,7 +2,8 @@ import { withAuth } from "next-auth/middleware";
 import { NextResponse } from "next/server";
 
 const NotProtectedPages = {
-    "/": true
+    "/": true,
+    "opengraph-image": true
 };
 
 export default withAuth(
