@@ -1,6 +1,10 @@
 import { withAuth } from "next-auth/middleware";
 import { NextResponse } from "next/server";
 
+const NotProtectedPages = {
+    "/": true
+};
+
 export default withAuth(
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     function middleware(req) {
@@ -19,6 +23,7 @@ export default withAuth(
         callbacks: {
             // eslint-disable-next-line @typescript-eslint/no-unused-vars
             authorized: async ({ req, token }) => {
+                if (req.nextUrl.pathname in NotProtectedPages) return true;
                 return !!token;
             }
         }
