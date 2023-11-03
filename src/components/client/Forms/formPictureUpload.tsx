@@ -9,16 +9,15 @@ import React, {
 } from "react";
 import { Button } from "@/src/components/ui/button";
 import { Input } from "@/src/components/ui/input";
-import { Avatar, AvatarFallback, AvatarImage } from "../../ui/avatar";
-
+import Image from "next/image";
 import { Label } from "../../ui/label";
 import { ToastMessage } from "@/src/services/toast/toast";
 import { useRouter } from "next/navigation";
 import { useSession } from "next-auth/react";
 import { Session } from "next-auth";
-import Loading from "../loading/loading";
 import { generatePictureID } from "@/src/lib/utils";
 import UploadServiceClient from "@/src/services/aws/client/clientSafe";
+import { Camera } from "lucide-react";
 
 export function FormPictureUpload({ session }: { session: Session | null }) {
     const inputRef = useRef<HTMLInputElement>(null);
@@ -26,14 +25,20 @@ export function FormPictureUpload({ session }: { session: Session | null }) {
 
     const { update } = useSession();
     const [isFetching, setIsFetching] = useState(false);
+    const [changed, setChanged] = useState(false);
     const [imageUrl, setImageUrl] = useState(session?.user?.image);
 
     async function onSubmit(e: FormEvent<HTMLFormElement>) {
         e.preventDefault();
-        if (!inputRef.current || !inputRef.current.files) return;
+        if (
+            !inputRef.current ||
+            !inputRef.current.files ||
+            !inputRef.current.files[0]
+        )
+            return;
         const selectedFile = inputRef.current.files[0];
 
-        const extention = selectedFile.name.split(".").pop();
+        const extension = selectedFile.name.split(".").pop();
         setIsFetching(true);
         try {
             const generated_key = await generatePictureID();
@@ -41,7 +46,7 @@ export function FormPictureUpload({ session }: { session: Session | null }) {
             const response = await fetch("/api/services/presignedUrl", {
                 method: "POST",
                 body: JSON.stringify({
-                    key: `${generated_key}.${extention}`
+                    key: `${generated_key}.${extension}`
                 })
             });
 
@@ -69,7 +74,7 @@ export function FormPictureUpload({ session }: { session: Session | null }) {
                 return;
             }
             setIsFetching(false);
-
+            setChanged(false);
             await update();
 
             ToastMessage("Update Successful", { variant: "success" });
@@ -82,6 +87,7 @@ export function FormPictureUpload({ session }: { session: Session | null }) {
 
     const handleInputChange = (e: ChangeEvent<HTMLInputElement>) => {
         e.preventDefault();
+        setChanged(true);
         if (!e.target || !e.target.files) return;
         const selectedFile = e.target.files[0];
         const imageUrl = URL.createObjectURL(selectedFile);
@@ -108,19 +114,23 @@ export function FormPictureUpload({ session }: { session: Session | null }) {
                 <button
                     onClick={triggerInput}
                     type="button"
-                    className="relative h-32 w-32 rounded-full"
+                    className=" relative  flex h-32 w-32 overflow-hidden rounded-full  "
                 >
-                    <Avatar>
-                        <AvatarImage
-                            className=" h-full"
-                            src={imageUrl as string}
-                        />
-                        <AvatarFallback>
-                            <Loading />
-                        </AvatarFallback>
-                    </Avatar>
+                    <div className=" absolute z-10 flex h-full w-full items-center justify-center rounded-full text-transparent  hover:bg-accent-2/25  hover:text-content ">
+                        <Camera />
+                    </div>
+                    <Image
+                        src={imageUrl as string}
+                        alt="I"
+                        fill
+                        loading="eager"
+                        className=" rounded-full"
+                    />
                 </button>
-                <Button disabled={isFetching} className=" w-fit self-end">
+                <Button
+                    disabled={isFetching || !changed}
+                    className=" w-fit self-end"
+                >
                     Update
                 </Button>
             </div>
