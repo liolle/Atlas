@@ -19,6 +19,7 @@ import { useRouter } from "next/navigation";
 import { ToastMessage } from "@/src/services/toast/toast";
 import { Session } from "next-auth";
 import { useSession } from "next-auth/react";
+import { CurateError } from "@/src/services/log/logs";
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 export function FormUpdateUser({
     field,
@@ -40,27 +41,41 @@ export function FormUpdateUser({
 
     async function onSubmit(values: z.infer<typeof EmailValidation>) {
         setIsFetching(true);
-        const response = await fetch("/api/users", {
-            method: "POST",
-            body: JSON.stringify({
-                field: field,
-                value: values.code,
-                email: session?.user?.email
-            })
-        });
 
-        await update();
+        try {
+            const response = await fetch("/api/users", {
+                method: "POST",
+                body: JSON.stringify({
+                    field: field,
+                    value: values.code,
+                    email: session?.user?.email
+                })
+            });
 
-        setIsFetching(false);
-        if (!response.ok) {
-            const { error, details } = await response.json();
-            details ? ToastMessage(details) : ToastMessage(error);
-            return;
+            if (!response.ok) {
+                const { error } = (await response.json()) as {
+                    error: {
+                        error: string;
+                        detail: string;
+                    };
+                };
+
+                setIsFetching(false);
+                if (!error) return;
+
+                ToastMessage(CurateError(error.detail));
+                return;
+            }
+
+            await update();
+
+            setIsFetching(false);
+
+            ToastMessage("Update Successful", { variant: "success" });
+            router.refresh();
+        } catch (error) {
+            ToastMessage(String(error));
         }
-
-        ToastMessage("Update Successful", { variant: "success" });
-
-        router.refresh();
     }
 
     const fld = field;
