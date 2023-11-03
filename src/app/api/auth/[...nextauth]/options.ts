@@ -38,12 +38,21 @@ export const authOptions: NextAuthOptions = {
             from: process.env.EMAIL_FROM,
 
             async generateVerificationToken() {
-                const vToken = await generateVToken();
-                return vToken;
+                try {
+                    const vToken = await generateVToken();
+                    return vToken;
+                } catch (error) {
+                    console.log(String(error));
+                    return "FakeToken";
+                }
             },
 
-            sendVerificationRequest(param) {
-                sendVerificationRequest(param);
+            async sendVerificationRequest(param) {
+                try {
+                    await sendVerificationRequest(param);
+                } catch (error) {
+                    console.log(String(error));
+                }
             },
             maxAge: 60 * 5
         })
