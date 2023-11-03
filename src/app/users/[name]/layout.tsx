@@ -21,8 +21,6 @@ export default async function Layout({
     });
 
     if (!user || !user.data || user.error) {
-        console.log(user);
-
         return (
             <BaseLayout>
                 <section className=" flex h-full items-center justify-center">

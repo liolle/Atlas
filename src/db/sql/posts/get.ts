@@ -109,8 +109,6 @@ export async function getPost(
 export async function getAllPosts(
     options: GetPostInput
 ): Promise<PostType[] | BaseError | null> {
-    console.log(options);
-
     const generatedQuery = options.reference
         ? getAllWithRef(options)
         : getAll(options);

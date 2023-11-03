@@ -70,6 +70,8 @@ export const UpdateUser = async ({
               self: ""
           };
 
+    console.log("Res:", result);
+
     if (!result) return response;
 
     new APIDispatcher(response).dispatch(result);

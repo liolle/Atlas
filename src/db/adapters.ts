@@ -24,7 +24,6 @@ export default function CustomDrizzleAdapter(
         },
 
         async getUser(id: string): Promise<AdapterUser | null> {
-            console.log("getUser");
             return (await client
                 .select()
                 .from(users)
@@ -34,7 +33,6 @@ export default function CustomDrizzleAdapter(
                 )) as AdapterUser | null;
         },
         async getUserByEmail(email: string): Promise<AdapterUser | null> {
-            console.log("getUserByEmail");
             try {
                 return (await client
                     .select()
@@ -58,7 +56,6 @@ export default function CustomDrizzleAdapter(
             providerAccountId,
             provider
         }): Promise<AdapterUser | null> {
-            console.log("getUserByAccount");
             const dbAccount =
                 (await client
                     .select()
@@ -81,7 +78,6 @@ export default function CustomDrizzleAdapter(
         async updateUser(
             user: Partial<AdapterUser> & Pick<AdapterUser, "id">
         ): Promise<AdapterUser> {
-            console.log("updateUser");
             if (!user.id) {
                 throw new Error("No user id.");
             }
@@ -94,7 +90,6 @@ export default function CustomDrizzleAdapter(
                 .then((res) => res[0])) as AdapterUser;
         },
         async deleteUser(userId: string): Promise<AdapterUser | null> {
-            console.log("deleteUser");
             return (await client
                 .delete(users)
                 .where(eq(users.id, userId))
@@ -104,32 +99,17 @@ export default function CustomDrizzleAdapter(
         async linkAccount(
             rawAccount: AdapterAccount
         ): Promise<AdapterAccount | null | undefined> {
-            console.log("linkAccount");
             const updatedAccount = await client
                 .insert(accounts)
                 .values(rawAccount)
                 .returning()
                 .then((res: unknown[]) => res[0]);
 
-            // Drizzle will return `null` for fields that are not defined.
-            // However, the return type is expecting `undefined`.
-            // const account = {
-            //     ...updatedAccount,
-            //     access_token: updatedAccount.access_token ?? undefined,
-            //     token_type: updatedAccount.token_type ?? undefined,
-            //     id_token: updatedAccount.id_token ?? undefined,
-            //     refresh_token: updatedAccount.refresh_token ?? undefined,
-            //     scope: updatedAccount.scope ?? undefined,
-            //     expires_at: updatedAccount.expires_at ?? undefined,
-            //     session_state: updatedAccount.session_state ?? undefined
-            // };
-
             return updatedAccount as AdapterAccount;
         },
         async unlinkAccount(
             account: Pick<AdapterAccount, "provider" | "providerAccountId">
         ): Promise<AdapterAccount | undefined> {
-            console.log("unlinkAccount");
             const { type, provider, providerAccountId, userId } = (await client
                 .delete(accounts)
                 .where(
@@ -151,7 +131,6 @@ export default function CustomDrizzleAdapter(
             userId: string;
             expires: Date;
         }): Promise<AdapterSession> {
-            console.log("createSession");
             return (await client
                 .insert(sessions)
                 .values(data)
@@ -161,7 +140,6 @@ export default function CustomDrizzleAdapter(
         async getSessionAndUser(
             sessionToken: string
         ): Promise<{ session: AdapterSession; user: AdapterUser } | null> {
-            console.log("getSessionAndUser");
             return (await client
                 .select({
                     session: sessions,
@@ -178,7 +156,6 @@ export default function CustomDrizzleAdapter(
         async updateSession(
             data: Partial<AdapterSession> & Pick<AdapterSession, "sessionToken">
         ): Promise<AdapterSession | null | undefined> {
-            console.log("updateSession");
             return (await client
                 .update(sessions)
                 .set(data)
@@ -192,7 +169,6 @@ export default function CustomDrizzleAdapter(
         async deleteSession(
             sessionToken: string
         ): Promise<AdapterSession | null | undefined> {
-            console.log("deleteSession");
             const session = await client
                 .delete(sessions)
                 .where(eq(sessions.sessionToken, sessionToken))
@@ -204,7 +180,6 @@ export default function CustomDrizzleAdapter(
         async createVerificationToken(
             token: VerificationToken
         ): Promise<VerificationToken | null | undefined> {
-            console.log("createVerificationToken");
             return await client
                 .insert(verificationTokens)
                 .values(token)
@@ -215,7 +190,6 @@ export default function CustomDrizzleAdapter(
             identifier: string;
             token: string;
         }): Promise<VerificationToken | null> {
-            console.log("useVerificationToken");
             try {
                 return await client
                     .delete(verificationTokens)

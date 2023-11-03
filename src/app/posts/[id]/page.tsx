@@ -33,7 +33,7 @@ export default async function Page({ params }: { params: { id: string } }) {
 
     if (!result) {
         return (
-            <div className="flex h-full w-full items-center justify-center ">
+            <div className="flex h-full w-full items-center justify-center border-r-2 border-accent-2 ">
                 <span> Oops this post does not exist</span>
             </div>
         );
@@ -52,8 +52,8 @@ export default async function Page({ params }: { params: { id: string } }) {
     }
 
     return (
-        <div>
-            <div className="h-full w-full border-b-2 border-accent-2 p-6">
+        <div className=" min-h-screen border-r-2 border-accent-2">
+            <div className="h-full w-full   p-6">
                 {!!subject && (
                     <CardPostDisplay
                         key={(subject as PostTypeElement).item.id}
@@ -61,7 +61,7 @@ export default async function Page({ params }: { params: { id: string } }) {
                     />
                 )}
             </div>
-            <div className="h-full w-full py-4 ">
+            <div className="h-full w-full  py-4 ">
                 <Suspense fallback={<div>Loading</div>}>
                     <InfiniteScrollPosts posts={posts || []} />
                 </Suspense>

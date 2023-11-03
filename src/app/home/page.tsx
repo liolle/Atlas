@@ -39,7 +39,7 @@ export default async function Home() {
             <section className="  flex h-full w-full gap-4  @container">
                 <div className="flex h-full w-full overflow-y-auto">
                     <div className="  flex h-fit min-h-screen  flex-[3_1_0] flex-col border-r-2 border-accent-2  ">
-                        <div className=" sticky left-0 top-0 z-10 flex h-[70px] w-[100%] items-center  justify-between px-4 backdrop-blur-sm ">
+                        <div className=" sticky left-0 top-0 z-10 flex h-[70px] w-[100%] items-center justify-between border-b-2 border-accent-2 px-4 backdrop-blur-sm ">
                             <div></div>
                             <PostDialog>New post</PostDialog>
                         </div>

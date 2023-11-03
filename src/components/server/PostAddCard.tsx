@@ -65,9 +65,6 @@ const PostAddCard = ({
             router.refresh();
             onStatusChange(false);
         }
-        // setIsSending(false);
-        // setCharacters(0);
-        // resetInput();
     };
 
     return (
