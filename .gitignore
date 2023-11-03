@@ -39,5 +39,3 @@ next-env.d.ts
 # database
 .db
 drizzle
-src/db/schema.ts
-src/db/sql/**/sql.ts
