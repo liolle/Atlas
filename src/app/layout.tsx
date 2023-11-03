@@ -10,8 +10,8 @@ import { Toaster } from "react-hot-toast";
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
-    title: "Nextjs-template",
-    description: "Reusable project starter"
+    title: "Atlas",
+    description: "Share your thoughts, updates, and insights in real-time"
 };
 
 export default async function RootLayout({
