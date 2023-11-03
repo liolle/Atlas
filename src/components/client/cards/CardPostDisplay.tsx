@@ -6,6 +6,7 @@ import { useRouter } from "next/navigation";
 import { ToastMessage } from "@/src/services/toast/toast";
 import { timeAgo } from "@/src/lib/time";
 import { MessageCircle } from "lucide-react";
+import { LikeSVG } from "../../server/logo";
 
 interface CardPostDisplayProps {
     post: PostType;
@@ -17,7 +18,6 @@ const CardPostDisplay = ({ post }: CardPostDisplayProps) => {
 
     const handlePostClick = (e: MouseEvent<HTMLDivElement>) => {
         e.preventDefault();
-        console.log("div click");
         router.push(`/posts/${post.id}`);
     };
 
@@ -106,7 +106,7 @@ const CardPostDisplay = ({ post }: CardPostDisplayProps) => {
 
                     <div
                         onClick={handleCommentClick}
-                        className={`  hover:text-accent-Com flex cursor-pointer items-center gap-1  p-[0.5rem] text-accent-2`}
+                        className={`  flex cursor-pointer items-center gap-1 p-[0.5rem]  text-accent-2 hover:text-accent-Com`}
                     >
                         <MessageCircle />
                         <span>{post.comments}</span>
@@ -115,120 +115,6 @@ const CardPostDisplay = ({ post }: CardPostDisplayProps) => {
                 <div>{timeAgo(post.created_at)}</div>
             </div>
         </div>
-    );
-};
-
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-const RePostSVG = () => {
-    return (
-        <svg
-            className=" h-4 w-4 text-accent-2"
-            fill="none"
-            height="24"
-            stroke="currentColor"
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            strokeWidth="2"
-            viewBox="0 0 24 24"
-            width="24"
-            xmlns="http://www.w3.org/2000/svg"
-        >
-            <path d="M3 12a9 9 0 0 1 9-9 9.75 9.75 0 0 1 6.74 2.74L21 8" />
-            <path d="M21 3v5h-5" />
-            <path d="M21 12a9 9 0 0 1-9 9 9.75 9.75 0 0 1-6.74-2.74L3 16" />
-            <path d="M8 16H3v5" />
-        </svg>
-    );
-};
-
-interface LikeSVGProps {
-    isLiked?: boolean;
-    size?: number;
-}
-
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-const LikeSVG = ({ isLiked = false, size = 24 }: LikeSVGProps) => {
-    return (
-        <svg
-            className={` ${isLiked && " fill-current"}  stroke-current `}
-            fill="none"
-            width={size}
-            height={size}
-            viewBox={`0 0 ${size} ${size}`}
-            xmlns="http://www.w3.org/2000/svg"
-        >
-            <path
-                d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"
-                stroke="currentColor"
-                strokeWidth="2"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-            />
-        </svg>
-    );
-};
-
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-const DownloadSVG = () => {
-    return (
-        <svg
-            className=" h-4 w-4 text-accent-2"
-            fill="none"
-            height="24"
-            stroke="currentColor"
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            strokeWidth="2"
-            viewBox="0 0 24 24"
-            width="24"
-            xmlns="http://www.w3.org/2000/svg"
-        >
-            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
-            <polyline points="17 8 12 3 7 8" />
-            <line x1="12" x2="12" y1="3" y2="15" />
-        </svg>
-    );
-};
-
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-const MoreSVG = () => {
-    return (
-        <svg
-            className=" h-4 w-4 text-accent-2"
-            fill="none"
-            height="24"
-            stroke="currentColor"
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            strokeWidth="2"
-            viewBox="0 0 24 24"
-            width="24"
-            xmlns="http://www.w3.org/2000/svg"
-        >
-            <circle cx="12" cy="12" r="1" />
-            <circle cx="19" cy="12" r="1" />
-            <circle cx="5" cy="12" r="1" />
-        </svg>
-    );
-};
-
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-const BokmarkSVG = () => {
-    return (
-        <svg
-            className=" h-4 w-4 text-accent-2"
-            fill="none"
-            height="24"
-            stroke="currentColor"
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            strokeWidth="2"
-            viewBox="0 0 24 24"
-            width="24"
-            xmlns="http://www.w3.org/2000/svg"
-        >
-            <path d="m19 21-7-4-7 4V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2v16z" />
-        </svg>
     );
 };
 
