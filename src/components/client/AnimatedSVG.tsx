@@ -59,8 +59,10 @@ export const AnimatedNavButton = () => {
                 ease: "easeInOut"
             }}
         >
-            <Button variant="outline">
-                <Link href="/home">Home</Link>
+            <Button variant="outline" className=" px-0 py-0">
+                <Link className=" px-4 py-2" href="/home">
+                    Home
+                </Link>
             </Button>
         </motion.div>
     );

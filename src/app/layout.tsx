@@ -11,7 +11,11 @@ const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
     title: "Atlas",
-    description: "Share your thoughts, updates, and insights in real-time"
+    description: "Share your thoughts, updates, and insights in real-time",
+    metadataBase: new URL("https://atlas-vertex.vercel.app"),
+    alternates: {
+        canonical: "/"
+    }
 };
 
 export default async function RootLayout({
