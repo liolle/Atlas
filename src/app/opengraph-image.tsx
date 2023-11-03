@@ -7,14 +7,14 @@ export const runtime = "edge";
 // Image metadata
 export const alt = "Atlas";
 export const size = {
-    width: 48,
-    height: 48
+    width: 305,
+    height: 305
 };
 
 export const contentType = "image/png";
 
 export default async function Image() {
-    return new ImageResponse(<LogoSVG size={48} />, {
+    return new ImageResponse(<LogoSVG size={305} />, {
         ...size
     });
 }
