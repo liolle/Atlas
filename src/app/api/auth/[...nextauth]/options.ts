@@ -38,13 +38,8 @@ export const authOptions: NextAuthOptions = {
             from: process.env.EMAIL_FROM,
 
             async generateVerificationToken() {
-                try {
-                    const vToken = await generateVToken();
-                    return vToken;
-                } catch (error) {
-                    console.log(String(error));
-                    return "FakeToken";
-                }
+                const vToken = await generateVToken();
+                return vToken;
             },
 
             async sendVerificationRequest(param) {
