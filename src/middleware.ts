@@ -3,7 +3,7 @@ import { NextResponse } from "next/server";
 
 const NotProtectedPages = {
     "/": true,
-    "opengraph-image": true
+    "/opengraph-image": true
 };
 
 export default withAuth(
