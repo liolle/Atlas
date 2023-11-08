@@ -15,11 +15,9 @@ const MessageToast = ({ message, t }: MessageToastProps) => {
     return (
         <div
             onClick={handleClose}
-            className={` shadow-toast border-[1px] border-accent-2 flex w-fit cursor-pointer select-none  rounded-lg  bg-bgc text-content  `}
+            className={` flex w-fit cursor-pointer select-none rounded-lg border-[1px] border-accent-2  bg-bgc  text-content shadow-toast  `}
         >
-            <div className=" flex-1 p-4">
-                {message}
-            </div>
+            <div className=" flex-1 p-4">{message}</div>
         </div>
     );
 };

@@ -6,6 +6,10 @@ import { HttpRequest } from "@smithy/protocol-http";
 import { parseUrl } from "@smithy/url-parser";
 import { BaseError, RequestErrorType } from "../../types";
 
+// import { DeleteObjectCommand, S3Client } from "@aws-sdk/client-s3";
+
+// const client = new S3Client({});
+
 const presignedUrl = async (key: string): Promise<string | BaseError> => {
     if (!process.env.AWS_REGION || !process.env.AWS_BUCKET_NAME) {
         return {
@@ -37,6 +41,8 @@ const presignedUrl = async (key: string): Promise<string | BaseError> => {
     }
 };
 
-const UploadServiceServer = { presignedUrl };
+const deleteFile = async () => {};
+
+const UploadServiceServer = { presignedUrl, deleteFile };
 
 export default UploadServiceServer;
