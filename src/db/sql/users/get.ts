@@ -2,13 +2,14 @@ import { sql } from "drizzle-orm";
 import { dzClient } from "@/src/db/index";
 import {
     BaseError,
-    GetUserType,
+    GetUserInput,
     RequestErrorType,
+    SQLInterfaceOptions,
     UserType
 } from "@/src/types";
 import { followers, users } from "../../schema";
 
-const getByField = (options: GetUserType["input"]) => {
+const getByField = (input: GetUserInput) => {
     const statement = sql`
         SELECT 
             u.name,
@@ -17,9 +18,9 @@ const getByField = (options: GetUserType["input"]) => {
             u.created_at,
             CASE WHEN f2.self IS NOT NULL THEN true ELSE false END as following 
         FROM ${users} u
-        LEFT JOIN ${followers} f2 ON f2.self = ${options.self}
+        LEFT JOIN ${followers} f2 ON f2.self = ${input.self}
             AND u.name = f2.follow
-        WHERE ${sql.raw(options.field)} = ${options.value}
+        WHERE ${sql.raw(input.field)} = ${input.value}
     `;
 
     return {
@@ -28,7 +29,7 @@ const getByField = (options: GetUserType["input"]) => {
     };
 };
 
-const getAll = (options: GetUserType["input"]) => {
+const getAll = (input: GetUserInput) => {
     const statement = sql`
     SELECT 
         u.name,
@@ -37,7 +38,7 @@ const getAll = (options: GetUserType["input"]) => {
         u.created_at,
         CASE WHEN f2.self IS NOT NULL THEN true ELSE false END as following
     FROM "user" u
-    LEFT JOIN ${followers} f2 ON f2.self = ${options.self}
+    LEFT JOIN ${followers} f2 ON f2.self = ${input.self}
         AND u.name = f2.follow
         
     `;
@@ -49,10 +50,13 @@ const getAll = (options: GetUserType["input"]) => {
 };
 
 export async function getUsers(
-    options: GetUserType["input"]
+    input: GetUserInput,
+    options?: SQLInterfaceOptions
 ): Promise<UserType[] | BaseError | null> {
-    if (!options.value) return null;
-    const generatedQuery = getByField(options);
+    if (options && options.mocked) return options.mockValue;
+
+    if (!input.value) return null;
+    const generatedQuery = getByField(input);
 
     try {
         const result = await dzClient.execute(generatedQuery.query);
@@ -67,9 +71,17 @@ export async function getUsers(
 }
 
 export async function getAllUsers(
-    options: GetUserType["input"]
+    input: GetUserInput,
+    options?: SQLInterfaceOptions
 ): Promise<UserType[] | BaseError | null> {
-    const generatedQuery = getAll(options);
+    if (!input.value && input.field != "all")
+        return {
+            error: "Incorrect input combination",
+            details: "Missing value when field in not 'all'"
+        };
+
+    if (options && options.mocked) return options.mockValue;
+    const generatedQuery = getAll(input);
 
     try {
         const result = await dzClient.execute(generatedQuery.query);

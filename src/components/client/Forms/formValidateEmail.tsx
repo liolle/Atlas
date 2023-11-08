@@ -3,7 +3,6 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
 import React, { useEffect, useState } from "react";
 import { Button } from "@/src/components/ui/button";
-import PropTypes from "prop-types";
 import {
     Form,
     FormControl,
@@ -128,8 +127,4 @@ const EmailVerification = ({
             </form>
         </Form>
     );
-};
-
-FormEmailValidation.propTypes = {
-    type: PropTypes.oneOf(["email"])
 };

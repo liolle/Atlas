@@ -7,10 +7,10 @@ import {
     APIVersion,
     AddPostInput,
     GetPostInput,
+    GetUserInput,
     LikeXInput,
     UpdateFollowStrField,
     UserFollowGetStrField,
-    UserGetStrField,
     UserUpdateStrField
 } from "../types";
 import { UnFollowUsers } from "./sql/follows/delete";
@@ -23,7 +23,7 @@ import { getAllUsers, getUsers } from "./sql/users/get";
 import updateUser from "./sql/users/update";
 
 interface GetUsersProps {
-    input: UserGetStrField;
+    input: GetUserInput;
     APIResponse?: APIResponse;
     options?: APIOptions;
 }
