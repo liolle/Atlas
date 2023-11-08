@@ -6,8 +6,8 @@ import {
     integer,
     serial
 } from "drizzle-orm/pg-core";
-import type { AdapterAccount } from "@auth/core/adapters";
 import { relations, sql } from "drizzle-orm";
+import { AdapterAccount } from "next-auth/adapters";
 
 // AUTH
 export const users = pgTable("user", {

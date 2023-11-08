@@ -25,6 +25,7 @@
         "@radix-ui/react-popover": "^1.0.7",
         "@radix-ui/react-separator": "^1.0.3",
         "@smithy/hash-node": "^2.0.12",
+        "@smithy/protocol-http": "^3.0.8",
         "@smithy/url-parser": "^2.0.12",
         "aws-crt": "^1.18.3",
         "bcryptjs": "^2.4.3",
