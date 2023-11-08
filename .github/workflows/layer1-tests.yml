@@ -25,14 +25,15 @@ jobs:
                   key: node_modules-${{hashFiles('package-lock.json')}}
                   restore-keys: node_modules-
 
-            - name: Install dependencies
-              run: npm install
+            - uses: pnpm/action-setup@v2
+              with:
+                  version: 8
 
             - name: Run type checking
-              run: npx tsc
+              run: pnpm tsc
 
             - name: Run tests
-              run: npm test
+              run: pnpm test
 
             - name: Create Pull Request
               run: gh pr create --base "test" --head "dev" --title "L1 tests" --body "Automated tests"
