@@ -61,6 +61,10 @@ export type PostType = {
     liked: boolean;
 };
 
+export type SQLInterfaceOptions = {
+    mocked: boolean;
+    mockValue: UserType[] | null;
+};
 //-->Create
 
 export type AddPostInput = {
@@ -81,10 +85,10 @@ export type LikeXInput = {
 
 //-->Read
 
-export type UserGetStrField = {
+export type GetUserInput = {
     self: string;
     field: "name" | "id" | "email" | "all";
-    value: string;
+    value?: string;
 };
 
 export type GetPostInput = {
@@ -151,7 +155,7 @@ export type LinkAction = {
 
 //Actionable//
 export type GetUserType = {
-    input: UserGetStrField;
+    input: GetPostInput;
     output: {
         data: UserType;
         actions: LinkAction[];
