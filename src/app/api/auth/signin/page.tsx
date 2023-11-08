@@ -1,7 +1,6 @@
 import { FormSignIn } from "@/src/components/client/Forms/formSignIn";
 import React from "react";
 import { NextPage } from "next";
-import PropTypes from "prop-types";
 import GoogleButton from "@/src/components/client/Buttons/google";
 import { Separator } from "@/src/components/ui/separator";
 import DiscordButton from "@/src/components/client/Buttons/discord";
@@ -22,10 +21,6 @@ const SignIn: NextPage = async () => {
             </section>
         </main>
     );
-};
-
-SignIn.propTypes = {
-    providers: PropTypes.object.isRequired
 };
 
 export default SignIn;

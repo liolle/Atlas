@@ -12,7 +12,6 @@ import {
 import { Input } from "@/src/components/ui/input";
 import { EmailValidation } from "@/src/types";
 import { zodResolver } from "@hookform/resolvers/zod";
-import PropTypes from "prop-types";
 import { useForm } from "react-hook-form";
 import * as z from "zod";
 import { useRouter } from "next/navigation";
@@ -123,7 +122,3 @@ export function FormUpdateUser({
         </Form>
     );
 }
-
-FormUpdateUser.propTypes = {
-    type: PropTypes.oneOf(["email"])
-};
