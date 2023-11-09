@@ -68,6 +68,18 @@ export function FormPictureUpload({ session }: { session: Session | null }) {
                 })
             });
 
+            const oldKey = session?.user?.image;
+
+            if (oldKey) {
+                const key = oldKey.split("/").pop();
+
+                if (key) {
+                    await fetch(`/api/services/aws/s3/objdelete?key=${key}`, {
+                        method: "POST"
+                    });
+                }
+            }
+
             if (!result.ok) {
                 const { error, details } = await response.json();
                 details ? ToastMessage(details) : ToastMessage(error);
