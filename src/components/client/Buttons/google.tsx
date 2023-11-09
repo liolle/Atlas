@@ -3,7 +3,7 @@ import { signIn } from "next-auth/react";
 import React from "react";
 import { Button } from "@/src/components/ui/button";
 import Image from "next/image";
-import GoogleIcon from "/public/icon/google.svg";
+import GoogleIcon from "@/public/icon/google.svg";
 import { ToastMessage } from "@/src/services/toast/toast";
 
 const GoogleButton = () => {

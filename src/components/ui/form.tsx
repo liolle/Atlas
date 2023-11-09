@@ -1,3 +1,4 @@
+/* eslint-disable react/prop-types */
 import * as React from "react";
 import * as LabelPrimitive from "@radix-ui/react-label";
 import { Slot } from "@radix-ui/react-slot";
@@ -12,8 +13,6 @@ import {
 
 import { cn } from "@/src/lib/utils";
 import { Label } from "@/src/components/ui/label";
-
-import PropTypes from "prop-types";
 
 const Form = FormProvider;
 
@@ -166,19 +165,6 @@ const FormMessage = React.forwardRef<
     );
 });
 FormMessage.displayName = "FormMessage";
-
-FormItem.propTypes = {
-    className: PropTypes.string
-};
-FormLabel.propTypes = {
-    className: PropTypes.string
-};
-FormDescription.propTypes = {
-    className: PropTypes.string
-};
-FormMessage.propTypes = {
-    className: PropTypes.string
-};
 
 export {
     useFormField,
