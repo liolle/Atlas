@@ -91,6 +91,19 @@ export type GetUserInput = {
     value?: string;
 };
 
+export type GetUserFollowInput = {
+    self: string;
+    field: "self" | "follow";
+    value: string;
+};
+
+export type GetUserFollowType = {
+    input: GetUserFollowInput;
+    output: {
+        data: FollowType;
+        actions: LinkAction[];
+    }[];
+};
 export type GetPostInput = {
     self: string;
     field: "owner" | "id" | "all";
@@ -100,6 +113,25 @@ export type GetPostInput = {
 
 //-->Update
 
+export type UpdateUserInput = {
+    field: "name" | "image";
+    value: string;
+    email: string;
+};
+
+export type UpdateFollowInput = {
+    type: "follow" | "unfollow";
+    self: string;
+    follow: string;
+};
+
+export type UpdateUserType = {
+    input: UpdateUserInput;
+    output: {
+        id: number;
+    }[];
+};
+
 //-->Delete
 
 export type DeletePostInput = {
@@ -107,39 +139,6 @@ export type DeletePostInput = {
 };
 
 //DB TYPES//
-
-export type UserFollowGetStrField = {
-    self: string;
-    field: "self" | "follow";
-    value: string;
-};
-
-export type UserUpdateStrField = {
-    field: "name" | "image";
-    value: string;
-    email: string;
-};
-
-export type UpdateFollowStrField = {
-    type: "follow" | "unfollow";
-    self: string;
-    follow: string;
-};
-
-export type GetUserFollowType = {
-    input: UserFollowGetStrField;
-    output: {
-        data: FollowType;
-        actions: LinkAction[];
-    }[];
-};
-
-export type UpdateUserType = {
-    input: UserUpdateStrField;
-    output: {
-        id: number;
-    }[];
-};
 
 export type DBReturnType = {
     error?: unknown;
