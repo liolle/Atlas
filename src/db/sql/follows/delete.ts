@@ -1,8 +1,8 @@
 import { sql } from "drizzle-orm";
 import { dzClient } from "@/src/db/index";
-import { BaseError, RequestErrorType, UpdateFollowStrField } from "@/src/types";
+import { BaseError, RequestErrorType, UpdateFollowInput } from "@/src/types";
 
-const unfollow = (options: UpdateFollowStrField) => {
+const unfollow = (options: UpdateFollowInput) => {
     const statement = sql`
     DELETE FROM followers 
         WHERE self = ${options.self} AND follow = ${options.follow};
@@ -15,7 +15,7 @@ const unfollow = (options: UpdateFollowStrField) => {
 };
 
 export async function UnFollowUsers(
-    options: UpdateFollowStrField
+    options: UpdateFollowInput
 ): Promise<BaseError | null> {
     const generatedQuery = unfollow(options);
     try {

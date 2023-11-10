@@ -3,7 +3,9 @@ import React, { useEffect, useState } from "react";
 import { Button } from "../../ui/button";
 
 import * as Dialog from "@radix-ui/react-dialog";
-import PostAddCard from "../../server/PostAddCard";
+import PostAddCard from "../Dialog/AddPost/PostAddCard";
+import { PostAddProvider } from "@/src/context/PostAddProvider";
+import { PostAddProviderFile } from "@/src/context/PostAddProviderFile";
 
 interface PostAddCardProps {
     reference?: string;
@@ -41,11 +43,17 @@ const PostDialog = ({ reference, children }: PostAddCardProps) => {
             <Dialog.Portal>
                 <Dialog.Overlay className="fixed inset-0 bg-fgc/50" />
                 <Dialog.Content className="fixed left-1/2 top-1/2 flex w-full -translate-x-1/2 -translate-y-1/2  px-4 shadow md:w-[800px]">
-                    <PostAddCard
-                        onStatusChange={setOpen}
-                        maxCharacters={200}
-                        reference={reference}
-                    />
+                    <PostAddProviderFile>
+                        <PostAddProvider
+                            options={{
+                                reference: reference,
+                                maxCharacter: 200,
+                                onStatusChange: setOpen
+                            }}
+                        >
+                            <PostAddCard reference={reference} />
+                        </PostAddProvider>
+                    </PostAddProviderFile>
                 </Dialog.Content>
             </Dialog.Portal>
         </Dialog.Root>

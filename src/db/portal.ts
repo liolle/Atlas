@@ -9,9 +9,9 @@ import {
     GetPostInput,
     GetUserInput,
     LikeXInput,
-    UpdateFollowStrField,
-    UserFollowGetStrField,
-    UserUpdateStrField
+    UpdateFollowInput,
+    GetUserFollowInput,
+    UpdateUserInput
 } from "../types";
 import { UnFollowUsers } from "./sql/follows/delete";
 import { getFollow } from "./sql/follows/get";
@@ -51,7 +51,7 @@ export const GetUsers = async ({
 };
 
 interface UpdateUserProps {
-    input: UserUpdateStrField;
+    input: UpdateUserInput;
     APIResponse?: APIResponse;
     options?: APIOptions;
 }
@@ -80,7 +80,7 @@ export const UpdateUser = async ({
 };
 
 interface GetFollowsProps {
-    input: UserFollowGetStrField;
+    input: GetUserFollowInput;
     APIResponse?: APIResponse;
     options?: APIOptions;
 }
@@ -107,7 +107,7 @@ export const GetFollows = async ({
 };
 
 interface UpdateFollowsProps {
-    input: UpdateFollowStrField;
+    input: UpdateFollowInput;
     APIResponse?: APIResponse;
     options?: APIOptions;
 }
