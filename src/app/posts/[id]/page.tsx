@@ -53,7 +53,7 @@ export default async function Page({ params }: { params: { id: string } }) {
 
     return (
         <div className=" min-h-screen border-r-2 border-accent-2">
-            <div className="h-full w-full   p-6">
+            <div className="h-full w-full border-b-2 border-accent-2 px-2 py-6">
                 {!!subject && (
                     <CardPostDisplay
                         key={(subject as PostTypeElement).item.id}
