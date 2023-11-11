@@ -7,7 +7,7 @@ import {
     POST_ID_LEN,
     USER_ID_LEN,
     VERIFICATION_TOKEN_LEN
-} from "../types";
+} from "@/src/types";
 import { cryptoGenerate } from "./generator";
 import bcrypt from "bcryptjs";
 

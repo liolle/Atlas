@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
-import { APIDispatcher } from "../lib/apiDispatcher";
-import { generatePictureID, generatePostID } from "../lib/utils";
+import { APIDispatcher } from "@/src/lib/apiDispatcher";
+import { generatePictureID, generatePostID } from "@/src/lib/utils";
 import {
     APIOptions,
     APIResponse,
@@ -15,7 +15,7 @@ import {
     AddMediaInput,
     BaseError,
     isBaseError
-} from "../types";
+} from "@/src/types";
 import { UnFollowUsers } from "./sql/follows/delete";
 import { getFollow } from "./sql/follows/get";
 import { FollowUsers } from "./sql/follows/post";

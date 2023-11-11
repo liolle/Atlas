@@ -1,7 +1,7 @@
 "use client";
 import { generatePictureID } from "@/src/lib/utils";
 import { BaseError, RequestErrorType, isBaseError } from "@/src/types";
-import UploadServiceClient from "../../aws/client/clientSafe";
+import UploadServiceClient from "@/src/services/aws/client";
 import { Session } from "next-auth";
 
 interface ClientChangeProfilePictureInput {

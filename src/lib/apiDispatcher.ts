@@ -16,7 +16,7 @@ import {
     isFollowType,
     isPostType,
     isUserType
-} from "../types";
+} from "@/src/types";
 
 export class APIDispatcher {
     private response: APIResponse;

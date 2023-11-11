@@ -1,7 +1,7 @@
 import { sql } from "drizzle-orm";
 import { dzClient } from "@/src/db/index";
 import { BaseError, RequestErrorType, UpdateUserType } from "@/src/types";
-import { users } from "../../schema";
+import { users } from "@/src/db/schema";
 
 const generate = (options: UpdateUserType["input"]) => {
     const statement = sql`

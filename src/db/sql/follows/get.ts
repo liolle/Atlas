@@ -6,7 +6,7 @@ import {
     GetUserFollowType,
     RequestErrorType
 } from "@/src/types";
-import { followers, users } from "../../schema";
+import { followers, users } from "@/src/db/schema";
 
 const getByField = (options: GetUserFollowType["input"]) => {
     const statement = sql`

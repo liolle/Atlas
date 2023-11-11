@@ -3,7 +3,7 @@ import { Button } from "@/src/components/ui/button";
 import { PostAddContext } from "@/src/context/PostAddProvider";
 import { PostAddContextFile } from "@/src/context/PostAddProviderFile";
 import AtlasClient from "@/src/services/atlas/client";
-import UploadServiceClient from "@/src/services/aws/client/clientSafe";
+import UploadServiceClient from "@/src/services/aws/client";
 import { ToastMessage } from "@/src/services/toast/toast";
 import { isBaseError } from "@/src/types";
 

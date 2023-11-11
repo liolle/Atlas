@@ -1,7 +1,7 @@
 import { sql } from "drizzle-orm";
 import { dzClient } from "@/src/db/index";
 import { AddPostInput, BaseError, RequestErrorType } from "@/src/types";
-import { posts } from "../../schema";
+import { posts } from "@/src/db/schema";
 
 const generatePost = (options: AddPostInput) => {
     const statement = sql`

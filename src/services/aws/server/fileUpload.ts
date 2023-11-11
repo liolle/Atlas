@@ -4,7 +4,7 @@ import { formatUrl } from "@aws-sdk/util-format-url";
 import { Hash } from "@smithy/hash-node";
 import { HttpRequest } from "@smithy/protocol-http";
 import { parseUrl } from "@smithy/url-parser";
-import { BaseError, RequestErrorType } from "../../../types";
+import { BaseError, RequestErrorType } from "@/src/types";
 
 import {
     DeleteObjectCommand,
