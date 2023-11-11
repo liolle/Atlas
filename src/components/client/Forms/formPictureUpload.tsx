@@ -15,9 +15,9 @@ import { ToastMessage } from "@/src/services/toast/toast";
 import { useRouter } from "next/navigation";
 import { useSession } from "next-auth/react";
 import { Session } from "next-auth";
-import { generatePictureID } from "@/src/lib/utils";
-import UploadServiceClient from "@/src/services/aws/client/clientSafe";
 import { Camera } from "lucide-react";
+import { isBaseError } from "@/src/types";
+import AtlasClient from "@/src/services/atlas/client";
 
 export function FormPictureUpload({ session }: { session: Session | null }) {
     const inputRef = useRef<HTMLInputElement>(null);
@@ -38,53 +38,19 @@ export function FormPictureUpload({ session }: { session: Session | null }) {
             return;
         const selectedFile = inputRef.current.files[0];
 
-        const extension = selectedFile.name.split(".").pop();
         setIsFetching(true);
         try {
-            const generated_key = await generatePictureID();
-
-            const response = await fetch("/api/services/presignedUrl", {
-                method: "POST",
-                body: JSON.stringify({
-                    key: `${generated_key}.${extension}`
-                })
+            const url = await AtlasClient.changeProfilePicture({
+                file: selectedFile,
+                session: session
             });
 
-            const data = await response.json();
-
-            const { url, cdn, key } = data;
-
-            await UploadServiceClient.putS3({
-                url: url as string,
-                data: selectedFile
-            });
-
-            const result = await fetch("/api/users", {
-                method: "POST",
-                body: JSON.stringify({
-                    field: "image",
-                    value: `https://${cdn}/${key}`,
-                    email: session?.user?.email
-                })
-            });
-
-            const oldKey = session?.user?.image;
-
-            if (oldKey) {
-                const key = oldKey.split("/").pop();
-
-                if (key) {
-                    await fetch(`/api/services/aws/s3/objdelete?key=${key}`, {
-                        method: "POST"
-                    });
-                }
-            }
-
-            if (!result.ok) {
-                const { error, details } = await response.json();
-                details ? ToastMessage(details) : ToastMessage(error);
+            if (isBaseError(url)) {
+                ToastMessage(url.details);
+                setIsFetching(false);
                 return;
             }
+
             setIsFetching(false);
             setChanged(false);
             await update();
