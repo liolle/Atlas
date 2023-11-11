@@ -1,14 +1,24 @@
 "use client";
 import { Button } from "@/src/components/ui/button";
 import { PostAddContext } from "@/src/context/PostAddProvider";
+import { PostAddContextFile } from "@/src/context/PostAddProviderFile";
+import AtlasClient from "@/src/services/atlas/client";
+import UploadServiceClient from "@/src/services/aws/client/clientSafe";
 import { ToastMessage } from "@/src/services/toast/toast";
+import { isBaseError } from "@/src/types";
+
 import { useRouter } from "next/navigation";
 import React, { MouseEvent, useContext } from "react";
 
-const PostButton = ({ reference }: { reference?: string }) => {
+interface PostButtonInput {
+    reference?: string;
+    // session:Session
+}
+
+const PostButton = ({ reference }: PostButtonInput) => {
     const { content, isSending, setIsSending, onStatusChange } =
         useContext(PostAddContext);
-
+    const { files } = useContext(PostAddContextFile);
     const router = useRouter();
     const handlePost = async (e: MouseEvent<HTMLButtonElement>) => {
         e.preventDefault();
@@ -18,23 +28,30 @@ const PostButton = ({ reference }: { reference?: string }) => {
             return;
         }
 
-        console.log(reference);
+        console.log(files);
 
         try {
-            // const response = await fetch("/api/posts", {
-            //     method: "POST",
-            //     body: JSON.stringify({
-            //         content: textAreaRef.current.value,
-            //         reference: reference || ""
-            //     })
-            // });
+            const urls = await UploadServiceClient.pushFiles({ files });
 
-            // const result = await response.json();
+            if (isBaseError(urls)) {
+                ToastMessage("Post Failed");
+                setIsSending(false);
+                return;
+            }
 
-            // if (result.error) {
-            //     ToastMessage(result.error.error);
-            //     return;
-            // }
+            const result = await AtlasClient.addPost({
+                input: {
+                    reference: reference,
+                    content: content,
+                    files: urls
+                }
+            });
+
+            if (result) {
+                ToastMessage(result.error);
+                setIsSending(false);
+                return;
+            }
 
             ToastMessage("Post sent");
         } catch (error) {
