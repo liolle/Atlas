@@ -61,16 +61,24 @@ const getPresignedUrl = async ({
     }
 };
 
-const pushFiles = async ({
-    files
-}: {
+interface PushFilesCtx {
     files: File[];
-}): Promise<string[] | BaseError> => {
+    ctx: {
+        origin: "posts";
+    };
+}
+
+const pushFiles = async ({
+    files,
+    ctx
+}: PushFilesCtx): Promise<string[] | BaseError> => {
     try {
+        const fileId = await generatePictureID();
         const preSign = await Promise.all(
-            files.map(async (item) => {
-                let key = await generatePictureID();
-                key += item.name.split(".").pop();
+            files.map(async (item, idx) => {
+                let key = `${ctx.origin}/${fileId}/`;
+                key += `file${idx + 1}`;
+                key += `.${item.name.split(".").pop()}`;
                 const result = await getPresignedUrl({ key });
                 return {
                     info: result,

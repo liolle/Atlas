@@ -31,7 +31,12 @@ const PostButton = ({ reference }: PostButtonInput) => {
         console.log(files);
 
         try {
-            const urls = await UploadServiceClient.pushFiles({ files });
+            const urls = await UploadServiceClient.pushFiles({
+                files: files,
+                ctx: {
+                    origin: "posts"
+                }
+            });
 
             if (isBaseError(urls)) {
                 ToastMessage("Post Failed");
