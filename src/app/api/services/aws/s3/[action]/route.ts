@@ -1,4 +1,4 @@
-import UploadServiceServer from "@/src/services/aws/fileUpload";
+import UploadServiceServer from "@/src/services/aws/server/fileUpload";
 import { APIResponse, APIVersion } from "@/src/types";
 import { NextRequest, NextResponse } from "next/server";
 

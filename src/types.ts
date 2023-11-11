@@ -59,12 +59,14 @@ export type PostType = {
     owner: string;
     image: string;
     liked: boolean;
+    files?: string[];
 };
 
 export type SQLInterfaceOptions = {
     mocked: boolean;
     mockValue: UserType[] | null;
 };
+
 //-->Create
 
 export type AddPostInput = {
@@ -73,6 +75,11 @@ export type AddPostInput = {
     owner: string;
     content: string;
     files: string[];
+};
+
+export type AddMediaInput = {
+    id: string;
+    link: string;
 };
 
 export type AddPostOutput = BaseError | null;
