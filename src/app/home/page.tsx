@@ -52,12 +52,12 @@ export default async function Home() {
                         </div>
 
                         <main className=" flex w-full flex-1">
-                            <div className=" flex-1">
+                            <div className=" w-full flex-1">
                                 <Suspense fallback={<div>Loading</div>}>
                                     <InfiniteScrollPosts posts={posts || []} />
                                 </Suspense>
                             </div>
-                            <div className=" max-w-[400px]  flex-1 flex-col border-l-2 border-accent-2   @[950px]:flex"></div>
+                            <div className=" hidden max-w-[400px]  flex-1 flex-col border-l-2 border-accent-2   @[950px]:flex"></div>
                         </main>
                     </div>
                 </div>
