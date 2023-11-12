@@ -110,6 +110,27 @@ const addPost = async ({
     }
 };
 
-const AtlasClient = { changeProfilePicture, addPost };
+interface likePostInput {
+    id: string;
+}
+const likePost = async ({ id }: likePostInput): Promise<BaseError | null> => {
+    const response = await fetch(`/api/posts/${id}?action=like`, {
+        method: "POST"
+    });
+
+    if (!response.ok) {
+        const result = await response.json();
+
+        if (result.error) {
+            return {
+                error: RequestErrorType.API_REQUEST_FAILED,
+                details: ""
+            };
+        }
+    }
+    return null;
+};
+
+const AtlasClient = { changeProfilePicture, addPost, likePost };
 
 export default AtlasClient;
