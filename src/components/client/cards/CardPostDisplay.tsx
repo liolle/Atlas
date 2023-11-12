@@ -88,7 +88,7 @@ const CardPostDisplay = ({ post }: CardPostDisplayProps) => {
                     </div>
                 </div>
             </div>
-            <div className="space-y-4 px-6 py-4">
+            <div className="w-full space-y-4 px-6 py-4">
                 <div className="text-lg text-content ">{post.content}</div>
                 <CardPostFileDisplay files={post.files || []} />
             </div>
