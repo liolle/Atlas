@@ -6,7 +6,7 @@ import {
     RequestErrorType
 } from "@/src/types";
 import { sql } from "drizzle-orm";
-import { media, post_likes, post_media, posts, users } from "../../schema";
+import { media, post_likes, post_media, posts, users } from "@/src/db/schema";
 
 const getByField = (options: GetPostInput) => {
     const statement = sql`

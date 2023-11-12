@@ -1,7 +1,7 @@
 import { sql } from "drizzle-orm";
 import { dzClient } from "@/src/db/index";
 import { AddMediaInput, BaseError, RequestErrorType } from "@/src/types";
-import { media, post_media } from "../../schema";
+import { media, post_media } from "@/src/db/schema";
 
 const generateMedia = (input: AddMediaInput[]) => {
     let buffer = "";

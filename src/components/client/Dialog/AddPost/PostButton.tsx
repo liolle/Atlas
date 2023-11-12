@@ -3,7 +3,7 @@ import { Button } from "@/src/components/ui/button";
 import { PostAddContext } from "@/src/context/PostAddProvider";
 import { PostAddContextFile } from "@/src/context/PostAddProviderFile";
 import AtlasClient from "@/src/services/atlas/client";
-import UploadServiceClient from "@/src/services/aws/client/clientSafe";
+import UploadServiceClient from "@/src/services/aws/client";
 import { ToastMessage } from "@/src/services/toast/toast";
 import { isBaseError } from "@/src/types";
 
@@ -31,7 +31,12 @@ const PostButton = ({ reference }: PostButtonInput) => {
         console.log(files);
 
         try {
-            const urls = await UploadServiceClient.pushFiles({ files });
+            const urls = await UploadServiceClient.pushFiles({
+                files: files,
+                ctx: {
+                    origin: "posts"
+                }
+            });
 
             if (isBaseError(urls)) {
                 ToastMessage("Post Failed");

@@ -1,7 +1,7 @@
 import { sql } from "drizzle-orm";
 import { dzClient } from "@/src/db/index";
 import { BaseError, LikeXInput, RequestErrorType } from "@/src/types";
-import { post_likes, users } from "../../schema";
+import { post_likes, users } from "@/src/db/schema";
 
 const generateLikePost = (options: LikeXInput) => {
     const statement = sql`
