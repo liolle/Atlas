@@ -15,7 +15,7 @@ const InfiniteScrollPosts = ({ posts }: InfiniteScrollPostsProps) => {
     return (
         <div className="flex h-full w-full   @container">
             <div className=" flex h-full w-full flex-col items-start ">
-                <div className="  h-full w-fit  space-y-4 p-8  ">
+                <div className="  h-full w-full  space-y-4 p-8  ">
                     {posts &&
                         posts.map((post) => {
                             return (
