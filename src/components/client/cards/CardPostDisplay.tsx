@@ -7,6 +7,8 @@ import { ToastMessage } from "@/src/services/toast/toast";
 import { timeAgo } from "@/src/lib/time";
 import { MessageCircle } from "lucide-react";
 import { LikeSVG } from "../../server/logo";
+import AtlasClient from "@/src/services/atlas/client";
+import CardPostFileDisplay from "./CardPostFileDisplay";
 
 interface CardPostDisplayProps {
     post: PostType;
@@ -15,6 +17,8 @@ interface CardPostDisplayProps {
 const CardPostDisplay = ({ post }: CardPostDisplayProps) => {
     const router = useRouter();
     const [isSending, setIsSending] = useState(false);
+    const [liked, setLiked] = useState(post.liked);
+    const [likes, setLikes] = useState(post.likes);
 
     const handlePostClick = (e: MouseEvent<HTMLDivElement>) => {
         e.preventDefault();
@@ -36,18 +40,13 @@ const CardPostDisplay = ({ post }: CardPostDisplayProps) => {
         setIsSending(true);
 
         try {
-            const response = await fetch(`/api/posts/${post.id}?action=like`, {
-                method: "POST"
-            });
+            const response = await AtlasClient.likePost({ id: post.id });
 
-            const result = await response.json();
-
-            if (result.error) {
-                ToastMessage(result.error.error);
+            if (!response) {
+                setLiked(!liked);
+                setLikes(liked ? likes - 1 : likes + 1);
                 return;
             }
-
-            router.refresh();
         } catch (error) {
             ToastMessage(String(error));
         } finally {
@@ -65,7 +64,7 @@ const CardPostDisplay = ({ post }: CardPostDisplayProps) => {
     return (
         <div
             onClick={handlePostClick}
-            className=" h-fit w-full  cursor-pointer overflow-hidden rounded-xl border-2 border-accent-2 bg-bgc hover:bg-accent-2/5"
+            className=" h-fit w-full max-w-3xl  cursor-pointer overflow-hidden rounded-xl border-2 border-accent-2 bg-bgc hover:bg-accent-2/5"
         >
             <div className="flex items-center justify-between px-6 py-4">
                 <div className="flex space-x-4">
@@ -89,19 +88,20 @@ const CardPostDisplay = ({ post }: CardPostDisplayProps) => {
                     </div>
                 </div>
             </div>
-            <div className="px-6 py-4">
-                <div className="text-sm text-content ">{post.content}</div>
+            <div className="space-y-4 px-6 py-4">
+                <div className="text-lg text-content ">{post.content}</div>
+                <CardPostFileDisplay files={post.files || []} />
             </div>
             <div className="flex items-center justify-between border-t border-accent-2 px-4">
                 <div className="flex items-center gap-6 ">
                     <div
                         onClick={handleLikeClick}
                         className={` ${
-                            post.liked && " text-accent-like"
+                            liked && " text-accent-like"
                         } flex cursor-pointer items-center gap-1  p-[0.5rem] text-accent-2  hover:text-accent-like`}
                     >
-                        <LikeSVG isLiked={post.liked} />
-                        <span>{post.likes}</span>
+                        <LikeSVG isLiked={liked} />
+                        <span>{likes}</span>
                     </div>
 
                     <div
