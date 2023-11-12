@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
-import { APIDispatcher } from "../lib/apiDispatcher";
-import { generatePostID } from "../lib/utils";
+import { APIDispatcher } from "@/src/lib/apiDispatcher";
+import { generatePictureID, generatePostID } from "@/src/lib/utils";
 import {
     APIOptions,
     APIResponse,
@@ -9,14 +9,18 @@ import {
     GetPostInput,
     GetUserInput,
     LikeXInput,
-    UpdateFollowStrField,
-    UserFollowGetStrField,
-    UserUpdateStrField
-} from "../types";
+    UpdateFollowInput,
+    GetUserFollowInput,
+    UpdateUserInput,
+    AddMediaInput,
+    BaseError,
+    isBaseError
+} from "@/src/types";
 import { UnFollowUsers } from "./sql/follows/delete";
 import { getFollow } from "./sql/follows/get";
 import { FollowUsers } from "./sql/follows/post";
 import { likeX } from "./sql/likes/post";
+import { MediaPostLinkInput, addMedia, linkPostMedia } from "./sql/medias/post";
 import { getAllPosts, getPost } from "./sql/posts/get";
 import { addPost } from "./sql/posts/post";
 import { getAllUsers, getUsers } from "./sql/users/get";
@@ -51,7 +55,7 @@ export const GetUsers = async ({
 };
 
 interface UpdateUserProps {
-    input: UserUpdateStrField;
+    input: UpdateUserInput;
     APIResponse?: APIResponse;
     options?: APIOptions;
 }
@@ -80,7 +84,7 @@ export const UpdateUser = async ({
 };
 
 interface GetFollowsProps {
-    input: UserFollowGetStrField;
+    input: GetUserFollowInput;
     APIResponse?: APIResponse;
     options?: APIOptions;
 }
@@ -107,7 +111,7 @@ export const GetFollows = async ({
 };
 
 interface UpdateFollowsProps {
-    input: UpdateFollowStrField;
+    input: UpdateFollowInput;
     APIResponse?: APIResponse;
     options?: APIOptions;
 }
@@ -159,10 +163,27 @@ export const AddPost = async ({
               self: ""
           };
 
-    if (!result) return response;
+    if (!result) {
+        const medias = await AddFiles({
+            input: input.files,
+            options: options
+        });
+
+        const binds = await BindFilesToPost({
+            input: medias.map((value) => {
+                return {
+                    media_id: value.id,
+                    post_id: id
+                };
+            })
+        });
+
+        if (!binds) return response;
+        new APIDispatcher(response).dispatch(binds);
+        return response;
+    }
 
     new APIDispatcher(response).dispatch(result);
-
     return response;
 };
 
@@ -219,4 +240,43 @@ export const LikeX = async ({
     new APIDispatcher(response).dispatch(result);
 
     return response;
+};
+
+interface AddFilesProps {
+    input: string[];
+    options?: APIOptions;
+}
+const AddFiles = async ({
+    input,
+    options
+}: AddFilesProps): Promise<AddMediaInput[]> => {
+    const info: AddMediaInput[] = [];
+
+    for (const link of input) {
+        const id = await generatePictureID();
+        info.push({ id: id, link: link });
+    }
+
+    const result = await addMedia(info);
+
+    if (isBaseError(result)) {
+        console.log(result);
+        return [];
+    }
+
+    return info;
+};
+
+interface BindFilesToPostProps {
+    input: MediaPostLinkInput[];
+    options?: APIOptions;
+}
+
+const BindFilesToPost = async ({
+    input,
+    options
+}: BindFilesToPostProps): Promise<null | BaseError> => {
+    const result = await linkPostMedia(input);
+
+    return result;
 };

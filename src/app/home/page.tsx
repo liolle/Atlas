@@ -39,22 +39,26 @@ export default async function Home() {
             <section className="  flex h-full w-full gap-4  @container">
                 <div className="flex h-full w-full overflow-y-auto">
                     <div className="  flex h-fit min-h-screen  flex-[3_1_0] flex-col border-r-2 border-accent-2  ">
-                        <div className=" sticky left-0 top-0 z-10 flex h-[70px] w-[100%] items-center justify-between border-b-2 border-accent-2 px-4 backdrop-blur-sm ">
-                            <div></div>
-                            <PostDialog>New post</PostDialog>
+                        <div className=" sticky left-0 top-0 z-10 flex h-[70px] w-[100%] items-center justify-between  border-b-2 border-accent-2  backdrop-blur-sm ">
+                            <div className=" flex flex-1 justify-between px-2">
+                                <div></div>
+                                <PostDialog>New post</PostDialog>
+                            </div>
+                            <div className=" hidden h-full max-w-[400px] flex-1 flex-col border-l-2 border-accent-2  @[950px]:flex">
+                                <div className="    flex h-[70px] w-[100%] items-center justify-center  bg-bgc  ">
+                                    <span>WIP</span>
+                                </div>
+                            </div>
                         </div>
 
-                        <Suspense fallback={<div>Loading</div>}>
-                            <InfiniteScrollPosts posts={posts || []} />
-                        </Suspense>
-                    </div>
-                    <div className=" hidden h-full max-w-[500px] flex-[1_1_0] flex-col  @[950px]:flex">
-                        <div className=" sticky left-0 top-0 z-10 flex h-[70px] w-[100%] items-center justify-center border-b-2 border-accent-2 bg-bgc  ">
-                            <span>WIP</span>
-                        </div>
-                        <div className=" flex h-full w-full flex-1 items-center justify-center ">
-                            <span>WIP</span>
-                        </div>
+                        <main className=" flex w-full flex-1">
+                            <div className=" flex-1">
+                                <Suspense fallback={<div>Loading</div>}>
+                                    <InfiniteScrollPosts posts={posts || []} />
+                                </Suspense>
+                            </div>
+                            <div className=" max-w-[400px]  flex-1 flex-col border-l-2 border-accent-2   @[950px]:flex"></div>
+                        </main>
                     </div>
                 </div>
             </section>

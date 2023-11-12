@@ -1,8 +1,8 @@
 import { sql } from "drizzle-orm";
 import { dzClient } from "@/src/db/index";
-import { BaseError, RequestErrorType, UpdateFollowStrField } from "@/src/types";
+import { BaseError, RequestErrorType, UpdateFollowInput } from "@/src/types";
 
-const follow = (options: UpdateFollowStrField) => {
+const follow = (options: UpdateFollowInput) => {
     const statement = sql`
     INSERT INTO followers (self, follow) 
     VALUES (${options.self}, ${options.follow});
@@ -15,7 +15,7 @@ const follow = (options: UpdateFollowStrField) => {
 };
 
 export async function FollowUsers(
-    options: UpdateFollowStrField
+    options: UpdateFollowInput
 ): Promise<BaseError | null> {
     const generatedQuery = follow(options);
 

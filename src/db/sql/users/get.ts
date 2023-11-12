@@ -7,7 +7,7 @@ import {
     SQLInterfaceOptions,
     UserType
 } from "@/src/types";
-import { followers, users } from "../../schema";
+import { followers, users } from "@/src/db/schema";
 
 const getByField = (input: GetUserInput) => {
     const statement = sql`

@@ -33,7 +33,7 @@ export default async function Page({ params }: { params: { id: string } }) {
 
     if (!result) {
         return (
-            <div className="flex h-full w-full items-center justify-center border-r-2 border-accent-2 ">
+            <div className="flex h-full w-full items-center justify-center ">
                 <span> Oops this post does not exist</span>
             </div>
         );
@@ -52,8 +52,8 @@ export default async function Page({ params }: { params: { id: string } }) {
     }
 
     return (
-        <div className=" min-h-screen border-r-2 border-accent-2">
-            <div className="h-full w-full   p-6">
+        <div className=" min-h-screen  ">
+            <div className="h-full w-full border-b-2  px-2 py-6">
                 {!!subject && (
                     <CardPostDisplay
                         key={(subject as PostTypeElement).item.id}

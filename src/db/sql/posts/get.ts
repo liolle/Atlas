@@ -6,27 +6,36 @@ import {
     RequestErrorType
 } from "@/src/types";
 import { sql } from "drizzle-orm";
-import { post_likes, posts, users } from "../../schema";
+import { media, post_likes, post_media, posts, users } from "@/src/db/schema";
 
 const getByField = (options: GetPostInput) => {
     const statement = sql`
-        SELECT 
-            p.id,
-            p.reference,
-            p.owner,
-            u.image,
-            p.content,
-            p.comments,
-            p.likes,
-            p.created_at,
-            CASE WHEN pl.post_id IS NOT NULL THEN true ELSE false END AS liked
-        FROM ${posts} p 
-        LEFT JOIN ${users} u ON u.name = p.owner
-        LEFT JOIN ${users} uself ON uself.name = ${options.self}
-        LEFT JOIN ${post_likes} pl ON pl.post_id = p.id AND pl.user_id = uself.id
-        WHERE p.${sql.raw(options.field)} = ${options.value}
-        ORDER BY p.created_at DESC 
-    `;
+    SELECT 
+        posts.id,
+        posts.reference,
+        posts.owner,
+        users.image,
+        posts.content,
+        posts.comments,
+        posts.likes,
+        posts.created_at,
+        EXISTS (
+            SELECT 1 
+            FROM ${post_likes} post_likes
+            WHERE post_likes.post_id = posts.id AND post_likes.user_id = (
+                SELECT id FROM ${users} WHERE name = ${options.self}
+            )
+        ) AS liked,
+        STRING_AGG(media.link, ',') AS medias
+    FROM ${posts} posts 
+    LEFT JOIN ${users} users ON users.name = posts.owner 
+    LEFT JOIN ${post_media} post_media ON post_media.post_id = posts.id
+    LEFT JOIN ${media} media ON media.id = post_media.media_id
+    WHERE posts.${sql.raw(options.field)} = ${options.value}
+    GROUP BY posts.id, posts.reference, posts.owner, users.image, posts.content, posts.comments, posts.likes, posts.created_at
+    ORDER BY posts.created_at DESC;
+    
+`;
 
     return {
         query: statement,
@@ -37,21 +46,29 @@ const getByField = (options: GetPostInput) => {
 const getAll = (options: GetPostInput) => {
     const statement = sql`
         SELECT 
-            p.id,
-            p.reference,
-            p.owner,
-            u.image,
-            p.content,
-            p.comments,
-            p.likes,
-            p.created_at,
-            CASE WHEN pl.post_id IS NOT NULL THEN true ELSE false END AS liked
-        FROM ${posts} p 
-        LEFT JOIN ${users} u ON u.name = p.owner 
-        LEFT JOIN ${users} uself ON uself.name = ${options.self}
-        LEFT JOIN ${post_likes} pl ON pl.post_id = p.id AND pl.user_id = uself.id
-        WHERE p.reference = '' OR p.reference IS NULL
-        ORDER BY p.created_at DESC 
+            posts.id,
+            posts.reference,
+            posts.owner,
+            users.image,
+            posts.content,
+            posts.comments,
+            posts.likes,
+            posts.created_at,
+            EXISTS (
+                SELECT 1 
+                FROM ${post_likes} post_likes
+                WHERE post_likes.post_id = posts.id AND post_likes.user_id = (
+                    SELECT id FROM ${users} WHERE name = ${options.self}
+                )
+            ) AS liked,
+            STRING_AGG(media.link, ',') AS medias
+        FROM ${posts} posts 
+        LEFT JOIN ${users} users ON users.name = posts.owner 
+        LEFT JOIN ${post_media} post_media ON post_media.post_id = posts.id
+        LEFT JOIN ${media} media ON media.id = post_media.media_id
+        WHERE posts.reference = '' OR posts.reference IS NULL
+        GROUP BY posts.id, posts.reference, posts.owner, users.image, posts.content, posts.comments, posts.likes, posts.created_at
+        ORDER BY posts.created_at DESC;
         
     `;
 
@@ -63,24 +80,32 @@ const getAll = (options: GetPostInput) => {
 
 const getAllWithRef = (options: GetPostInput) => {
     const statement = sql`
-        SELECT 
-            p.id,
-            p.reference,
-            p.owner,
-            u.image,
-            p.content,
-            p.comments,
-            p.likes,
-            p.created_at,
-            CASE WHEN pl.post_id IS NOT NULL THEN true ELSE false END AS liked
-        FROM ${posts} p 
-        LEFT JOIN ${users} u ON u.name = p.owner 
-        LEFT JOIN ${users} uself ON uself.name = ${options.self}
-        LEFT JOIN ${post_likes} pl ON pl.post_id = p.id AND pl.user_id = uself.id
-        WHERE p.reference = ${options.reference} OR p.id = ${options.reference}
-        ORDER BY p.created_at DESC 
-        
-    `;
+    SELECT 
+        posts.id,
+        posts.reference,
+        posts.owner,
+        users.image,
+        posts.content,
+        posts.comments,
+        posts.likes,
+        posts.created_at,
+        EXISTS (
+            SELECT 1 
+            FROM ${post_likes} post_likes
+            WHERE post_likes.post_id = posts.id AND post_likes.user_id = (
+                SELECT id FROM ${users} WHERE name = ${options.self}
+            )
+        ) AS liked,
+        STRING_AGG(media.link, ',') AS medias
+    FROM ${posts} posts 
+    LEFT JOIN ${users} users ON users.name = posts.owner 
+    LEFT JOIN ${post_media} post_media ON post_media.post_id = posts.id
+    LEFT JOIN ${media} media ON media.id = post_media.media_id
+    WHERE posts.reference = ${options.reference} OR posts.id = ${options.reference}
+    GROUP BY posts.id, posts.reference, posts.owner, users.image, posts.content, posts.comments, posts.likes, posts.created_at
+    ORDER BY posts.created_at DESC;
+    
+`;
 
     return {
         query: statement,
@@ -128,6 +153,8 @@ export async function getAllPosts(
 
 function transformUsers(data: Record<string, unknown>[]): PostType[] {
     return data.map((record) => {
+        const medias = record.medias as string;
+        const files = medias != null ? medias.split(",") : [];
         const transformedRecord: PostType = {
             id: record.id as string,
             reference: (record.reference as string) || "",
@@ -137,8 +164,10 @@ function transformUsers(data: Record<string, unknown>[]): PostType[] {
             comments: record.comments as number,
             likes: record.likes as number,
             liked: record.liked as boolean,
-            created_at: new Date(record.created_at as string)
+            created_at: new Date(record.created_at as string),
+            files: files
         };
+
         return transformedRecord;
     });
 }

@@ -4,11 +4,21 @@ import { formatUrl } from "@aws-sdk/util-format-url";
 import { Hash } from "@smithy/hash-node";
 import { HttpRequest } from "@smithy/protocol-http";
 import { parseUrl } from "@smithy/url-parser";
-import { BaseError, RequestErrorType } from "../../types";
+import { BaseError, RequestErrorType } from "@/src/types";
 
-// import { DeleteObjectCommand, S3Client } from "@aws-sdk/client-s3";
+import {
+    DeleteObjectCommand,
+    DeleteObjectCommandOutput,
+    S3Client
+} from "@aws-sdk/client-s3";
 
-// const client = new S3Client({});
+const client = new S3Client({
+    region: process.env.AWS_REGION as string,
+    credentials: {
+        accessKeyId: process.env.AWS_ACCESS_KEY_ID || "",
+        secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY || ""
+    }
+});
 
 const presignedUrl = async (key: string): Promise<string | BaseError> => {
     if (!process.env.AWS_REGION || !process.env.AWS_BUCKET_NAME) {
@@ -41,7 +51,19 @@ const presignedUrl = async (key: string): Promise<string | BaseError> => {
     }
 };
 
-const deleteFile = async () => {};
+const deleteFile = async (
+    key: string
+): Promise<DeleteObjectCommandOutput | undefined> => {
+    const bucketParams = { Bucket: process.env.AWS_BUCKET_NAME, Key: key };
+
+    try {
+        const data = await client.send(new DeleteObjectCommand(bucketParams));
+        console.log("Success. Object deleted.", data);
+        return data; // For unit tests.
+    } catch (err) {
+        console.log("Error", err);
+    }
+};
 
 const UploadServiceServer = { presignedUrl, deleteFile };
 
