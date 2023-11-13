@@ -58,7 +58,6 @@ const deleteFile = async (
 
     try {
         const data = await client.send(new DeleteObjectCommand(bucketParams));
-        console.log("Success. Object deleted.", data);
         return data; // For unit tests.
     } catch (err) {
         console.log("Error", err);
