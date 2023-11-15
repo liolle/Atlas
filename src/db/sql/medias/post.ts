@@ -55,7 +55,6 @@ export async function linkPostMedia(
         await dzClient.execute(generatedQuery.query);
         return null;
     } catch (error) {
-        console.log("->", error);
         return {
             error: RequestErrorType.DB_QUERY_FAILED,
             details: String(error)
