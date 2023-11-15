@@ -16,7 +16,7 @@ export async function GET(request: NextRequest) {
             input: {
                 self: session?.user?.name || " ",
                 field: "all",
-                value: ""
+                value: " "
             },
             APIResponse: baseResponse
         });
@@ -56,7 +56,7 @@ export async function POST(request: NextRequest) {
         ) {
             baseResponse.error = {
                 error: RequestErrorType.API_AUTH_ERROR,
-                detail: "Not authorized to modify this value"
+                details: "Not authorized to modify this value"
             };
 
             return NextResponse.json(baseResponse, { status: 401 });

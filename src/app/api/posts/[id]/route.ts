@@ -65,7 +65,7 @@ export async function POST(request: NextRequest, context: RouteContext) {
         if (!session || !session.user || !session.user.name) {
             baseResponse.error = {
                 error: RequestErrorType.API_AUTH_ERROR,
-                detail: "Need to be authenticated to like a post"
+                details: "Need to be authenticated to like a post"
             };
 
             return NextResponse.json(baseResponse, { status: 401 });
@@ -74,7 +74,7 @@ export async function POST(request: NextRequest, context: RouteContext) {
         if (!action) {
             baseResponse.error = {
                 error: RequestErrorType.API_MISSING_ARG,
-                detail: "Need to specify an action"
+                details: "Need to specify an action"
             };
 
             return NextResponse.json(baseResponse, { status: 401 });
@@ -99,7 +99,7 @@ export async function POST(request: NextRequest, context: RouteContext) {
 
         baseResponse.error = {
             error: RequestErrorType.API_UNSUPPORTED_ACTION,
-            detail: ""
+            details: ""
         };
 
         return NextResponse.json(baseResponse, { status: 400 });

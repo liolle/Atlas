@@ -28,8 +28,6 @@ const PostButton = ({ reference }: PostButtonInput) => {
             return;
         }
 
-        console.log(files);
-
         try {
             const urls = await UploadServiceClient.pushFiles({
                 files: files,

@@ -25,12 +25,7 @@ export default async function Profile({
             value: params.name
         },
         APIResponse: baseResponse,
-        options: {
-            pagination: {
-                index: 1,
-                limit: 5
-            }
-        }
+        options: {}
     });
 
     const posts = apiData.data?.content as unknown as {

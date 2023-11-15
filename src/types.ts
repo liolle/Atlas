@@ -64,7 +64,7 @@ export type PostType = {
 
 export type SQLInterfaceOptions = {
     mocked: boolean;
-    mockValue: UserType[] | null;
+    mockValue: UserType[] | FollowType[] | PostType[] | APIMessage | null;
 };
 
 //-->Create
@@ -176,13 +176,9 @@ export type PostTypeElement = {
 //API TYPES//
 
 export type APIMessage = {
-    error: string;
+    type: "UpdateUser" | "UpdateFollow" | "AddUser" | "AddPost" | "Like";
     message: string;
-};
-
-export type APIContent = {
-    error: string;
-    content: unknown | null;
+    content?: string;
 };
 
 export type APIDataTypesName =
@@ -212,7 +208,7 @@ export type APIResponse = {
     self: string;
     error?: {
         error: string;
-        detail: string;
+        details: string;
     };
     data?: {
         type: APIDataTypesName;
@@ -225,6 +221,7 @@ export type APIResponse = {
     rel?: {
         pagination: APIPaginationType;
     };
+    message?: APIMessage;
 };
 
 //AWS//
@@ -316,6 +313,17 @@ export const isFollowType = (obj: unknown): obj is FollowType => {
         typeof obj.name === "string" &&
         "following" in obj &&
         typeof obj.following === "boolean"
+    );
+};
+
+export const isAPIMessage = (obj: unknown): obj is APIMessage => {
+    if (!obj) return false;
+    return (
+        typeof obj === "object" &&
+        "type" in obj &&
+        typeof obj.type === "string" &&
+        "message" in obj &&
+        typeof obj.message === "string"
     );
 };
 

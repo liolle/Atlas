@@ -1,6 +1,12 @@
 import { sql } from "drizzle-orm";
 import { dzClient } from "@/src/db/index";
-import { BaseError, LikeXInput, RequestErrorType } from "@/src/types";
+import {
+    APIMessage,
+    BaseError,
+    LikeXInput,
+    RequestErrorType,
+    SQLInterfaceOptions
+} from "@/src/types";
 import { post_likes, users } from "@/src/db/schema";
 
 const generateLikePost = (options: LikeXInput) => {
@@ -39,12 +45,39 @@ const generateLikePost = (options: LikeXInput) => {
     };
 };
 
-export async function likeX(options: LikeXInput): Promise<BaseError | null> {
-    const generatedQuery = generateLikePost(options);
+interface LikeX {
+    input: LikeXInput;
+    options?: {
+        mock?: SQLInterfaceOptions;
+    };
+}
+
+export async function likeX({
+    input,
+    options
+}: LikeX): Promise<BaseError | APIMessage> {
+    if (input.id == "")
+        return {
+            error: "Empty string id",
+            details: ""
+        };
+
+    if (input.name == "")
+        return {
+            error: "Empty string name",
+            details: ""
+        };
+
+    if (options && options.mock) return options.mock.mockValue as APIMessage;
+
+    const generatedQuery = generateLikePost(input);
 
     try {
         await dzClient.execute(generatedQuery.query);
-        return null;
+        return {
+            type: "Like",
+            message: ""
+        };
     } catch (error) {
         return {
             error: RequestErrorType.DB_QUERY_FAILED,

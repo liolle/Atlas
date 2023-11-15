@@ -22,7 +22,7 @@ export async function GET(request: NextRequest, context: RouteContext) {
         if (!name || !field) {
             baseResponse.error = {
                 error: RequestErrorType.API_MISSING_ARG,
-                detail: "Require name and field"
+                details: "Require name and field"
             };
 
             return NextResponse.json(baseResponse, { status: 409 });
@@ -31,7 +31,7 @@ export async function GET(request: NextRequest, context: RouteContext) {
         if (field != "follow" && field != "self") {
             baseResponse.error = {
                 error: RequestErrorType.API_UNSUPPORTED_ACTION,
-                detail: "field should be set to self or follow"
+                details: "field should be set to self or follow"
             };
 
             return NextResponse.json(baseResponse, { status: 401 });
@@ -54,7 +54,7 @@ export async function GET(request: NextRequest, context: RouteContext) {
     } catch (error) {
         baseResponse.error = {
             error: RequestErrorType.API_REQUEST_FAILED,
-            detail: String(error)
+            details: String(error)
         };
 
         return NextResponse.json(baseResponse, { status: 500 });
@@ -77,7 +77,7 @@ export async function POST(request: NextRequest, context: RouteContext) {
         if (!session || !session.user || !session.user.name) {
             baseResponse.error = {
                 error: RequestErrorType.API_AUTH_ERROR,
-                detail: "Need connection"
+                details: "Need connection"
             };
 
             return NextResponse.json(baseResponse, { status: 401 });
@@ -96,7 +96,7 @@ export async function POST(request: NextRequest, context: RouteContext) {
         if (action != "follow" && action != "unfollow") {
             baseResponse.error = {
                 error: RequestErrorType.API_UNSUPPORTED_ACTION,
-                detail: "action should be set to follow or unfollow"
+                details: "action should be set to follow or unfollow"
             };
 
             return NextResponse.json(baseResponse, { status: 401 });
@@ -119,7 +119,7 @@ export async function POST(request: NextRequest, context: RouteContext) {
     } catch (error) {
         baseResponse.error = {
             error: RequestErrorType.API_REQUEST_FAILED,
-            detail: String(error)
+            details: String(error)
         };
 
         return NextResponse.json(baseResponse, { status: 500 });

@@ -19,7 +19,7 @@ export async function GET(request: NextRequest, context: RouteContext) {
         if (!name) {
             baseResponse.error = {
                 error: RequestErrorType.API_MISSING_ARG,
-                detail: "Missing name"
+                details: "Missing name"
             };
 
             return NextResponse.json(baseResponse, { status: 409 });

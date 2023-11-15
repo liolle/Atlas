@@ -22,12 +22,7 @@ export async function GET(request: NextRequest, context: RouteContext) {
                 value: name
             },
             APIResponse: baseResponse,
-            options: {
-                pagination: {
-                    index: 1,
-                    limit: 5
-                }
-            }
+            options: {}
         });
 
         if (result.error) {
@@ -38,7 +33,7 @@ export async function GET(request: NextRequest, context: RouteContext) {
     } catch (error) {
         baseResponse.error = {
             error: RequestErrorType.API_REQUEST_FAILED,
-            detail: String(error)
+            details: String(error)
         };
 
         return NextResponse.json(baseResponse, { status: 500 });

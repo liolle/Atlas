@@ -55,14 +55,14 @@ export function FormUpdateUser({
                 const { error } = (await response.json()) as {
                     error: {
                         error: string;
-                        detail: string;
+                        details: string;
                     };
                 };
 
                 setIsFetching(false);
                 if (!error) return;
 
-                ToastMessage(CurateError(error.detail));
+                ToastMessage(CurateError(error.details));
                 return;
             }
 
