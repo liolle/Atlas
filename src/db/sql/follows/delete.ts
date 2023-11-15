@@ -1,6 +1,13 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import { sql } from "drizzle-orm";
 import { dzClient } from "@/src/db/index";
-import { BaseError, RequestErrorType, UpdateFollowInput } from "@/src/types";
+import {
+    APIMessage,
+    BaseError,
+    RequestErrorType,
+    SQLInterfaceOptions,
+    UpdateFollowInput
+} from "@/src/types";
 
 const unfollow = (options: UpdateFollowInput) => {
     const statement = sql`
@@ -14,13 +21,40 @@ const unfollow = (options: UpdateFollowInput) => {
     };
 };
 
-export async function UnFollowUsers(
-    options: UpdateFollowInput
-): Promise<BaseError | null> {
-    const generatedQuery = unfollow(options);
+interface FollowUsersProps {
+    input: UpdateFollowInput;
+    options?: {
+        mock?: SQLInterfaceOptions;
+    };
+}
+
+export async function UnFollowUsers({
+    input,
+    options
+}: FollowUsersProps): Promise<BaseError | APIMessage> {
+    if (input.self == "")
+        return {
+            error: "Empty string self",
+            details: ""
+        };
+
+    if (input.follow == "")
+        return {
+            error: "Empty string follow",
+            details: ""
+        };
+
+    if (options && options.mock) return options.mock.mockValue as APIMessage;
+
+    const generatedQuery = unfollow(input);
+
     try {
         await dzClient.execute(generatedQuery.query);
-        return null;
+        return {
+            type: "UpdateFollow",
+            message: "Update successful",
+            content: ""
+        };
     } catch (error) {
         return {
             error: RequestErrorType.DB_QUERY_FAILED,
