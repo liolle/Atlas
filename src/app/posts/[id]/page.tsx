@@ -18,15 +18,10 @@ export default async function Page({ params }: { params: { id: string } }) {
             self: session?.user?.name || " ",
             field: "all",
             reference: params.id,
-            value: ""
+            value: " "
         },
         APIResponse: baseResponse,
-        options: {
-            pagination: {
-                index: 1,
-                limit: 5
-            }
-        }
+        options: {}
     });
 
     const result = apiData.data?.content as unknown as PostTypeElement[];

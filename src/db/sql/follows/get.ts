@@ -3,8 +3,10 @@ import { dzClient } from "@/src/db/index";
 import {
     BaseError,
     FollowType,
+    GetUserFollowInput,
     GetUserFollowType,
-    RequestErrorType
+    RequestErrorType,
+    SQLInterfaceOptions
 } from "@/src/types";
 import { followers, users } from "@/src/db/schema";
 
@@ -30,11 +32,31 @@ const getByField = (options: GetUserFollowType["input"]) => {
     };
 };
 
-export async function getFollow(
-    options: GetUserFollowType["input"]
-): Promise<FollowType[] | BaseError | null> {
-    if (!options.value) return null;
-    const generatedQuery = getByField(options);
+interface GetFollowProps {
+    input: GetUserFollowInput;
+    options?: {
+        mock?: SQLInterfaceOptions;
+    };
+}
+
+export async function getFollow({
+    input,
+    options
+}: GetFollowProps): Promise<FollowType[] | BaseError> {
+    if (input.self == "")
+        return {
+            error: "Empty string self",
+            details: ""
+        };
+
+    if (input.value == "")
+        return {
+            error: "Empty string value",
+            details: ""
+        };
+
+    if (options && options.mock) return options.mock.mockValue as FollowType[];
+    const generatedQuery = getByField(input);
 
     try {
         const result = await dzClient.execute(generatedQuery.query);

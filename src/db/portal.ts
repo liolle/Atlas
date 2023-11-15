@@ -14,7 +14,8 @@ import {
     UpdateUserInput,
     AddMediaInput,
     BaseError,
-    isBaseError
+    isBaseError,
+    SQLInterfaceOptions
 } from "@/src/types";
 import { UnFollowUsers } from "./sql/follows/delete";
 import { getFollow } from "./sql/follows/get";
@@ -29,7 +30,9 @@ import updateUser from "./sql/users/update";
 interface GetUsersProps {
     input: GetUserInput;
     APIResponse?: APIResponse;
-    options?: APIOptions;
+    options?: {
+        mock?: SQLInterfaceOptions;
+    };
 }
 
 export const GetUsers = async ({
@@ -38,7 +41,9 @@ export const GetUsers = async ({
     options
 }: GetUsersProps): Promise<APIResponse> => {
     const result =
-        input.field == "all" ? await getAllUsers(input) : await getUsers(input);
+        input.field == "all"
+            ? await getAllUsers({ input: input, options: options })
+            : await getUsers({ input: input, options: options });
 
     const response = APIResponse
         ? APIResponse
@@ -48,16 +53,16 @@ export const GetUsers = async ({
           };
 
     if (!result) return response;
-
     new APIDispatcher(response).dispatch(result);
-
     return response;
 };
 
 interface UpdateUserProps {
     input: UpdateUserInput;
     APIResponse?: APIResponse;
-    options?: APIOptions;
+    options?: {
+        mock?: SQLInterfaceOptions;
+    };
 }
 
 export const UpdateUser = async ({
@@ -65,7 +70,7 @@ export const UpdateUser = async ({
     APIResponse,
     options
 }: UpdateUserProps): Promise<APIResponse> => {
-    const result = await updateUser(input);
+    const result = await updateUser({ input: input, options: options });
 
     const response = APIResponse
         ? APIResponse
@@ -73,10 +78,6 @@ export const UpdateUser = async ({
               version: APIVersion,
               self: ""
           };
-
-    console.log("Res:", result);
-
-    if (!result) return response;
 
     new APIDispatcher(response).dispatch(result);
 
@@ -86,7 +87,9 @@ export const UpdateUser = async ({
 interface GetFollowsProps {
     input: GetUserFollowInput;
     APIResponse?: APIResponse;
-    options?: APIOptions;
+    options?: {
+        mock?: SQLInterfaceOptions;
+    };
 }
 
 export const GetFollows = async ({
@@ -94,7 +97,7 @@ export const GetFollows = async ({
     APIResponse,
     options
 }: GetFollowsProps): Promise<APIResponse> => {
-    const result = await getFollow(input);
+    const result = await getFollow({ input: input, options: options });
 
     const response = APIResponse
         ? APIResponse
@@ -106,14 +109,15 @@ export const GetFollows = async ({
     if (!result) return response;
 
     new APIDispatcher(response).dispatch(result);
-
     return response;
 };
 
 interface UpdateFollowsProps {
     input: UpdateFollowInput;
     APIResponse?: APIResponse;
-    options?: APIOptions;
+    options?: {
+        mock?: SQLInterfaceOptions;
+    };
 }
 
 export const UpdateFollows = async ({
@@ -123,8 +127,8 @@ export const UpdateFollows = async ({
 }: UpdateFollowsProps): Promise<APIResponse> => {
     const result =
         input.type == "follow"
-            ? await FollowUsers(input)
-            : await UnFollowUsers(input);
+            ? await FollowUsers({ input: input, options: options })
+            : await UnFollowUsers({ input: input, options: options });
 
     const response = APIResponse
         ? APIResponse
@@ -133,17 +137,16 @@ export const UpdateFollows = async ({
               self: ""
           };
 
-    if (!result) return response;
-
     new APIDispatcher(response).dispatch(result);
-
     return response;
 };
 
 interface AddPostProps {
     input: AddPostInput;
     APIResponse?: APIResponse;
-    options?: APIOptions;
+    options?: {
+        mock?: SQLInterfaceOptions;
+    };
 }
 
 export const AddPost = async ({
@@ -154,7 +157,7 @@ export const AddPost = async ({
     const id = await generatePostID();
     input.id = id;
 
-    const result = await addPost(input);
+    const result = await addPost({ input: input, options: options });
 
     const response = APIResponse
         ? APIResponse
@@ -163,7 +166,9 @@ export const AddPost = async ({
               self: ""
           };
 
-    if (!result) {
+    new APIDispatcher(response).dispatch(result);
+
+    if (!isBaseError(result)) {
         const medias = await AddFiles({
             input: input.files,
             options: options
@@ -183,14 +188,15 @@ export const AddPost = async ({
         return response;
     }
 
-    new APIDispatcher(response).dispatch(result);
     return response;
 };
 
 interface GetPostsProps {
     input: GetPostInput;
     APIResponse?: APIResponse;
-    options?: APIOptions;
+    options?: {
+        mock?: SQLInterfaceOptions;
+    };
 }
 
 export const GetPosts = async ({
@@ -199,7 +205,9 @@ export const GetPosts = async ({
     options
 }: GetPostsProps): Promise<APIResponse> => {
     const result =
-        input.field == "all" ? await getAllPosts(input) : await getPost(input);
+        input.field == "all"
+            ? await getAllPosts({ input: input, options: options })
+            : await getPost({ input: input, options: options });
 
     const response = APIResponse
         ? APIResponse
@@ -208,17 +216,16 @@ export const GetPosts = async ({
               self: ""
           };
 
-    if (!result) return response;
-
     new APIDispatcher(response).dispatch(options).dispatch(result);
-
     return response;
 };
 
 interface LikeXProps {
     input: LikeXInput;
     APIResponse?: APIResponse;
-    options?: APIOptions;
+    options?: {
+        mock?: SQLInterfaceOptions;
+    };
 }
 
 export const LikeX = async ({
@@ -226,7 +233,7 @@ export const LikeX = async ({
     APIResponse,
     options
 }: LikeXProps): Promise<APIResponse> => {
-    const result = await likeX(input);
+    const result = await likeX({ input: input, options: options });
 
     const response = APIResponse
         ? APIResponse
@@ -236,15 +243,15 @@ export const LikeX = async ({
           };
 
     if (!result) return response;
-
     new APIDispatcher(response).dispatch(result);
-
     return response;
 };
 
 interface AddFilesProps {
     input: string[];
-    options?: APIOptions;
+    options?: {
+        mock?: SQLInterfaceOptions;
+    };
 }
 const AddFiles = async ({
     input,
@@ -260,7 +267,6 @@ const AddFiles = async ({
     const result = await addMedia(info);
 
     if (isBaseError(result)) {
-        console.log(result);
         return [];
     }
 
@@ -269,7 +275,9 @@ const AddFiles = async ({
 
 interface BindFilesToPostProps {
     input: MediaPostLinkInput[];
-    options?: APIOptions;
+    options?: {
+        mock?: SQLInterfaceOptions;
+    };
 }
 
 const BindFilesToPost = async ({
@@ -277,6 +285,5 @@ const BindFilesToPost = async ({
     options
 }: BindFilesToPostProps): Promise<null | BaseError> => {
     const result = await linkPostMedia(input);
-
     return result;
 };

@@ -49,13 +49,23 @@ const getAll = (input: GetUserInput) => {
     };
 };
 
-export async function getUsers(
-    input: GetUserInput,
-    options?: SQLInterfaceOptions
-): Promise<UserType[] | BaseError | null> {
-    if (options && options.mocked) return options.mockValue;
+interface GetUsersProps {
+    input: GetUserInput;
+    options?: {
+        mock?: SQLInterfaceOptions;
+    };
+}
+export async function getUsers({
+    input,
+    options
+}: GetUsersProps): Promise<UserType[] | BaseError | null> {
+    if (!input.value || input.value == "")
+        return {
+            error: "Empty string value",
+            details: ""
+        };
 
-    if (!input.value) return null;
+    if (options && options.mock) return options.mock.mockValue as UserType[];
     const generatedQuery = getByField(input);
 
     try {
@@ -70,17 +80,17 @@ export async function getUsers(
     }
 }
 
-export async function getAllUsers(
-    input: GetUserInput,
-    options?: SQLInterfaceOptions
-): Promise<UserType[] | BaseError | null> {
+export async function getAllUsers({
+    input,
+    options
+}: GetUsersProps): Promise<UserType[] | BaseError> {
     if (!input.value && input.field != "all")
         return {
             error: "Incorrect input combination",
             details: "Missing value when field in not 'all'"
         };
 
-    if (options && options.mocked) return options.mockValue;
+    if (options && options.mock) return options.mock.mockValue as UserType[];
     const generatedQuery = getAll(input);
 
     try {
