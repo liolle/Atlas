@@ -2,6 +2,7 @@
 import {
     APIDataTypes,
     APIDataTypesName,
+    APIMessage,
     APIOptions,
     APIPaginationType,
     APIResponse,
@@ -11,6 +12,7 @@ import {
     LinkAction,
     PostType,
     UserType,
+    isAPIMessage,
     isApiOption,
     isBaseError,
     isFollowType,
@@ -25,8 +27,12 @@ export class APIDispatcher {
         this.response = response;
     }
 
+    private overwrite(): boolean {
+        return !!this.response.error;
+    }
+
     private addUsers(users: UserType[]) {
-        if (this.response.error) return;
+        if (this.overwrite()) return;
 
         const content: {
             actions: LinkAction[];
@@ -64,7 +70,7 @@ export class APIDispatcher {
     }
 
     private addFollows(follows: FollowType[]) {
-        if (this.response.error) return;
+        if (this.overwrite()) return;
 
         const content: {
             actions: LinkAction[];
@@ -102,7 +108,7 @@ export class APIDispatcher {
     }
 
     private addPosts(posts: PostType[]) {
-        if (this.response.error) return;
+        if (this.overwrite()) return;
 
         const content: {
             actions: LinkAction[];
@@ -136,10 +142,12 @@ export class APIDispatcher {
     }
 
     private addError(error: BaseError) {
-        this.response.error = { error: error.error, detail: error.details };
+        this.response.error = { error: error.error, details: error.details };
     }
 
     private addPagination(options?: APIOptions) {
+        if (this.overwrite()) return;
+
         if (!options) {
             options = {
                 pagination: {
@@ -159,11 +167,24 @@ export class APIDispatcher {
         }
     }
 
+    private addMessage(message: APIMessage) {
+        this.response.message = {
+            type: message.type,
+            message: message.message,
+            content: message.content
+        };
+    }
+
     public dispatch<T>(data: BaseError | T | T[]): APIDispatcher {
         if (!APIVersion) this.response.version = `${APIVersion}`;
 
         if (isBaseError(data)) {
             this.addError(data);
+            return this;
+        }
+
+        if (isAPIMessage(data)) {
+            this.addMessage(data);
             return this;
         }
 
