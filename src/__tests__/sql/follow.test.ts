@@ -25,7 +25,7 @@ describe("Follow", () => {
                     input: {
                         self: "test-1",
                         field: "self",
-                        value: " "
+                        value: ""
                     },
                     options: {
                         mock: {

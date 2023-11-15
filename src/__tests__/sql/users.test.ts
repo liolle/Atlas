@@ -51,7 +51,7 @@ describe("Users", () => {
                     input: {
                         self: "test",
                         field: "id",
-                        value: " "
+                        value: ""
                     },
                     options: {
                         mock: {
@@ -180,7 +180,7 @@ describe("Users", () => {
                 const response = await UpdateUser({
                     input: {
                         field: "name",
-                        value: " ",
+                        value: "",
                         email: "test@test.com"
                     },
                     options: {

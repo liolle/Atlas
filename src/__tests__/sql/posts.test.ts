@@ -58,7 +58,7 @@ describe("Post", () => {
                     input: {
                         self: "test-1",
                         field: "id",
-                        value: " "
+                        value: ""
                     },
                     options: {
                         mock: {
