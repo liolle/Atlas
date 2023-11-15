@@ -19,15 +19,10 @@ export async function GET(request: NextRequest) {
                 self: session?.user?.name || " ",
                 field: "all",
                 reference: reference,
-                value: ""
+                value: " "
             },
             APIResponse: baseResponse,
-            options: {
-                pagination: {
-                    index: 1,
-                    limit: 5
-                }
-            }
+            options: {}
         });
 
         if (result.error) {
@@ -60,7 +55,7 @@ export async function POST(request: NextRequest) {
         if (!session || !session.user || !session.user.name) {
             baseResponse.error = {
                 error: RequestErrorType.API_AUTH_ERROR,
-                detail: "Need to be authenticated to add a post"
+                details: "Need to be authenticated to add a post"
             };
 
             return NextResponse.json(baseResponse, { status: 401 });
@@ -69,7 +64,7 @@ export async function POST(request: NextRequest) {
         if (!content) {
             baseResponse.error = {
                 error: RequestErrorType.API_MISSING_ARG,
-                detail: "Missing content"
+                details: "Missing content"
             };
 
             return NextResponse.json(baseResponse, { status: 409 });

@@ -18,15 +18,10 @@ export default async function Home() {
         input: {
             self: session?.user?.name || " ",
             field: "all",
-            value: ""
+            value: " "
         },
         APIResponse: baseResponse,
-        options: {
-            pagination: {
-                index: 1,
-                limit: 5
-            }
-        }
+        options: {}
     });
 
     const posts = apiData.data?.content as unknown as {
