@@ -1,6 +1,13 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import { sql } from "drizzle-orm";
 import { dzClient } from "@/src/db/index";
-import { AddPostInput, BaseError, RequestErrorType } from "@/src/types";
+import {
+    APIMessage,
+    AddPostInput,
+    BaseError,
+    RequestErrorType,
+    SQLInterfaceOptions
+} from "@/src/types";
 import { posts } from "@/src/db/schema";
 
 const generatePost = (options: AddPostInput) => {
@@ -22,14 +29,34 @@ const generatePost = (options: AddPostInput) => {
     };
 };
 
-export async function addPost(
-    options: AddPostInput
-): Promise<BaseError | string | null> {
-    const generatedQuery = generatePost(options);
+interface AddPostProps {
+    input: AddPostInput;
+    options?: {
+        mock?: SQLInterfaceOptions;
+    };
+}
+
+export async function addPost({
+    input,
+    options
+}: AddPostProps): Promise<BaseError | APIMessage> {
+    if (input.reference == "")
+        return {
+            error: "Empty string reference",
+            details: ""
+        };
+
+    if (options && options.mock) return options.mock.mockValue as APIMessage;
+
+    const generatedQuery = generatePost(input);
 
     try {
         const id = await dzClient.execute(generatedQuery.query);
-        return transformUsers(id);
+        return {
+            type: "AddPost",
+            message: "Post added successfully",
+            content: transformUsers(id) as string
+        };
     } catch (error) {
         return {
             error: RequestErrorType.DB_QUERY_FAILED,

@@ -1,9 +1,11 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import { dzClient } from "@/src/db/index";
 import {
     BaseError,
     GetPostInput,
     PostType,
-    RequestErrorType
+    RequestErrorType,
+    SQLInterfaceOptions
 } from "@/src/types";
 import { sql } from "drizzle-orm";
 import { media, post_likes, post_media, posts, users } from "@/src/db/schema";
@@ -113,11 +115,37 @@ const getAllWithRef = (options: GetPostInput) => {
     };
 };
 
-export async function getPost(
-    options: GetPostInput
-): Promise<PostType[] | BaseError | null> {
-    if (!options.value) return null;
-    const generatedQuery = getByField(options);
+interface GetPostProps {
+    input: GetPostInput;
+    options?: {
+        mock?: SQLInterfaceOptions;
+    };
+}
+
+export async function getPost({
+    input,
+    options
+}: GetPostProps): Promise<PostType[] | BaseError> {
+    if (input.self == "")
+        return {
+            error: "Empty string self",
+            details: ""
+        };
+
+    if (input.value == "")
+        return {
+            error: "Empty string value",
+            details: ""
+        };
+
+    if (input.reference == "")
+        return {
+            error: "Empty string reference",
+            details: ""
+        };
+
+    if (options && options.mock) return options.mock.mockValue as PostType[];
+    const generatedQuery = getByField(input);
 
     try {
         const result = await dzClient.execute(generatedQuery.query);
@@ -131,12 +159,33 @@ export async function getPost(
     }
 }
 
-export async function getAllPosts(
-    options: GetPostInput
-): Promise<PostType[] | BaseError | null> {
-    const generatedQuery = options.reference
-        ? getAllWithRef(options)
-        : getAll(options);
+export async function getAllPosts({
+    input,
+    options
+}: GetPostProps): Promise<PostType[] | BaseError> {
+    if (input.self == "")
+        return {
+            error: "Empty string self",
+            details: ""
+        };
+
+    if (input.value == "")
+        return {
+            error: "Empty string value",
+            details: ""
+        };
+
+    if (input.reference == "")
+        return {
+            error: "Empty string reference",
+            details: ""
+        };
+
+    if (options && options.mock) return options.mock.mockValue as PostType[];
+
+    const generatedQuery = input.reference
+        ? getAllWithRef(input)
+        : getAll(input);
 
     try {
         const result = await dzClient.execute(generatedQuery.query);
