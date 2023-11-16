@@ -4,98 +4,98 @@ import { getServerSession } from "next-auth";
 import { NextRequest, NextResponse } from "next/server";
 
 export async function GET(request: NextRequest) {
-    const session = await getServerSession();
+  const session = await getServerSession();
 
-    const baseResponse: APIResponse = {
-        self: request.nextUrl.href,
-        version: APIVersion
-    };
+  const baseResponse: APIResponse = {
+    self: request.nextUrl.href,
+    version: APIVersion
+  };
 
-    try {
-        const result = await GetUsers({
-            input: {
-                self: session?.user?.name || " ",
-                field: "all",
-                value: " "
-            },
-            APIResponse: baseResponse
-        });
+  try {
+    const result = await GetUsers({
+      input: {
+        self: session?.user?.name || " ",
+        field: "all",
+        value: " "
+      },
+      APIResponse: baseResponse
+    });
 
-        if (result.error) {
-            return NextResponse.json(result, { status: 400 });
-        }
-
-        return NextResponse.json(result, { status: 200 });
-    } catch (error) {
-        return NextResponse.json(
-            {
-                error: RequestErrorType.API_REQUEST_FAILED,
-                details: String(error)
-            },
-            { status: 500 }
-        );
+    if (result.error) {
+      return NextResponse.json(result, { status: 400 });
     }
+
+    return NextResponse.json(result, { status: 200 });
+  } catch (error) {
+    return NextResponse.json(
+      {
+        error: RequestErrorType.API_REQUEST_FAILED,
+        details: String(error)
+      },
+      { status: 500 }
+    );
+  }
 }
 
 export async function POST(request: NextRequest) {
-    const baseResponse: APIResponse = {
-        self: request.nextUrl.href,
-        version: APIVersion
-    };
+  const baseResponse: APIResponse = {
+    self: request.nextUrl.href,
+    version: APIVersion
+  };
 
-    try {
-        const { field, value, email } = await request.json();
+  try {
+    const { field, value, email } = await request.json();
 
-        const session = await getServerSession();
+    const session = await getServerSession();
 
-        if (
-            !session ||
-            !session.user ||
-            !session.user.email ||
-            session.user.email != email
-        ) {
-            baseResponse.error = {
-                error: RequestErrorType.API_AUTH_ERROR,
-                details: "Not authorized to modify this value"
-            };
+    if (
+      !session ||
+      !session.user ||
+      !session.user.email ||
+      session.user.email != email
+    ) {
+      baseResponse.error = {
+        error: RequestErrorType.API_AUTH_ERROR,
+        details: "Not authorized to modify this value"
+      };
 
-            return NextResponse.json(baseResponse, { status: 401 });
-        }
-
-        if (!field || !value || !email) {
-            return NextResponse.json(
-                {
-                    error: RequestErrorType.API_MISSING_ARG,
-                    details: ""
-                },
-                { status: 409 }
-            );
-        }
-
-        if (field == "email") {
-            return NextResponse.json(
-                {
-                    error: RequestErrorType.API_UNSUPPORTED_ACTION,
-                    details: "Cant change email address yet"
-                },
-                { status: 400 }
-            );
-        }
-
-        const result = await UpdateUser({
-            input: {
-                field: field,
-                value: value,
-                email: email
-            }
-        });
-
-        if (result.error) {
-            return NextResponse.json(result, { status: 409 });
-        }
-
-        return NextResponse.json(result, { status: 200 });
-    } catch (error) {
-        return NextResponse.json({ error: String(error) }, { status: 500 });
+      return NextResponse.json(baseResponse, { status: 401 });
     }
+
+    if (!field || !value || !email) {
+      return NextResponse.json(
+        {
+          error: RequestErrorType.API_MISSING_ARG,
+          details: ""
+        },
+        { status: 409 }
+      );
+    }
+
+    if (field == "email") {
+      return NextResponse.json(
+        {
+          error: RequestErrorType.API_UNSUPPORTED_ACTION,
+          details: "Cant change email address yet"
+        },
+        { status: 400 }
+      );
+    }
+
+    const result = await UpdateUser({
+      input: {
+        field: field,
+        value: value,
+        email: email
+      }
+    });
+
+    if (result.error) {
+      return NextResponse.json(result, { status: 409 });
+    }
+
+    return NextResponse.json(result, { status: 200 });
+  } catch (error) {
+    return NextResponse.json({ error: String(error) }, { status: 500 });
+  }
 }

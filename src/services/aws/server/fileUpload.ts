@@ -7,61 +7,61 @@ import { parseUrl } from "@smithy/url-parser";
 import { BaseError, RequestErrorType } from "@/src/types";
 
 import {
-    DeleteObjectCommand,
-    DeleteObjectCommandOutput,
-    S3Client
+  DeleteObjectCommand,
+  DeleteObjectCommandOutput,
+  S3Client
 } from "@aws-sdk/client-s3";
 
 const client = new S3Client({
-    region: process.env.AWS_REGION as string,
-    credentials: {
-        accessKeyId: process.env.AWS_ACCESS_KEY_ID || "",
-        secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY || ""
-    }
+  region: process.env.AWS_REGION as string,
+  credentials: {
+    accessKeyId: process.env.AWS_ACCESS_KEY_ID || "",
+    secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY || ""
+  }
 });
 
 const presignedUrl = async (key: string): Promise<string | BaseError> => {
-    if (!process.env.AWS_REGION || !process.env.AWS_BUCKET_NAME) {
-        return {
-            error: RequestErrorType.API_MISSING_ARG,
-            details: "Missing environment variables"
-        };
-    }
-    const url = parseUrl(
-        `https://${process.env.AWS_BUCKET_NAME}.s3.${process.env.AWS_REGION}.amazonaws.com/${key}`
-    );
+  if (!process.env.AWS_REGION || !process.env.AWS_BUCKET_NAME) {
+    return {
+      error: RequestErrorType.API_MISSING_ARG,
+      details: "Missing environment variables"
+    };
+  }
+  const url = parseUrl(
+    `https://${process.env.AWS_BUCKET_NAME}.s3.${process.env.AWS_REGION}.amazonaws.com/${key}`
+  );
 
-    const presigner = new S3RequestPresigner({
-        credentials: fromEnv(),
-        region: process.env.AWS_REGION,
-        sha256: Hash.bind(null, "sha256")
-    });
+  const presigner = new S3RequestPresigner({
+    credentials: fromEnv(),
+    region: process.env.AWS_REGION,
+    sha256: Hash.bind(null, "sha256")
+  });
 
-    const signedUrlObject = await presigner.presign(
-        new HttpRequest({ ...url, method: "PUT" })
-    );
+  const signedUrlObject = await presigner.presign(
+    new HttpRequest({ ...url, method: "PUT" })
+  );
 
-    try {
-        return formatUrl(signedUrlObject);
-    } catch (error) {
-        return {
-            error: RequestErrorType.API_REQUEST_FAILED,
-            details: String(error)
-        };
-    }
+  try {
+    return formatUrl(signedUrlObject);
+  } catch (error) {
+    return {
+      error: RequestErrorType.API_REQUEST_FAILED,
+      details: String(error)
+    };
+  }
 };
 
 const deleteFile = async (
-    key: string
+  key: string
 ): Promise<DeleteObjectCommandOutput | undefined> => {
-    const bucketParams = { Bucket: process.env.AWS_BUCKET_NAME, Key: key };
+  const bucketParams = { Bucket: process.env.AWS_BUCKET_NAME, Key: key };
 
-    try {
-        const data = await client.send(new DeleteObjectCommand(bucketParams));
-        return data; // For unit tests.
-    } catch (err) {
-        console.log("Error", err);
-    }
+  try {
+    const data = await client.send(new DeleteObjectCommand(bucketParams));
+    return data; // For unit tests.
+  } catch (err) {
+    console.log("Error", err);
+  }
 };
 
 const UploadServiceServer = { presignedUrl, deleteFile };

@@ -1,5 +1,5 @@
 export const EmailTemplate1 = (code: string) => {
-    return `
+  return `
     <body
     style="
         background-color: #ffffff;
@@ -90,7 +90,7 @@ export const EmailTemplate1 = (code: string) => {
                         font-size: 14px;
                     "
                     href="${
-                        process.env.NEXTAUTH_URL || "http://localhost:3000"
+                      process.env.NEXTAUTH_URL || "http://localhost:3000"
                     }"
                     >Atlas</a
                 >
