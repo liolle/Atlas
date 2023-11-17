@@ -10,29 +10,27 @@ import { Toaster } from "react-hot-toast";
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
-    title: "Atlas",
-    description: "Share your thoughts, updates, and insights in real-time",
-    metadataBase: new URL("https://atlas-vertex.vercel.app"),
-    alternates: {
-        canonical: "/"
-    }
+  title: "Atlas",
+  description: "Share your thoughts, updates, and insights in real-time",
+  metadataBase: new URL("https://atlas-vertex.vercel.app"),
+  alternates: {
+    canonical: "/"
+  }
 };
 
 export default async function RootLayout({
-    children
+  children
 }: {
-    children: React.ReactNode;
+  children: React.ReactNode;
 }) {
-    const session = await getServerSession(authOptions);
+  const session = await getServerSession(authOptions);
 
-    return (
-        <html className=" bg-bgc" lang="en">
-            <body className={` @container ${inter.className}`}>
-                <Toaster reverseOrder={false} />
-                <NextAuthProvider session={session}>
-                    {children}
-                </NextAuthProvider>
-            </body>
-        </html>
-    );
+  return (
+    <html className=" bg-bgc" lang="en">
+      <body className={` @container ${inter.className}`}>
+        <Toaster reverseOrder={false} />
+        <NextAuthProvider session={session}>{children}</NextAuthProvider>
+      </body>
+    </html>
+  );
 }

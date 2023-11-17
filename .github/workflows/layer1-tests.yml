@@ -1,41 +1,41 @@
 name: Layer1-tests
 
 on:
-    workflow_dispatch:
-    push:
-        branches:
-            - dev
+  workflow_dispatch:
+  push:
+    branches:
+      - dev
 
 jobs:
-    L1-test:
-        runs-on: ubuntu-latest
-        steps:
-            - name: Check out code
-              uses: actions/checkout@v4
+  L1-test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out code
+        uses: actions/checkout@v4
 
-            - name: Set up Node.js
-              uses: actions/setup-node@v3
-              with:
-                  node-version: "18"
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: "18"
 
-            - name: Cache node modules
-              uses: actions/cache@v3
-              with:
-                  path: node_modules
-                  key: node_modules-${{hashFiles('package-lock.json')}}
-                  restore-keys: node_modules-
+      - name: Cache node modules
+        uses: actions/cache@v3
+        with:
+          path: node_modules
+          key: node_modules-${{hashFiles('package-lock.json')}}
+          restore-keys: node_modules-
 
-            - uses: pnpm/action-setup@v2
-              with:
-                  version: 8
+      - uses: pnpm/action-setup@v2
+        with:
+          version: 8
 
-            - name: Install dependencies
-              run: pnpm install --no-frozen-lockfile
+      - name: Install dependencies
+        run: pnpm install --no-frozen-lockfile
 
-            - name: Run tests
-              run: pnpm test
+      - name: Run tests
+        run: pnpm test
 
-            - name: Create Pull Request
-              run: gh pr create --base "test" --head "dev" --title "L1 tests" --body "Automated tests"
-              env:
-                  GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: Create Pull Request
+        run: gh pr create --base "test" --head "dev" --title "L1 tests" --body "Automated tests"
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
