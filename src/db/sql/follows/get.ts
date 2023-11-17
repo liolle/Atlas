@@ -4,13 +4,12 @@ import {
   BaseError,
   FollowType,
   GetUserFollowInput,
-  GetUserFollowType,
   RequestErrorType,
   SQLInterfaceOptions
 } from "@/src/types";
 import { followers, users } from "@/src/db/schema";
 
-const getByField = (options: GetUserFollowType["input"]) => {
+const getByField = (options: GetUserFollowInput) => {
   const statement = sql`
         SELECT 
         f1.${sql.raw(options.field == "follow" ? "self" : "follow")}, 
