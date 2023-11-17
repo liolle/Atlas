@@ -6,15 +6,14 @@ import {
   BaseError,
   RequestErrorType,
   SQLInterfaceOptions,
-  UpdateUserInput,
-  UpdateUserType
+  UpdateUserInput
 } from "@/src/types";
 import { users } from "@/src/db/schema";
 import { z } from "zod";
 
 const EmailSchema = z.string().email();
 
-const generate = (options: UpdateUserType["input"]) => {
+const generate = (options: UpdateUserInput) => {
   const statement = sql`
         UPDATE ${users} SET ${sql.raw(options.field)} = ${
           options.value
@@ -54,7 +53,8 @@ export default async function updateUser({
       details: ""
     };
 
-  if (options && options.mock) return options.mock.mockValue as APIMessage;
+  if (options && options.mock)
+    return options.mock.mockValue as unknown as APIMessage;
 
   const generatedQuery = generate(input);
 
@@ -62,7 +62,8 @@ export default async function updateUser({
     await dzClient.execute(generatedQuery.query);
     return {
       type: "UpdateUser",
-      message: "Update successful"
+      message: "Update successful",
+      content: ""
     };
   } catch (error) {
     return {

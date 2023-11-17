@@ -9,9 +9,7 @@ export type NavigationVariant = "home" | "account" | "profile";
 export type LinkActionType = "followUser" | "unfollowUser" | "like";
 export type ActiveProfileTab = "posts" | "groups" | "follows" | "followers";
 
-export type UserTypes = "admin" | "user" | "dev";
 export type ValidationType = "email";
-export type GeneratorService = "crypto";
 export type LogoType = "logout";
 export const APIVersion = "v0.1";
 //-----//
@@ -82,8 +80,6 @@ export type AddMediaInput = {
   link: string;
 };
 
-export type AddPostOutput = BaseError | null;
-
 export type LikeXInput = {
   type: "posts" | "comments" | "reply";
   id: string;
@@ -104,13 +100,6 @@ export type GetUserFollowInput = {
   value: string;
 };
 
-export type GetUserFollowType = {
-  input: GetUserFollowInput;
-  output: {
-    data: FollowType;
-    actions: LinkAction[];
-  }[];
-};
 export type GetPostInput = {
   self: string;
   field: "owner" | "id" | "all";
@@ -132,40 +121,11 @@ export type UpdateFollowInput = {
   follow: string;
 };
 
-export type UpdateUserType = {
-  input: UpdateUserInput;
-  output: {
-    id: number;
-  }[];
-};
-
-//-->Delete
-
-export type DeletePostInput = {
-  id: string;
-};
-
-//DB TYPES//
-
-export type DBReturnType = {
-  error?: unknown;
-  data: unknown[];
-};
-
 //Actions//
 
 export type LinkAction = {
   type: LinkActionType;
   link: string;
-};
-
-//Actionable//
-export type GetUserType = {
-  input: GetPostInput;
-  output: {
-    data: UserType;
-    actions: LinkAction[];
-  };
 };
 
 export type PostTypeElement = {
@@ -225,11 +185,6 @@ export type APIResponse = {
 };
 
 //AWS//
-export type SignedType = {
-  region: "eu-west-3" | "eu-central-1";
-  bucket: string;
-  key: string;
-};
 
 export type PutS3Type = {
   url: string;
