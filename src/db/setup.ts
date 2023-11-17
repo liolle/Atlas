@@ -67,23 +67,23 @@ const PostLikeDeleteTrigger = sql`
 `;
 
 export const SETUP_QUERIES = [
-    PostLikeInsertTrigger,
-    PostLikeDeleteTrigger,
-    PostReplyInsertTrigger
+  PostLikeInsertTrigger,
+  PostLikeDeleteTrigger,
+  PostReplyInsertTrigger
 ];
 
 async function main() {
-    console.log("SetUp started");
+  console.log("SetUp started");
 
-    for (const query of SETUP_QUERIES) {
-        await dzClient.execute(query);
-    }
+  for (const query of SETUP_QUERIES) {
+    await dzClient.execute(query);
+  }
 
-    console.log("SetUp ended");
-    process.exit(0);
+  console.log("SetUp ended");
+  process.exit(0);
 }
 
 main().catch((err) => {
-    console.log(err);
-    process.exit(0);
+  console.log(err);
+  process.exit(0);
 });

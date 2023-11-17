@@ -5,10 +5,10 @@ import { ReactNode } from "react";
 import { Session } from "next-auth";
 
 interface Props {
-    children: ReactNode;
-    session: Session | null;
+  children: ReactNode;
+  session: Session | null;
 }
 
 export default function NextAuthProvider({ children, session }: Props) {
-    return <SessionProvider session={session}>{children}</SessionProvider>;
+  return <SessionProvider session={session}>{children}</SessionProvider>;
 }
