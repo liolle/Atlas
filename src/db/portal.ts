@@ -216,7 +216,7 @@ export const GetPosts = async ({
         self: ""
       };
 
-  new APIDispatcher(response).dispatch(options).dispatch(result);
+  new APIDispatcher(response).dispatch(result);
   return response;
 };
 
@@ -242,7 +242,6 @@ export const LikeX = async ({
         self: ""
       };
 
-  if (!result) return response;
   new APIDispatcher(response).dispatch(result);
   return response;
 };
