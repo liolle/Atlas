@@ -29,6 +29,7 @@ export function FormSignIn() {
 
   const param = useSearchParams();
   useEffect(() => {
+    if (!param) return;
     const error = param.get("error");
     if (error) {
       ToastMessage(error);
