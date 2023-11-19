@@ -4,4 +4,4 @@
 
 ## Documentation (WIP)
 
-[![](https://d22f1kls6ex9ii.cloudfront.net/doc/doc1.png)](https://atlas.vertix.tech)
+[![](https://d22f1kls6ex9ii.cloudfront.net/doc/doc1.png)](https://doc.vertix.tech)
