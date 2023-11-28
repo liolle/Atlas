@@ -31,7 +31,7 @@ export default async function Layout({
 
             <main className=" flex w-full flex-1">
               <div className=" flex-1">{children}</div>
-              <div className=" max-w-[400px]  flex-1 flex-col border-l-2 border-accent-2   @[950px]:flex"></div>
+              <div className=" hidden max-w-[400px]  flex-1 flex-col border-l-2 border-accent-2   @[950px]:flex"></div>
             </main>
           </div>
         </div>
