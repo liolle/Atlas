@@ -39,9 +39,9 @@ export default async function Home() {
                 <div></div>
                 <PostDialog>New post</PostDialog>
               </div>
-              <div className=" hidden h-full max-w-[400px] flex-1 flex-col border-l-2 border-accent-2  @[950px]:flex">
+              <div className=" hidden h-full max-w-[300px] flex-1 flex-col border-l-2 border-accent-2 @[950px]:flex @[1200px]:max-w-[400px]">
                 <div className="    flex h-[70px] w-[100%] items-center justify-center  bg-bgc  ">
-                  <span>WIP</span>
+                  <span>--------</span>
                 </div>
               </div>
             </div>
@@ -52,7 +52,7 @@ export default async function Home() {
                   <InfiniteScrollPosts posts={posts || []} />
                 </Suspense>
               </div>
-              <div className=" hidden max-w-[400px]  flex-1 flex-col border-l-2 border-accent-2   @[950px]:flex"></div>
+              <div className=" hidden max-w-[300px]  flex-1 flex-col border-l-2 border-accent-2 @[950px]:flex @[1200px]:max-w-[400px]"></div>
             </main>
           </div>
         </div>
