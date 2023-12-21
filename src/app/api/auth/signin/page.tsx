@@ -4,7 +4,6 @@ import { NextPage } from "next";
 import GoogleButton from "@/src/components/client/Buttons/google";
 import { Separator } from "@/src/components/ui/separator";
 import DiscordButton from "@/src/components/client/Buttons/discord";
-// import Link from "next/link";
 
 const SignIn: NextPage = async () => {
   return (

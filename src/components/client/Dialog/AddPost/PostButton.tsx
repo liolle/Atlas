@@ -12,7 +12,6 @@ import React, { MouseEvent, useContext } from "react";
 
 interface PostButtonInput {
   reference?: string;
-  // session:Session
 }
 
 const PostButton = ({ reference }: PostButtonInput) => {
