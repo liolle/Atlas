@@ -29,7 +29,6 @@ const CardUserFollow = ({ user, isOWner, actions }: CardUserFollowType) => {
       await fetch(action.link, {
         method: "POST"
       });
-      // router.push( `/users/${}`)
       router.refresh();
     } catch (error) {
       ToastMessage(String(error));
