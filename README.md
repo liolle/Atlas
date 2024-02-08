@@ -67,7 +67,7 @@ Social media app base on Twitter.
     <a href="https://mcdonut.vertix.tech/" target="_blank"> 
         <img src=".github\images\atlas-laptop1.png" style="border-radius:9px;  "/>
     </a>
-     <a href="https://mcdonut.vertix.tech/" target="_blank"> 
+     <a href="https://atlas.vertix.tech" target="_blank"> 
         <img src=".github\images\atlas-phone1.png " style="border-radius:9px; "/>
     </a>
    </div>
