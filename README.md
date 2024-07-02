@@ -60,14 +60,14 @@ Social media app base on Twitter.
 
 ### Demo
 
-<a href="https://atlas.vertix.tech" target="_blank">Live</a>
+<a href="https://atlas.kodevly.com" target="_blank">Live</a>
 
 <div class="" style="display: flex; justify-content: space-around;">
    <div class="">
-    <a href="https://mcdonut.vertix.tech/" target="_blank"> 
+    <a href="https://atlas.kodevly.com" target="_blank"> 
         <img src=".github\images\atlas-laptop1.png" style="border-radius:9px;  "/>
     </a>
-     <a href="https://atlas.vertix.tech" target="_blank"> 
+     <a href="https://atlas.kodevly.com" target="_blank"> 
         <img src=".github\images\atlas-phone1.png " style="border-radius:9px; "/>
     </a>
    </div>
